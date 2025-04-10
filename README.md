@@ -9,7 +9,7 @@ This is the frontend codebase for **MedaCare**, a health-focused application bui
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-org/medaCare-FE.git
+git clone https://github.com/mindahun21/medaCare-FE.git
 cd medaCare-FE
 ```
 
@@ -31,39 +31,43 @@ npm run dev
 
 ```text
 .
-├── public/                 # Static assets
-│   ├── images/            # App images (e.g., logo)
+├── public/                     # Static assets
+│   ├── images/                # App images (e.g., logo, medacare.png)
+│   └── vite.svg               # Vite logo (default)
 ├── src/
-│   ├── App.jsx            # Root component
-│   ├── main.jsx           # App entry point
-│   ├── styles.css         # Global styles
-│   ├── data/              # Static or seeded data
-│   ├── hooks/             # Custom React hooks
-│   ├── utils/             # Utility functions/helpers
-│   ├── services/          # Global API clients & service logic
-│   │   └── apiClient.js
-│   ├── features/          # Feature-based modules
+│   ├── App.tsx                # Root component
+│   ├── main.tsx               # App entry point
+│   ├── styles.css             # Global styles
+│   ├── data/                  # Static or seeded data
+│   ├── hooks/                 # Custom React hooks
+│   ├── utils/                 # Utility functions/helpers
+│   ├── services/              # Global API clients & service logic
+│   │   └── apiClient.ts
+│   ├── features/              # Feature-based modules
 │   │   ├── authentication/
-│   │   │   ├── components/
-│   │   │   │   ├── AuthBanner.jsx
-│   │   │   │   ├── LoginForm.jsx
-│   │   │   │   └── RegisterForm.jsx
-│   │   │   └── services/
-│   │   │       └── authApi.js
-│   │   └── dashboard/     # (To be developed)
-│   ├── pages/             # Route-level components
-│   │   ├── Home.jsx
-│   │   ├── Login.jsx
-│   │   ├── Register.jsx
-│   │   └── NotFound.jsx
-│   ├── ui/                # Reusable UI components
-│   │   └── shared/        # Shared UI elements (buttons, inputs, modals, etc.)
-├── eslint.config.js       # ESLint configuration
-├── vite.config.js         # Vite configuration
-├── index.html             # HTML template
+│   │   │   ├── components/    # Auth UI components
+│   │   │   │   ├── AuthBanner.tsx
+│   │   │   │   ├── LoginForm.tsx
+│   │   │   │   └── RegisterForm.tsx
+│   │   │   ├── services/      # Auth-related services (API calls, etc.)
+│   │   │   │   └── authApi.ts
+│   │   │   └── types.ts       # Type definitions for authentication
+│   │   └── dashboard/         # (To be developed)
+│   ├── pages/                 # Route-level components
+│   │   ├── Home.tsx
+│   │   ├── Login.tsx
+│   │   ├── Register.tsx
+│   │   └── NotFound.tsx
+│   ├── ui/                    # Reusable UI components
+│   │   └── shared/            # Shared UI elements (buttons, inputs, etc.)
+├── eslint.config.js           # ESLint configuration
+├── vite.config.ts             # Vite configuration (TypeScript)
+├── index.html                 # HTML template
+├── tsconfig.json              # TypeScript compiler configuration
 ├── package.json
 ├── package-lock.json
-└── README.md              # Project overview
+└── README.md                  # Project overview and setup instructions
+
 ```
 
 ---
