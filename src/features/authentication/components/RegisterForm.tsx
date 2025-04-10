@@ -8,11 +8,14 @@ import {
   Button,
   CircularProgress,
 } from '@mui/material';
+import type { TextFieldProps } from '@mui/material';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import { RegisterFormData } from '../types';
 
 export default function RegisterForm() {
-  const [form, setForm] = useState({
+  type RegisterFormErrors = Partial<Record<keyof RegisterFormData, string>>;
+  const [form, setForm] = useState<RegisterFormData>({
     firstName: '',
     lastName: '',
     email: '',
@@ -21,7 +24,7 @@ export default function RegisterForm() {
   });
 
   const [showPassword, setShowPassword] = useState(false);
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<RegisterFormErrors>({});
 
   const mutation = useMutation({
     mutationFn: registerUser,
@@ -34,12 +37,12 @@ export default function RegisterForm() {
     },
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const validate = () => {
-    const errs = {};
+    const errs: RegisterFormErrors = {};
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const passwordRegex =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?#&])[A-Za-z\d@$!%*?#&]{8,}$/;
@@ -62,13 +65,13 @@ export default function RegisterForm() {
     return Object.keys(errs).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validate()) return;
     mutation.mutate(form);
   };
 
-  const sharedTextFieldProps = {
+  const sharedTextFieldProps: Partial<TextFieldProps> = {
     fullWidth: true,
     variant: 'outlined',
     autoComplete: 'off',
@@ -194,7 +197,7 @@ export default function RegisterForm() {
         type="submit"
         fullWidth
         variant="contained"
-        disabled={mutation.isLoading}
+        disabled={mutation.isPending}
         sx={{
           fontWeight: 600,
           py: 1.5,
@@ -208,7 +211,7 @@ export default function RegisterForm() {
           },
         }}
       >
-        {mutation.isLoading ? (
+        {mutation.isPending ? (
           <CircularProgress size={20} color="inherit" />
         ) : (
           'Sign Up'

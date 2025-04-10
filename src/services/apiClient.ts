@@ -15,7 +15,7 @@ const apiClient = axios.create({
 // Request Interceptor
 apiClient.interceptors.request.use(
   (config) => {
-    config.headers['Authorization'] = `Bearer ${token}`;
+    // config.headers['Authorization'] = `Bearer ${token}`;
     return config;
   },
   (error) => Promise.reject(error)

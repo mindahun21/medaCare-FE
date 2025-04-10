@@ -1,4 +1,3 @@
-import React from 'react';
 import RegisterForm from '../features/authentication/components/RegisterForm';
 import { Link } from 'react-router-dom';
 import AuthBanner from '../features/authentication/components/AuthBanner';

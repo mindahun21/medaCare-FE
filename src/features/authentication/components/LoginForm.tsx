@@ -10,15 +10,18 @@ import {
   Button,
   CircularProgress,
 } from '@mui/material';
+import type { TextFieldProps } from '@mui/material';
+import { LoginFormData } from '../types';
 
 export default function LoginForm() {
-  const [form, setForm] = useState({
+  type LoginFormErrors = Partial<Record<'email' | 'password', string>>;
+  const [form, setForm] = useState<LoginFormData>({
     email: '',
     password: '',
   });
 
   const [showPassword, setShowPassword] = useState(false);
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<LoginFormErrors>({});
 
   const mutation = useMutation({
     mutationFn: loginUser,
@@ -31,12 +34,12 @@ export default function LoginForm() {
     },
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const validate = () => {
-    const errs = {};
+    const errs: LoginFormErrors = {};
     const emailRegex = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
     if (!form.email) errs.email = 'Email is required';
     else if (!emailRegex.test(form.email)) errs.email = 'Invalid email format';
@@ -47,10 +50,39 @@ export default function LoginForm() {
     return Object.keys(errs).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validate()) return;
     mutation.mutate(form);
+  };
+
+  const SharedTextFieldProps: Partial<TextFieldProps> = {
+    variant: 'outlined',
+    fullWidth: true,
+    autoComplete: 'off',
+    sx: {
+      '& label': {
+        fontWeight: 700,
+        fontSize: '1rem',
+      },
+      '& label.Mui-focused': {
+        color: 'var(--color-primary-teal)',
+      },
+      '& .MuiOutlinedInput-root': {
+        bgcolor: 'white',
+        color: 'var(--color-primary-teal)',
+        '& fieldset': {
+          borderColor: 'var(--color-primary-teal)',
+        },
+        '&:hover fieldset': {
+          borderColor: 'var(--color-primary-teal)',
+        },
+        '&.Mui-focused fieldset': {
+          borderColor: 'var(--color-primary-teal)',
+          borderWidth: 2,
+        },
+      },
+    },
   };
 
   return (
@@ -62,50 +94,23 @@ export default function LoginForm() {
         <TextField
           id="email"
           label="Email"
-          variant="outlined"
           value={form.email}
           onChange={handleChange}
-          fullWidth
           error={!!errors.email}
           helperText={errors.email}
-          autoComplete="off"
-          sx={{
-            '& label': {
-              fontWeight: 700,
-              fontSize: '1rem',
-            },
-            '& label.Mui-focused': {
-              color: 'var(--color-primary-teal)',
-            },
-            '& .MuiOutlinedInput-root': {
-              bgcolor: 'white',
-              color: 'var(--color-primary-teal)',
-              '& fieldset': {
-                borderColor: 'var(--color-primary-teal)',
-              },
-              '&:hover fieldset': {
-                borderColor: 'var(--color-primary-teal)',
-              },
-              '&.Mui-focused fieldset': {
-                borderColor: 'var(--color-primary-teal)',
-                borderWidth: 2,
-              },
-            },
-          }}
+          {...SharedTextFieldProps}
         />
       </div>
       <div>
         <TextField
           id="password"
           label="Password"
-          variant="outlined"
           type={showPassword ? 'text' : 'password'}
           value={form.password}
           onChange={handleChange}
-          fullWidth
           error={!!errors.password}
           helperText={errors.password}
-          autoComplete="off"
+          {...SharedTextFieldProps}
           slotProps={{
             input: {
               endAdornment: (
@@ -121,29 +126,6 @@ export default function LoginForm() {
               ),
             },
           }}
-          sx={{
-            '& label': {
-              fontWeight: 700,
-              fontSize: '1rem',
-            },
-            '& label.Mui-focused': {
-              color: 'var(--color-primary-teal)',
-            },
-            '& .MuiOutlinedInput-root': {
-              bgcolor: 'white',
-              color: 'var(--color-primary-teal)',
-              '& fieldset': {
-                borderColor: 'var(--color-primary-teal)',
-              },
-              '&:hover fieldset': {
-                borderColor: 'var(--color-primary-teal)',
-              },
-              '&.Mui-focused fieldset': {
-                borderColor: 'var(--color-primary-teal)',
-                borderWidth: 2,
-              },
-            },
-          }}
         />
       </div>
 
@@ -151,7 +133,7 @@ export default function LoginForm() {
         type="submit"
         fullWidth
         variant="contained"
-        disabled={mutation.isLoading}
+        disabled={mutation.isPending}
         sx={{
           fontWeight: 600,
           py: 1.5,
@@ -165,7 +147,7 @@ export default function LoginForm() {
           },
         }}
       >
-        {mutation.isLoading ? (
+        {mutation.isPending ? (
           <CircularProgress size={20} color="inherit" />
         ) : (
           'Sign In'

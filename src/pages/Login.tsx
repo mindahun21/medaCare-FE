@@ -1,4 +1,3 @@
-import React from 'react';
 import LoginForm from '../features/authentication/components/LoginForm';
 import { Link } from 'react-router-dom';
 import AuthBanner from '../features/authentication/components/AuthBanner';
