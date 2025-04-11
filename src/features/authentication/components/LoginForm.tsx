@@ -28,9 +28,8 @@ export default function LoginForm() {
     onSuccess: () => {
       alert('Login successful!');
     },
-    onError: (err) => {
+    onError: () => {
       alert('Login failed. Please try again.');
-      console.error(err);
     },
   });
 

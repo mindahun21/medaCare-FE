@@ -31,9 +31,8 @@ export default function RegisterForm() {
     onSuccess: () => {
       alert('Registered successfully!');
     },
-    onError: (err) => {
+    onError: () => {
       alert('Registration failed. Try again.');
-      console.error(err);
     },
   });
 
