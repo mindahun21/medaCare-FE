@@ -1,14 +1,34 @@
 import apiClient from '../../../services/apiClient';
-import { LoginFormData, RegisterFormData } from '../types';
+import { LoginFormData, RegisterRequestData } from '../types';
 
-export async function registerUser(formData: RegisterFormData) {
-  const response = await apiClient.post('/api/register', formData);
+export async function registerUser(formData: RegisterRequestData) {
+  const response = await apiClient.post('auth/signup', formData);
 
-  return response.data;
+  return response;
 }
 
 export async function loginUser(formData: LoginFormData) {
-  const response = await apiClient.post('/api/login', formData);
+  const response = await apiClient.post('auth/login', formData);
 
-  return response.data;
+  return response;
+}
+
+export async function verifyEmail({
+  email,
+  token,
+}: {
+  email: string;
+  token: string;
+}) {
+  const response = await apiClient.post(
+    `auth/verify-email?email=${email}&token=${token}`
+  );
+
+  return response;
+}
+
+export async function requestUser() {
+  const response = await apiClient.get('users/current');
+
+  return response;
 }

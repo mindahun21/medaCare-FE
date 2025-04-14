@@ -12,8 +12,13 @@ import {
 } from '@mui/material';
 import type { TextFieldProps } from '@mui/material';
 import { LoginFormData } from '../types';
+import { useAppDispatch } from '../../../data/hooks';
+import { setToken } from '../../../data/authSlice';
+import { useNavigate } from 'react-router-dom';
 
 export default function LoginForm() {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   type LoginFormErrors = Partial<Record<'email' | 'password', string>>;
   const [form, setForm] = useState<LoginFormData>({
     email: '',
@@ -25,11 +30,13 @@ export default function LoginForm() {
 
   const mutation = useMutation({
     mutationFn: loginUser,
-    onSuccess: () => {
-      alert('Login successful!');
+    onSuccess: (data) => {
+      const token = data.data?.data?.token;
+      dispatch(setToken(token));
+      navigate('/home');
     },
-    onError: () => {
-      alert('Login failed. Please try again.');
+    onError: (err) => {
+      console.log('Login failed. Please try again.', err);
     },
   });
 

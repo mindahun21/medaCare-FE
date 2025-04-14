@@ -12,8 +12,13 @@ import type { TextFieldProps } from '@mui/material';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { RegisterFormData } from '../types';
+import { useNavigate } from 'react-router-dom';
+import { useAppDispatch } from '../../../data/hooks';
+import { setEmail } from '../../../data/authSlice';
 
 export default function RegisterForm() {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   type RegisterFormErrors = Partial<Record<keyof RegisterFormData, string>>;
   const [form, setForm] = useState<RegisterFormData>({
     firstName: '',
@@ -21,6 +26,7 @@ export default function RegisterForm() {
     email: '',
     password: '',
     confirmPassword: '',
+    origin: 'SELF_REGISTERED',
   });
 
   const [showPassword, setShowPassword] = useState(false);
@@ -28,11 +34,14 @@ export default function RegisterForm() {
 
   const mutation = useMutation({
     mutationFn: registerUser,
-    onSuccess: () => {
-      alert('Registered successfully!');
+    onSuccess: (data) => {
+      console.log('Registration successful:', data);
+      const email = form.email;
+      dispatch(setEmail(email));
+      navigate('/verify-email');
     },
-    onError: () => {
-      alert('Registration failed. Try again.');
+    onError: (err) => {
+      console.error('Registration error:', err);
     },
   });
 
@@ -67,7 +76,9 @@ export default function RegisterForm() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validate()) return;
-    mutation.mutate(form);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { confirmPassword, ...data } = form;
+    mutation.mutate(data);
   };
 
   const sharedTextFieldProps: Partial<TextFieldProps> = {
