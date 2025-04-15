@@ -1,0 +1,6 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-primary-teal: #1d586e;
+  --color-secondary-burgandy: #a55d68;
+}
