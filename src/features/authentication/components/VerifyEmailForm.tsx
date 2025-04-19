@@ -10,12 +10,14 @@ import { useAppDispatch, useAppSelector } from '../../../data/hooks';
 import { useNavigate } from 'react-router-dom';
 import { requestUser, verifyEmail } from '../services/authApi';
 import { setToken } from '../../../data/authSlice';
+import { useMessage } from '../../../contexts/MessageContext';
+import { AxiosError } from 'axios';
 
 export default function VerifyEmailForm() {
+  const { showMessage } = useMessage();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const email = useAppSelector((state) => state.auth.email);
-  console.log('email in verification', email);
 
   const [tokenInput, setTokenInput] = useState('');
   const [error, setError] = useState('');
@@ -24,19 +26,20 @@ export default function VerifyEmailForm() {
     mutationFn: verifyEmail,
     onSuccess: async (data) => {
       const token = data.data?.data?.token;
-      console.log('data after  verification:', data);
       dispatch(setToken(token));
       try {
         const userResponse = await requestUser();
         const userData = userResponse.data?.data;
 
         if (!userData) {
-          console.error('User data not found');
           return;
         }
-        console.log('User data:', userData);
         navigate('/home');
       } catch (userErr) {
+        const axiosError = userErr as AxiosError;
+        const errorMessage =
+          axiosError?.message || 'Error When loading user data';
+        showMessage({ type: 'error', text: errorMessage });
         console.error('Failed to fetch user:', userErr);
       }
     },

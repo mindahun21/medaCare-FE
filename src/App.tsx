@@ -8,12 +8,12 @@ import Guest from './pages/Guest';
 import { Provider } from 'react-redux';
 import { store } from './data/store';
 import VerifyEmail from './pages/VerifyEmail';
-import InstitutionRequest from './pages/InstitutionRequest';
 import ProtectedRoutes from './ui/Layouts/ProtectedRoutes';
 import Unauthorized from './pages/Unauthorized';
 import { MessageProvider } from './contexts/MessageContext';
 import GlobalMessage from './ui/GlobalMessage';
 import CompletePhysicianProfile from './pages/CompletePhysicianProfile';
+import InstitutionRequest from './pages/InstitutionRequest';
 
 const queryClient = new QueryClient();
 
