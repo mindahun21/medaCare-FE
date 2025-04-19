@@ -1,19 +1,24 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { User } from '../types/user';
 
 interface AuthState {
+  user: User | null;
   token: string | null;
   email: string | null;
   loading: boolean;
   error: string | null;
   isVerified: boolean;
+  expiresAt: number | null;
 }
 
 const initialState: AuthState = {
+  user: null,
   token: null,
   email: null,
   loading: false,
   error: null,
   isVerified: false,
+  expiresAt: null,
 };
 
 const authSlice = createSlice({
@@ -28,8 +33,12 @@ const authSlice = createSlice({
     setEmail: (state, action: PayloadAction<string>) => {
       state.email = action.payload;
     },
-    setToken: (state, action: PayloadAction<string>) => {
-      state.token = action.payload;
+    setToken: (
+      state,
+      action: PayloadAction<{ token: string; expiresAt: number }>
+    ) => {
+      state.token = action.payload.token;
+      state.expiresAt = action.payload.expiresAt;
     },
     setVerified: (state, action: PayloadAction<boolean>) => {
       state.isVerified = action.payload;

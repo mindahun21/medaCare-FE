@@ -15,6 +15,7 @@ export default function VerifyEmailForm() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const email = useAppSelector((state) => state.auth.email);
+  console.log('email in verification', email);
 
   const [tokenInput, setTokenInput] = useState('');
   const [error, setError] = useState('');
@@ -23,8 +24,8 @@ export default function VerifyEmailForm() {
     mutationFn: verifyEmail,
     onSuccess: async (data) => {
       const token = data.data?.data?.token;
+      console.log('data after  verification:', data);
       dispatch(setToken(token));
-      navigate('/home');
       try {
         const userResponse = await requestUser();
         const userData = userResponse.data?.data;
@@ -90,14 +91,15 @@ export default function VerifyEmailForm() {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="p-8 w-full space-y-5 md:space-y-10"
-    >
+    <form onSubmit={handleSubmit} className=" w-full space-y-5 md:space-y-10">
       <h2 className="text-3xl font-bold text-center text-primary-teal">
         Verify Your Email
       </h2>
-
+      <p className="text-sm md:text-md ">
+        A verification email has been sent to your provided email address.
+        Please check your inbox (and spam folder) for the email containing the
+        verification token.
+      </p>
       <div>
         <TextField
           id="token"

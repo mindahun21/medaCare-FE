@@ -8,6 +8,7 @@ export interface RegisterFormData extends LoginFormData {
   lastName: string;
   confirmPassword: string;
   origin: string;
+  role: string;
 }
 
 export type RegisterRequestData = Omit<RegisterFormData, 'confirmPassword'>;

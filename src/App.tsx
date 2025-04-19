@@ -8,15 +8,32 @@ import Guest from './pages/Guest';
 import { Provider } from 'react-redux';
 import { store } from './data/store';
 import VerifyEmail from './pages/VerifyEmail';
+import InstitutionRequest from './pages/InstitutionRequest';
+import ProtectedRoutes from './ui/Layouts/ProtectedRoutes';
+import Unauthorized from './pages/Unauthorized';
+import { MessageProvider } from './contexts/MessageContext';
+import GlobalMessage from './ui/GlobalMessage';
+import CompletePhysicianProfile from './pages/CompletePhysicianProfile';
 
 const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
   { path: '/', index: true, element: <Guest /> },
-  { path: 'home', index: true, element: <Home /> },
+  {
+    element: (
+      <ProtectedRoutes
+        allowedRoles={['PHYSICIAN', 'ADMIN', 'SUPER_ADMIN', 'ORG_ADMIN']}
+      />
+    ),
+    children: [{ path: 'home', element: <Home /> }],
+  },
+  { path: 'profile/complete', element: <CompletePhysicianProfile /> },
   { path: 'login', element: <Login /> },
   { path: 'register', element: <Register /> },
+  { path: 'institution-request', element: <InstitutionRequest /> },
   { path: 'verify-email', element: <VerifyEmail /> },
+  { path: 'unauthorized', element: <Unauthorized /> },
+
   { path: '*', element: <NotFound /> },
 ]);
 
@@ -24,7 +41,10 @@ function App() {
   return (
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />;
+        <MessageProvider>
+          <RouterProvider router={router} />
+          <GlobalMessage />
+        </MessageProvider>
       </QueryClientProvider>
     </Provider>
   );

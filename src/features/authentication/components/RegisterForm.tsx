@@ -11,12 +11,14 @@ import {
 import type { TextFieldProps } from '@mui/material';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { RegisterFormData } from '../types';
+import { RegisterFormData } from '../../../types/auth';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../../data/hooks';
 import { setEmail } from '../../../data/authSlice';
+import { useMessage } from '../../../contexts/MessageContext';
 
 export default function RegisterForm() {
+  const { showMessage } = useMessage();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   type RegisterFormErrors = Partial<Record<keyof RegisterFormData, string>>;
@@ -27,6 +29,7 @@ export default function RegisterForm() {
     password: '',
     confirmPassword: '',
     origin: 'SELF_REGISTERED',
+    role: 'PHYSICIAN',
   });
 
   const [showPassword, setShowPassword] = useState(false);
@@ -36,11 +39,16 @@ export default function RegisterForm() {
     mutationFn: registerUser,
     onSuccess: (data) => {
       console.log('Registration successful:', data);
+      showMessage({
+        type: 'success',
+        text: 'Registration successful, now verify your email.',
+      });
       const email = form.email;
       dispatch(setEmail(email));
       navigate('/verify-email');
     },
     onError: (err) => {
+      showMessage({ type: 'error', text: 'Something went wrong' });
       console.error('Registration error:', err);
     },
   });
@@ -113,7 +121,7 @@ export default function RegisterForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="p-8 w-full space-y-5 md:space-y-10"
+      className="w-full space-y-4 md:space-y-5 py-10"
     >
       <div>
         <TextField
@@ -214,15 +222,18 @@ export default function RegisterForm() {
           borderRadius: '0.3rem',
           backgroundColor: 'var(--color-secondary-burgandy)',
           '&:hover': {
-            backgroundColor: 'var(--color-secondary-burgandy)',
+            backgroundColor: 'var(--color-secondary-burgandy-hover)',
           },
           '&.Mui-disabled': {
-            opacity: 0.5,
+            backgroundColor: 'var(--color-secondary-burgandy-disabled)',
+            opacity: 0.8,
           },
         }}
       >
         {mutation.isPending ? (
-          <CircularProgress size={20} color="inherit" />
+          <span className="text-primary-teal">
+            <CircularProgress size={20} color="inherit" />
+          </span>
         ) : (
           'Sign Up'
         )}
