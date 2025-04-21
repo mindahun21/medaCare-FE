@@ -1,116 +1,163 @@
 import React from 'react';
 import PrimaryButton from '../shared/PrimaryButton';
-
-export default function HowItWorks() {
-  return (
-    <section id="how-it-works" className="w-full">
-      {['patients', 'physicians', 'institutions'].map((role, index) => (
-        <div
-          key={role}
-          className={`${
-            index % 2 === 0 ? 'bg-primary-teal-surface' : ''
-          } py-20`}
-        >
-          <div className="max-w-7xl mx-auto px-4 flex flex-col items-center gap-10">
-            {/* Header */}
-            <h1 className="text-4xl md:text-6xl font-bold text-center text-gray-800">
-              How <span className="gradient-primary px-2">our platform</span>{' '}
-              works for <span className="gradient-primary px-2">{role}</span>
-            </h1>
-            <p className="text-lg md:text-xl text-secondary-gray-light text-center max-w-3xl">
-              Navigating your healthcare journey with MedaCare is seamless. Just
-              follow these steps below to proceed with your selected services.
-            </p>
-
-            {/* Content Block */}
-            <div
-              className={`flex flex-col-reverse lg:flex-row ${
-                index % 2 !== 0 ? 'lg:flex-row-reverse' : ''
-              } items-center justify-between gap-10 w-full`}
-            >
-              {/* Image Block */}
-              <div className="w-full lg:w-1/2 relative flex justify-center">
-                <img
-                  src={
-                    role === 'patients'
-                      ? './images/patient.png'
-                      : role === 'physicians'
-                      ? './images/doctor_image_bg.png'
-                      : './images/institution_image.png'
-                  }
-                  alt={`${role} visual`}
-                  className="w-full max-w-md"
-                />
-                {/* Decorations */}
-                {role === 'patients' && (
-                  <>
-                    <img
-                      src="./images/group.png"
-                      className="absolute top-5 -left-10 w-16 md:w-24"
-                      alt=""
-                    />
-                    <img
-                      src="./images/group.png"
-                      className="absolute bottom-5 -right-10 w-16 md:w-24"
-                      alt=""
-                    />
-                  </>
-                )}
-              </div>
-
-              {/* Steps + CTA */}
-              <div className="w-full lg:w-1/2 flex flex-col items-center gap-6">
-                <Steps />
-                <PrimaryButton text="REGISTER" className="text-xl py-4 px-10" />
-              </div>
-            </div>
-          </div>
-        </div>
-      ))}
-    </section>
-  );
-}
+import { useNavigate } from 'react-router-dom';
 
 const steps = [
   {
     number: 1,
     title: 'Create Your Profile',
     description:
-      'Sign up and fill in your medical history securely to stay up-to-date with your medical processes.',
+      'Sign up and fill in your medical history securely. Setting up your profile this way would ensure that you stay up-to-date with your medical processes.',
   },
   {
     number: 2,
     title: 'Choose Your Service',
     description:
-      'Select from our range of services and book a consultation. It’s simple and straight-forward.',
+      'Select from our range of services and book a consultation. Booking a consultation with MedaCare is fairly simple and straight-forward.',
   },
   {
     number: 3,
     title: 'Meet Your Doctor',
     description:
-      'Have a virtual consultation with one of our certified specialists, or visit physically if needed.',
+      'Have a virtual consultation with one of our certified specialists, or go for a physical visit to the doctor in case you opted for a physical check-up.',
   },
 ];
 
+export default function HowItWorks() {
+  const navigate = useNavigate();
+  const roles = [
+    {
+      key: 'patients',
+      image: './images/patient.png',
+      decorations: ['./images/group.png', './images/group.png'],
+      onClick: () => {},
+    },
+    {
+      key: 'physicians',
+      image: './images/doctor_image_bg.png',
+      decorations: [],
+      onClick: () => {
+        navigate('/register');
+      },
+    },
+    {
+      key: 'institutions',
+      image: './images/institution_image.png',
+      decorations: [],
+      onClick: () => {
+        navigate('/institution-request');
+      },
+    },
+  ];
+  return (
+    <section id="how-it-works" className="w-full">
+      {roles.map((role, index) => (
+        <RoleSection
+          key={role.key}
+          role={role.key}
+          image={role.image}
+          decorations={role.decorations}
+          onClick={role.onClick}
+          reversed={index % 2 === 0}
+          background={index % 2 === 0 ? 'bg-primary-teal-surface' : ''}
+        />
+      ))}
+    </section>
+  );
+}
+
+function RoleSection({
+  role,
+  image,
+  decorations = [],
+  onClick,
+  reversed = false,
+  background = '',
+}: {
+  role: string;
+  image: string;
+  decorations?: string[];
+  onClick: () => void;
+  reversed?: boolean;
+  background?: string;
+}) {
+  return (
+    <div className={background}>
+      <div className="mx-auto flex flex-col items-center py-[32px]">
+        {/* Heading */}
+        <h1 className="text-center font-bold text-[42px] leading-[45px]">
+          How <span className="gradient-primary px-2">our platform</span> works
+          for <span className="gradient-primary px-2">{role}</span>
+        </h1>
+        <p className="text-center font-semibold text-[17px] pt-[33px] text-neutrals-300 max-w-[808px]">
+          Navigating your healthcare journey with MedaCare is seamless. Just
+          follow these steps below to proceed with your selected services. You
+          can also see our FAQ section for more guidance:
+        </p>
+
+        {/* Content */}
+        <div
+          className={`flex flex-col-reverse lg:flex-row gap-20 pt-[54px] ${
+            reversed ? 'lg:flex-row-reverse' : ''
+          }`}
+        >
+          {/* Image Block */}
+          <div>
+            <div className="relative flex justify-center items-start py-4 px-20">
+              <img
+                src={image}
+                alt={`${role} visual`}
+                className="w-full max-w-md"
+              />
+              {decorations.map((src, i) => (
+                <img
+                  key={i}
+                  src={src}
+                  className={`absolute ${
+                    i === 0 ? 'left-0 top-0' : 'bottom-0 right-0'
+                  }`}
+                  alt=""
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Steps + CTA */}
+          <div className="w-[443px] flex flex-col items-start">
+            <Steps />
+            <div className="pt-[21px] pl-[49px]">
+              <PrimaryButton
+                text={role == 'institutions' ? 'REQUEST' : 'REGSTER'}
+                className="px-[62px] py-[8px]"
+                onClick={() => onClick()}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function Steps() {
   return (
-    <div className="w-full max-w-xl">
+    <div className="w-full">
       {steps.map((step, index) => (
         <div
           key={index}
-          className={`relative pl-20 pb-10 ${
+          className={`relative pl-[49px] pb-[38px] ${
             index !== steps.length - 1
-              ? 'border-l-2 border-dashed border-teal-300'
+              ? 'border-l-2 border-dashed border-primary-blues-200'
               : ''
           }`}
         >
-          {/* Step Number */}
-          <div className="absolute -left-8 top-0 w-14 h-14 text-white text-2xl flex items-center justify-center font-bold rounded-full gradient-teal">
+          <div className="absolute -left-10 top-0 w-[54px] h-[54px] text-white rounded-full gradient-teal font-bold text-[34px] leading-[34px] flex justify-center items-center">
             {step.number}
           </div>
-          {/* Step Content */}
-          <h3 className="text-2xl font-semibold text-gray-800">{step.title}</h3>
-          <p className="text-gray-600 text-lg leading-relaxed">
+          <h3 className="font-bold text-neutrals-900 text-[34px] leading-[42px] pb-[10px]">
+            {step.title}
+          </h3>
+          <p className="font-semibold text-[14px] leading-[25px] text-neutrals-500">
             {step.description}
           </p>
         </div>

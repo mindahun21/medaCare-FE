@@ -39,7 +39,7 @@ export default function Register() {
           <p className="text-primary-teal text-center text-lg md:text-xl">
             Already have an account?
             <Link
-              to="/login"
+              to="/login?prev=register"
               className="text-secondary-burgandy text-lg md:text-xl hover:underline ps-2"
             >
               Sign In

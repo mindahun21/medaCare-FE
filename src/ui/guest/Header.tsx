@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PrimaryButton from '../shared/PrimaryButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
@@ -8,11 +8,28 @@ export default function Header() {
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 108);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <header className="w-full px-4 sm:px-6 md:px-10  shadow-md fixed top-0 left-0 bg-white z-50">
-      <div className="max-w-[1300px] mx-auto flex justify-between items-center">
+    <header
+      className={`w-full h-[108px] z-50 flex items-center text-neutrals-900 transition-all duration-300 ease-in-out ${
+        isScrolled
+          ? 'fixed top-0 left-0 bg-white shadow-md px-20 guest-bg-gradient '
+          : 'relative'
+      } `}
+    >
+      <div className="mx-auto flex justify-between items-center h-full w-full">
         {/* Logo */}
-        <div className="w-28 sm:w-32">
+        <div className="">
           <img
             src="./images/logo.png"
             alt="brand logo"
@@ -21,39 +38,37 @@ export default function Header() {
         </div>
 
         {/* Desktop Nav */}
-        <nav className="hidden lg:flex items-center gap-8 text-base lg:text-xl text-gray-700">
-          <ul className="flex gap-6 items-center">
-            <li>
-              <a href="/" className="hover:text-primary">
-                Home
-              </a>
-            </li>
-            <li>
-              <a href="#about" className="hover:text-primary">
-                About Us
-              </a>
-            </li>
-            <li>
-              <a href="#how-it-works" className="hover:text-primary">
-                How it Works?
-              </a>
-            </li>
-            <li>
-              <a href="#services" className="hover:text-primary">
-                Services
-              </a>
-            </li>
-            <li>
-              <a href="#contact-us" className="hover:text-primary">
-                Contact Us
-              </a>
-            </li>
-          </ul>
-          <PrimaryButton
-            text="SIGNUP/SIGNIN"
-            onClick={() => navigate('/login')}
-          />
-        </nav>
+        <ul className="hidden items-center lg:flex gap-[42px] text-neutral-900 font-semibold text-[16px] leading-[25px]">
+          <li>
+            <a href="/" className="hover:text-primary-teal">
+              Home
+            </a>
+          </li>
+          <li>
+            <a href="#about" className="hover:text-primary-teal">
+              About Us
+            </a>
+          </li>
+          <li>
+            <a href="#how-it-works" className="hover:text-primary-teal">
+              How it Works?
+            </a>
+          </li>
+          <li>
+            <a href="#services" className="hover:text-primary-teal">
+              Services
+            </a>
+          </li>
+          <li>
+            <a href="#contact-us" className="hover:text-primary-teal">
+              Contact Us
+            </a>
+          </li>
+        </ul>
+        <PrimaryButton
+          text="SIGNUP / SIGNIN"
+          onClick={() => navigate('/choose-accounttype')}
+        />
 
         {/* Mobile Toggle */}
         <button
@@ -66,7 +81,7 @@ export default function Header() {
 
       {/* Mobile Nav Dropdown */}
       {mobileMenuOpen && (
-        <div className="lg:hidden flex flex-col gap-4 px-4 mt-4 text-lg text-gray-700 bg-white shadow-lg rounded-lg py-6">
+        <div className="lg:hidden flex flex-col gap-4 px-4 mt-4 text-lg text-neutral-900 bg-white shadow-lg rounded-lg py-6">
           <a href="/" onClick={() => setMobileMenuOpen(false)}>
             Home
           </a>
@@ -83,10 +98,10 @@ export default function Header() {
             Contact Us
           </a>
           <PrimaryButton
-            text="SIGNUP/SIGNIN"
+            text="SIGNUP / SIGNIN"
             onClick={() => {
               setMobileMenuOpen(false);
-              navigate('/login');
+              navigate('/choose-accounttype');
             }}
           />
         </div>

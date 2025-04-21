@@ -40,30 +40,37 @@ const services = [
 
 export default function Services() {
   return (
-    <section id="services" className="py-20 bg-white">
-      <div className="max-w-7xl mx-auto px-4 flex flex-col items-center gap-12">
+    <section id="services" className="pt-[50px] bg-white">
+      <div className="mx-auto flex flex-col items-center text-neutrals-900 py-8">
         {/* Title */}
-        <h1 className="text-4xl md:text-6xl font-bold text-center">
+        <h1 className="text-[42px] leading-[55px] font-bold text-center">
           Top
           <span className="gradient-primary px-2">Services</span>
           we offer
         </h1>
 
         {/* Subtitle */}
-        <p className="text-lg md:text-xl text-center text-secondary-gray-light max-w-3xl">
+        <p className="text-center pt-[34px] text-neutrals-300 w-[860px] text-[17px] leading-[25px]">
           In today&#x27;s fast-paced world, your health deserves the utmost
           attention and convenience. MedaCare brings a suite of integrated
           services to support your needs digitally:
         </p>
 
         {/* Services Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 w-full relative">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-9 gap-8 w-full relative mt-[54px] max-w-[1029px]">
           {services.map((service, index) => (
             <ServiceCard
               key={index}
               icon={service.icon}
               title={service.title}
               description={service.description}
+              className={` col-span-1 ${
+                index == 0
+                  ? 'md:col-span-5'
+                  : index == 1
+                  ? 'md:col-span-4'
+                  : 'md:col-span-3'
+              }`}
             />
           ))}
 
@@ -71,12 +78,12 @@ export default function Services() {
           <img
             src="./images/group.png"
             alt=""
-            className="absolute -top-10 -left-10 w-20 hidden md:block"
+            className="absolute w-[150px] hidden md:block -top-8 -left-20 "
           />
           <img
             src="./images/group.png"
             alt=""
-            className="absolute -bottom-10 -right-10 w-20 hidden md:block"
+            className="absolute w-[150px] -bottom-8 -right-20 hidden md:block"
           />
         </div>
       </div>
@@ -88,20 +95,30 @@ function ServiceCard({
   icon: Icon,
   title,
   description,
+  className,
 }: {
   icon: React.ElementType;
   title: string;
   description: string;
+  className: string;
 }) {
   return (
-    <div className="border-2 border-primary-teal-light rounded-2xl p-6 md:p-8 flex flex-col gap-4 bg-white shadow-md transition-transform hover:scale-[1.02] duration-300">
-      {Icon && (
-        <span className="text-primary-teal-light">
-          <Icon fontSize="large" />
-        </span>
-      )}
-      <h3 className="text-2xl md:text-3xl font-bold">{title}</h3>
-      <p className="text-base md:text-lg text-secondary-gray">{description}</p>
+    <div
+      className={`rounded-[25px] bg-gradient-to-r from-[#C5ECFF] to-[#95DDFF] transition-transform hover:scale-[1.02] duration-300 p-[2px] ${className}`}
+    >
+      <div className="w-full bg-white z-10 rounded-[25px] p-[42px]">
+        {Icon && (
+          <span className="text-primary-blues-700 ">
+            <Icon style={{ width: 42, height: 42 }} />
+          </span>
+        )}
+        <h3 className="text-[21px] pt-[16px] leading-[21px] font-bold text-primary-blues-700">
+          {title}
+        </h3>
+        <p className=" pt-[16px] text-neutrals-500 text-[14px] leading-[25px] font-semibold ">
+          {description}
+        </p>
+      </div>
     </div>
   );
 }

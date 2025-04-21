@@ -1,13 +1,15 @@
-import { useState } from 'react';
 import AuthBanner from '../features/authentication/components/AuthBanner';
 import { Divider } from '@mui/material';
 import LoginForm from '../features/authentication/components/LoginForm';
 import TextButton from '../ui/shared/TextButton';
-import ChooseAccountType from '../ui/guest/ChooseAccountType';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 export default function Login() {
-  const [isOpenChooseAcountTypeModal, setIsOpenChooseAcountTypeModal] =
-    useState(false);
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  const prevRoute = searchParams.get('prev') || 'register';
+  console.log(prevRoute);
 
   return (
     <div className="flex h-screen w-full overflow-hidden">
@@ -46,16 +48,11 @@ export default function Login() {
             Don’t have an account?
             <TextButton
               text="Sign Up"
-              onClick={() => setIsOpenChooseAcountTypeModal(true)}
+              onClick={() => navigate(`/${prevRoute}`)}
             />
           </p>
         </div>
       </div>
-
-      <ChooseAccountType
-        open={isOpenChooseAcountTypeModal}
-        onClose={() => setIsOpenChooseAcountTypeModal(false)}
-      />
     </div>
   );
 }

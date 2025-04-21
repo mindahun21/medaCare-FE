@@ -16,7 +16,7 @@ export const SharedTextFieldProps: Partial<TextFieldProps> = {
       bgcolor: 'white',
       color: 'var(--color-primary-teal)',
       '& fieldset': {
-        borderColor: 'var(--color-primary-teal)',
+        borderColor: 'var(--color-neutrals-300)',
       },
       '&:hover fieldset': {
         borderColor: 'var(--color-primary-teal)',

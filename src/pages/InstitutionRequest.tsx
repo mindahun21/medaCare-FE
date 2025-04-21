@@ -13,7 +13,7 @@ import PrimaryButton from '../ui/shared/PrimaryButton';
 import { Link } from 'react-router';
 
 export default function InstitutionRequest() {
-  const [currentStep, setCurrentStep] = useState(2);
+  const [currentStep, setCurrentStep] = useState(1);
   const totalStep = 2;
 
   const methods = useForm<InstitutionRequestSchemaType>({
@@ -49,16 +49,16 @@ export default function InstitutionRequest() {
   };
   const handleSubmit = () => {};
   return (
-    <div className="min-h-screen w-full gradient-teal-light flex justify-center items-center overflow-y-auto scrollbar-hide">
-      <div className="mx-4 bg-white min-h-[700px flex flex-col items-center justify-center w-full sm:w-[500px] md:w-[700px] rounded-2xl shadow-lg my-4">
-        <div className=" flex flex-col gap-5 justify-center items-center sm:py-10 h-full w-full max-w-[500px] ">
+    <div className="min-h-screen w-full bg-gradient-to-br from-[#DEF1FF] to-[#FFF] flex justify-center items-center overflow-y-auto scrollbar-hide  ">
+      <div className="mx-4 bg-white w-[800px] flex flex-col items-center justify-center px-[150px]">
+        <div className=" flex flex-col gap-[11px] justify-center items-center h-full w-full  ">
           <AuthBanner />
-          <h1 className="text-4xl font-semibold text-center gradient-primary">
+          <h1 className="font-semibold text-[40px] leading-[70px] gradient-primary  ">
             Request Account
           </h1>
 
           {/* Stepper */}
-          <div className="flex w-full  items-center justify-between my-4">
+          <div className="flex  items-center my-[11px]">
             {Array.from({ length: totalStep }, (_, index) => {
               const step = index + 1;
               const isCompleted = currentStep > step;
@@ -68,20 +68,22 @@ export default function InstitutionRequest() {
                 <React.Fragment key={index}>
                   <div className="flex flex-col items-center">
                     <div
-                      className={`h-10 w-10 rounded-full flex items-center justify-center ${
+                      className={`w-[22px] h-[22px] rounded-full flex items-center justify-center ${
                         isCompleted
                           ? 'text-4xl'
                           : 'text-white text-sm font-bold shadow-md transition-all duration-300'
                       }  ${
                         isCompleted
-                          ? 'text-primary-teal'
+                          ? 'text-primary-blues-500'
                           : isActive
-                          ? 'gradient-teal'
+                          ? 'bg-primary-blues-500'
                           : 'bg-gray-300'
                       }`}
                     >
                       {isCompleted ? (
-                        <CheckCircleIcon fontSize="large" />
+                        <CheckCircleIcon
+                          style={{ height: '22px', width: '22px' }}
+                        />
                       ) : (
                         step
                       )}
@@ -92,8 +94,10 @@ export default function InstitutionRequest() {
                   </div>
                   {step !== totalStep && (
                     <div
-                      className={`h-1 flex-1 mx-2 rounded-full transition-all duration-300 ${
-                        currentStep > step ? 'bg-primary-teal' : 'bg-gray-300'
+                      className={`border-b-[1px] w-[112px] rounded-full transition-all duration-300 ${
+                        currentStep > step
+                          ? 'text-primary-blues-500'
+                          : 'bg-[#BDBDBD] '
                       }`}
                     ></div>
                   )}
@@ -107,7 +111,7 @@ export default function InstitutionRequest() {
           <div className="w-full flex justify-between mt-4">
             {currentStep > 1 && (
               <button
-                className="bg-primary-teal-light px-4 py-2 text-secondary-burgandy rounded-md font-bold"
+                className="bg-primary-teal-light px-10 py-2 text-secondary-burgandy rounded-md font-bold"
                 onClick={gotoPrev}
               >
                 Back
@@ -115,17 +119,25 @@ export default function InstitutionRequest() {
             )}
             <div className="flex-1" />
             {currentStep == totalStep ? (
-              <PrimaryButton text="Finish" onClick={handleSubmit} />
+              <PrimaryButton
+                text="Finish"
+                className="px-10"
+                onClick={handleSubmit}
+              />
             ) : (
-              <PrimaryButton text="Next" onClick={goToNextStep} />
+              <PrimaryButton
+                text="Next"
+                className="px-10"
+                onClick={goToNextStep}
+              />
             )}
           </div>
         </div>
-        <div className="mt-5">
+        <div className="my-7">
           <p className="text-primary-teal text-2xl">
             Already have an account?
             <Link
-              to="/login"
+              to="/login?prev=institution-request"
               className="text-secondary-burgandy text-3xl hover:underline ps-3"
             >
               Sign In
