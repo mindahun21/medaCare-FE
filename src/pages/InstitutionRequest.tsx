@@ -49,7 +49,7 @@ export default function InstitutionRequest() {
   };
   const handleSubmit = () => {};
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-[#DEF1FF] to-[#FFF] flex justify-center items-center overflow-y-auto scrollbar-hide  ">
+    <div className="min-h-screen w-full bg-gradient-to-br from-[#DEF1FF] to-[#FFF] flex justify-center items-center overflow-y-auto scrollbar-hide py-10 ">
       <div className="mx-4 bg-white w-[800px] flex flex-col items-center justify-center px-[150px]">
         <div className=" flex flex-col gap-[11px] justify-center items-center h-full w-full  ">
           <AuthBanner />
