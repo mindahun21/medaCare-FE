@@ -14,12 +14,10 @@ import CompleteProfileFormTwo from '../features/profile/components/physician/Com
 import { useMutation } from '@tanstack/react-query';
 import { submitPhysicianProfile } from '../features/profile/services/completeProfile';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { RootState } from '../data/store';
+// import { useSelector } from 'react-redux';
+// import { RootState } from '../data/store';
 
 export default function CompletePhysicianProfile() {
-  const { user } = useSelector((state: RootState) => state.auth);
-  console.log('user on complete profile :', user);
   const [currentStep, setCurrentStep] = useState(1);
   const navigate = useNavigate();
   const totalStep = 3;

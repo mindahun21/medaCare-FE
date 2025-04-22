@@ -33,7 +33,6 @@ export const fetchUser = createAsyncThunk<User, void, { rejectValue: string }>(
   async (_, { rejectWithValue }) => {
     try {
       const response = await requestUser();
-      console.log('user in fetch user:', response.data);
       return response.data;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {

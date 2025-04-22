@@ -11,12 +11,8 @@ export default function VerifyEmail() {
 
   const mutation = useMutation({
     mutationFn: resendEmail,
-    onSuccess: () => {
-      console.log('resending email  successFull');
-    },
-    onError: () => {
-      console.log('resending email  unsuccessFull');
-    },
+    onSuccess: () => {},
+    onError: () => {},
   });
 
   const handleResendEmail = () => {

@@ -51,7 +51,6 @@ export default function ProtectedRoute({
     );
   }
   const role = user?.role.name;
-  console.log('user role:', role);
 
   if (!user || !isAuthenticated) return <Navigate to="/login" />;
   if (!allowedRoles.includes(role!)) return <Navigate to="/unauthorized" />;
