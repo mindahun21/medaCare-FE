@@ -8,10 +8,9 @@ import {
 import { useMutation } from '@tanstack/react-query';
 import { useAppDispatch, useAppSelector } from '../../../data/hooks';
 import { useNavigate } from 'react-router-dom';
-import { requestUser, verifyEmail } from '../services/authApi';
+import { verifyEmail } from '../services/authApi';
 import { setToken } from '../../../data/authSlice';
 import { useMessage } from '../../../contexts/MessageContext';
-import { AxiosError } from 'axios';
 
 export default function VerifyEmailForm() {
   const { showMessage } = useMessage();
@@ -26,27 +25,15 @@ export default function VerifyEmailForm() {
     mutationFn: verifyEmail,
     onSuccess: async (data) => {
       const token = data.data?.data?.token;
-      dispatch(setToken(token));
-      try {
-        const userResponse = await requestUser();
-        const userData = userResponse.data?.data;
-
-        if (!userData) {
-          return;
-        }
-        navigate('/home');
-      } catch (userErr) {
-        const axiosError = userErr as AxiosError;
-        const errorMessage =
-          axiosError?.message || 'Error When loading user data';
-        showMessage({ type: 'error', text: errorMessage });
-        console.error('Failed to fetch user:', userErr);
-      }
+      const expiresAt = data.data?.data?.expiresAt;
+      dispatch(setToken({ token: token, expiresAt: expiresAt }));
+      navigate('/profile/complete');
     },
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (err: any) => {
       setError(err?.message || 'Verification failed');
+      showMessage({ type: 'error', text: 'Verification failed' });
     },
   });
 
@@ -58,7 +45,6 @@ export default function VerifyEmailForm() {
       return;
     }
     if (!email) {
-      console.log('Email is required--------------------');
       return;
     }
     mutation.mutate({ email: email, token: tokenInput });
@@ -94,16 +80,16 @@ export default function VerifyEmailForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className=" w-full space-y-5 md:space-y-10">
+    <form onSubmit={handleSubmit} className=" w-full">
       <h2 className="text-3xl font-bold text-center text-primary-teal">
         Verify Your Email
       </h2>
-      <p className="text-sm md:text-md ">
+      <p className="text-sm md:text-md text-neutrals-500 pt-5">
         A verification email has been sent to your provided email address.
         Please check your inbox (and spam folder) for the email containing the
         verification token.
       </p>
-      <div>
+      <div className="py-10">
         <TextField
           id="token"
           label="Verification Token"

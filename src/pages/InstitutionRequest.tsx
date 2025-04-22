@@ -10,21 +10,36 @@ import InstitutionRequestFormTwo from '../features/authentication/components/Ins
 import AuthBanner from '../features/authentication/components/AuthBanner';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import PrimaryButton from '../ui/shared/PrimaryButton';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
+import { useMutation } from '@tanstack/react-query';
+import { sendInstitutionrequest } from '../features/authentication/services/authApi';
 
 export default function InstitutionRequest() {
   const [currentStep, setCurrentStep] = useState(1);
   const totalStep = 2;
+  const navigate = useNavigate();
 
   const methods = useForm<InstitutionRequestSchemaType>({
     resolver: zodResolver(InstitutionRequestSchema),
-    defaultValues: {},
+    defaultValues: {
+      institutionName: '',
+      email: '',
+      subcity: '',
+      street: '',
+    },
     mode: 'onTouched',
   });
   const goToNextStep = async () => {
     let isStepValid = true;
     if (currentStep === 1) {
-      isStepValid = await methods.trigger([]);
+      isStepValid = await methods.trigger([
+        'institutionName',
+        'institutionType',
+        'email',
+        'region',
+        'subcity',
+        'street',
+      ]);
     }
     if (!isStepValid) return;
 
@@ -47,9 +62,34 @@ export default function InstitutionRequest() {
         return <InstitutionRequestFormOne />;
     }
   };
-  const handleSubmit = () => {};
+
+  const mutation = useMutation({
+    mutationFn: sendInstitutionrequest,
+    onSuccess: () => {
+      navigate('/application-submitted');
+    },
+    onError: () => {},
+  });
+
+  const handleSubmit = async () => {
+    const isValid = await methods.trigger();
+    if (!isValid) return;
+
+    const values = methods.getValues();
+
+    const payload: Partial<InstitutionRequestSchemaType> = {
+      institutionName: values.institutionName,
+      institutionType: values.institutionType,
+      email: values.email,
+      region: values.region,
+      subcity: values.subcity,
+      street: values.street,
+    };
+
+    mutation.mutate(payload);
+  };
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-[#DEF1FF] to-[#FFF] flex justify-center items-center overflow-y-auto scrollbar-hide py-10 ">
+    <div className="min-h-screen w-full bg-gradient-to-br from-[#DEF1FF] to-[#FFF] flex justify-center items-center overflow-y-auto scrollbar-hide py-[50px] ">
       <div className="mx-4 bg-white w-[800px] flex flex-col items-center justify-center px-[150px]">
         <div className=" flex flex-col gap-[11px] justify-center items-center h-full w-full  ">
           <AuthBanner />
@@ -108,7 +148,7 @@ export default function InstitutionRequest() {
           {/* Form */}
           <FormProvider {...methods}>{renderForm()}</FormProvider>
           {/* Navigation */}
-          <div className="w-full flex justify-between mt-4">
+          <div className="w-full flex justify-between mt-[37px]">
             {currentStep > 1 && (
               <button
                 className="bg-primary-teal-light px-10 py-2 text-secondary-burgandy rounded-md font-bold"
@@ -120,20 +160,20 @@ export default function InstitutionRequest() {
             <div className="flex-1" />
             {currentStep == totalStep ? (
               <PrimaryButton
-                text="Finish"
+                text="COMPLETE"
                 className="px-10"
                 onClick={handleSubmit}
               />
             ) : (
               <PrimaryButton
-                text="Next"
+                text="NEXT"
                 className="px-10"
                 onClick={goToNextStep}
               />
             )}
           </div>
         </div>
-        <div className="my-7">
+        <div className="my-7 pb-10">
           <p className="text-primary-teal text-2xl">
             Already have an account?
             <Link

@@ -25,22 +25,19 @@ export default function VerifyEmail() {
     }
   };
   return (
-    <div className="flex justify-center h-screen ">
-      <div className="hidden md:flex w-1/2 h-full">
-        <img
-          src="./images/login_image.png"
-          className="w-full h-full object-cover rounded-l-2xl"
-          alt=""
-        />
-      </div>
-      <div className="flex flex-col justify-center items-center min-w-96 sm:w-[400px] gap-3 m-auto px-4">
-        <AuthBanner />
-        <VerifyEmailForm />
-        <div className="mt-5">
-          <p className="text-primary-teal text-2xl">
-            Didn&#x27;t receive the email?
-            <TextButton text="Send again" onClick={handleResendEmail} />
-          </p>
+    <div className="h-screen w-full bg-gradient-to-b from-[#DEF1FF] to-[#DEF1FF4D] flex justify-center items-center backdrop-blur-[11px] ">
+      <div className="w-[500px] gap-[25px] p-[34px]  rounded-[17px] bg-white flex flex-col items-center ">
+        <div className="flex w-[968px] rounded-[30px]">
+          <div className="flex flex-col justify-center items-center min-w-96 sm:w-[400px] gap-3 m-auto px-4">
+            <AuthBanner />
+            <VerifyEmailForm />
+            <div className="mt-5">
+              <p className="text-primary-teal text-2xl">
+                Didn&#x27;t receive the email?
+                <TextButton text="Send again" onClick={handleResendEmail} />
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -16,12 +16,23 @@ import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../../data/hooks';
 import { setEmail } from '../../../data/authSlice';
 import { useMessage } from '../../../contexts/MessageContext';
+import { AxiosError } from 'axios';
+
+type ValidationErrorResponse = {
+  status: 'error';
+  message: string;
+  errors?: Record<string, string>;
+};
 
 export default function RegisterForm() {
   const { showMessage } = useMessage();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  type RegisterFormErrors = Partial<Record<keyof RegisterFormData, string>>;
+  type RegisterFormErrors = Partial<
+    Record<keyof RegisterFormData, string> & {
+      noneField: string;
+    }
+  >;
   const [form, setForm] = useState<RegisterFormData>({
     firstName: '',
     lastName: '',
@@ -37,8 +48,7 @@ export default function RegisterForm() {
 
   const mutation = useMutation({
     mutationFn: registerUser,
-    onSuccess: (data) => {
-      console.log('Registration successful:', data);
+    onSuccess: () => {
       showMessage({
         type: 'success',
         text: 'Registration successful, now verify your email.',
@@ -48,8 +58,21 @@ export default function RegisterForm() {
       navigate('/verify-email');
     },
     onError: (err) => {
-      showMessage({ type: 'error', text: 'Something went wrong' });
-      console.error('Registration error:', err);
+      const axiosError = err as AxiosError<ValidationErrorResponse>;
+      const response = axiosError.response?.data;
+      if (response?.errors) {
+        setErrors(response.errors);
+      }
+      if (response?.message) {
+        setErrors((prev) => ({
+          ...prev,
+          noneField: response.message,
+        }));
+      }
+
+      const fallbackMessage =
+        response?.message || 'Something went wrong, please try again.';
+      showMessage({ type: 'error', text: fallbackMessage });
     },
   });
 
@@ -123,6 +146,13 @@ export default function RegisterForm() {
       onSubmit={handleSubmit}
       className="w-full space-y-4 md:space-y-5 py-10"
     >
+      {errors.noneField && (
+        <div className=" flex justify-center ">
+          <p className="text-red-500 text-center text-2xl ">
+            {errors.noneField}
+          </p>
+        </div>
+      )}
       <div>
         <TextField
           label="First Name"

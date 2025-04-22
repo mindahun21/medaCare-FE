@@ -25,7 +25,7 @@ export default function ChooseAccountType() {
         {/* Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 pt-[68px] gap-[77px] ">
           <div
-            className={`flex flex-col w-[288px]  shadow-md rounded-[6px] items-center px-3 pb-2 ${
+            className={`flex flex-col w-[288px]  shadow-md rounded-[6px] items-center px-3 pb-2 cursor-pointer ${
               accountType == 'physician'
                 ? 'border-[1.5px] border-[#03A9F4] shadow-[#03A9F4] '
                 : 'border-[1px] border-[#E5E5E5] shadow-[#E5E5E5] '
@@ -50,7 +50,7 @@ export default function ChooseAccountType() {
           </div>
 
           <div
-            className={`flex flex-col w-[288px] shadow-sm rounded-[6px] items-center px-3 pb-2 ${
+            className={`flex flex-col w-[288px] shadow-sm rounded-[6px] items-center px-3 pb-2 cursor-pointer ${
               accountType == 'institution'
                 ? 'border-[1.5px] border-[#03A9F4] shadow-[#03A9F4] '
                 : 'border-[1px] border-[#E5E5E5] shadow-[#E5E5E5] '

@@ -47,7 +47,7 @@ function FileUploadInput<T extends FieldValues>({
   const fieldError = errors[name] as FieldError | undefined;
 
   return (
-    <div className="flex flex-col gap-2 p-5 border rounded-xl border-gray-200 shadow-md">
+    <div className="flex flex-col gap-2 p-5 border rounded-xl border-gray-200 shadow-md cursor-pointer">
       <p className="text-xl font-bold">{label}</p>
       {description && <p className="text-sm text-gray-500">{description}</p>}
 

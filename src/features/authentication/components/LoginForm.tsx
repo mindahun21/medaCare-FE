@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
-import { loginUser, requestUser } from '../services/authApi';
+import { loginUser } from '../services/authApi';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import {
@@ -17,6 +17,11 @@ import { setToken } from '../../../data/authSlice';
 import { useNavigate } from 'react-router-dom';
 import { useMessage } from '../../../contexts/MessageContext';
 import { AxiosError } from 'axios';
+
+type ErrorResponse = {
+  status: string;
+  message: string;
+};
 
 export default function LoginForm() {
   const { showMessage } = useMessage();
@@ -36,38 +41,33 @@ export default function LoginForm() {
   const mutation = useMutation({
     mutationFn: loginUser,
     onSuccess: async (data) => {
-      console.log('data after login:', data);
       const token = data.data?.data?.token;
       const expiresAt = data.data?.data?.expiresAt;
-      try {
-        const userResponse = await requestUser();
-        const userData = userResponse.data?.data;
-
-        if (!userData) {
-          console.error('User data not found');
-          return;
-        }
-        console.log('User data:', userData);
-        showMessage({ type: 'success', text: 'Login Successful!' });
-        dispatch(setToken({ token: token, expiresAt: expiresAt }));
-        navigate('/home');
-      } catch (userErr) {
-        showMessage({
-          type: 'error',
-          text: 'Something went wrong, please try again later!',
-        });
-        console.error('Failed to fetch user:', userErr);
-      }
+      dispatch(setToken({ token: token, expiresAt: expiresAt }));
+      showMessage({ type: 'success', text: 'Login Successful!' });
+      navigate('/home');
     },
     onError: (err) => {
       const axiosError = err as AxiosError;
-      if (axiosError.response?.status === 401) {
-        setErrors((prev) => ({
-          ...prev,
-          noneField: 'Email or password is incorrect',
-        }));
+      const errorData = axiosError.response?.data as ErrorResponse;
+
+      if (axiosError) {
+        if (axiosError.response?.status === 401) {
+          setErrors((prev) => ({
+            ...prev,
+            noneField: 'Email or password is incorrect',
+          }));
+        } else if (errorData.message) {
+          showMessage({
+            type: 'error',
+            text: errorData.message,
+          });
+          setErrors((prev) => ({
+            ...prev,
+            noneField: errorData.message,
+          }));
+        }
       }
-      console.log('Login failed. Please try again.', axiosError.response?.data);
       showMessage({ type: 'error', text: 'Something went wrong!' });
     },
   });

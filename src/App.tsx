@@ -15,6 +15,8 @@ import GlobalMessage from './ui/GlobalMessage';
 import CompletePhysicianProfile from './pages/CompletePhysicianProfile';
 import InstitutionRequest from './pages/InstitutionRequest';
 import ChooseAccountType from './pages/ChooseAccountType';
+import AccountVerified from './pages/AccountVerified';
+import ApplicationSubmited from './features/authentication/components/ApplicationSubmited';
 
 const queryClient = new QueryClient();
 
@@ -31,8 +33,13 @@ const router = createBrowserRouter([
   { path: 'profile/complete', element: <CompletePhysicianProfile /> },
   { path: 'login', element: <Login /> },
   { path: 'register', element: <Register /> },
+  { path: 'account/verified', element: <AccountVerified /> },
   { path: 'choose-accounttype', element: <ChooseAccountType /> },
   { path: 'institution-request', element: <InstitutionRequest /> },
+  {
+    path: 'application-submitted',
+    element: <ApplicationSubmited />,
+  },
   { path: 'verify-email', element: <VerifyEmail /> },
   { path: 'unauthorized', element: <Unauthorized /> },
 

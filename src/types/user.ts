@@ -1,6 +1,6 @@
 export type Role = {
   id: number;
-  name: 'USER' | 'ADMIN' | 'INSTITUTION';
+  name: 'USER' | 'ADMIN' | 'INSTITUTION' | 'PHYSICIAN';
   description: string;
   createdAt: string;
   updatedAt: string;
@@ -17,7 +17,7 @@ export type User = {
   email: string;
   firstLogin: boolean;
   verified: boolean;
-  gender: string;
+  gender?: string;
   origin: string;
   role: Role;
   createdAt: string;

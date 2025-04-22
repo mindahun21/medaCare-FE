@@ -13,9 +13,15 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import CompleteProfileFormTwo from '../features/profile/components/physician/CompleteProfileFormTwo';
 import { useMutation } from '@tanstack/react-query';
 import { submitPhysicianProfile } from '../features/profile/services/completeProfile';
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { RootState } from '../data/store';
 
 export default function CompletePhysicianProfile() {
-  const [currentStep, setCurrentStep] = useState(2);
+  const { user } = useSelector((state: RootState) => state.auth);
+  console.log('user on complete profile :', user);
+  const [currentStep, setCurrentStep] = useState(1);
+  const navigate = useNavigate();
   const totalStep = 3;
 
   const methods = useForm<CompletePhysicianProfileType>({
@@ -52,15 +58,25 @@ export default function CompletePhysicianProfile() {
 
   const mutation = useMutation({
     mutationFn: submitPhysicianProfile,
-    onSuccess: () => {},
+    onSuccess: () => {
+      navigate('/application-submitted');
+    },
     onError: () => {},
   });
 
   const handleSubmit = async () => {
     const isValid = await methods.trigger();
     if (!isValid) return;
-    const formData = methods.getValues();
-    mutation.mutate(formData);
+    const values = methods.getValues();
+
+    const payload: Partial<CompletePhysicianProfileType> = {
+      phoneNumber: values.phoneNumber,
+      dateOfBirth: values.dateOfBirth,
+      gender: values.gender,
+    };
+    mutation.mutate(payload);
+
+    navigate('/application-submitted');
   };
   const renderForm = () => {
     switch (currentStep) {
@@ -77,7 +93,7 @@ export default function CompletePhysicianProfile() {
 
   return (
     <div className="min-h-screen w-full gradient-teal-light flex justify-center items-center overflow-y-auto scrollbar-hide">
-      <div className="mx-4 bg-white min-h-[700px flex justify-center w-full sm:w-[500px] md:w-[700px] rounded-2xl shadow-lg my-4">
+      <div className="mx-4 bg-white min-h-[700px flex justify-center w-full sm:w-[500px] md:w-[700px] rounded-2xl shadow-lg my-[50px]">
         <div className=" flex flex-col gap-5 justify-center items-center sm:py-10 h-full w-full max-w-[500px] ">
           <AuthBanner />
           <h1 className="text-4xl font-semibold text-center gradient-primary">
@@ -85,7 +101,7 @@ export default function CompletePhysicianProfile() {
           </h1>
 
           {/* Stepper */}
-          <div className="flex w-full  items-center justify-between my-4">
+          <div className="flex  items-center my-[11px]">
             {Array.from({ length: totalStep }, (_, index) => {
               const step = index + 1;
               const isCompleted = currentStep > step;
@@ -95,20 +111,22 @@ export default function CompletePhysicianProfile() {
                 <React.Fragment key={index}>
                   <div className="flex flex-col items-center">
                     <div
-                      className={`h-10 w-10 rounded-full flex items-center justify-center ${
+                      className={`w-[22px] h-[22px] rounded-full flex items-center justify-center ${
                         isCompleted
                           ? 'text-4xl'
                           : 'text-white text-sm font-bold shadow-md transition-all duration-300'
                       }  ${
                         isCompleted
-                          ? 'text-primary-teal'
+                          ? 'text-primary-blues-500'
                           : isActive
-                          ? 'gradient-teal'
+                          ? 'bg-primary-blues-500'
                           : 'bg-gray-300'
                       }`}
                     >
                       {isCompleted ? (
-                        <CheckCircleIcon fontSize="large" />
+                        <CheckCircleIcon
+                          style={{ height: '22px', width: '22px' }}
+                        />
                       ) : (
                         step
                       )}
@@ -119,8 +137,10 @@ export default function CompletePhysicianProfile() {
                   </div>
                   {step !== totalStep && (
                     <div
-                      className={`h-1 flex-1 mx-2 rounded-full transition-all duration-300 ${
-                        currentStep > step ? 'bg-primary-teal' : 'bg-gray-300'
+                      className={`border-b-[1px] w-[112px] rounded-full transition-all duration-300 ${
+                        currentStep > step
+                          ? 'text-primary-blues-500'
+                          : 'bg-[#BDBDBD] '
                       }`}
                     ></div>
                   )}
@@ -144,7 +164,7 @@ export default function CompletePhysicianProfile() {
             )}
             <div className="flex-1" />
             {currentStep == totalStep ? (
-              <PrimaryButton text="Finish" onClick={handleSubmit} />
+              <PrimaryButton text="COMPLETE" onClick={handleSubmit} />
             ) : (
               <PrimaryButton text="Next" onClick={goToNextStep} />
             )}

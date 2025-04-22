@@ -19,7 +19,7 @@ export const CompletePhysicianProfileSchema = z.object({
     }, 'Date of birth must be in the past'),
   nationalId: z
     .custom<File>((file) => file instanceof File, {
-      message: 'File is required',
+      message: 'this is required field',
     })
     .refine((file) => file.size <= 25 * 1024 * 1024, {
       message: 'File size should not exceed 25 MB',
