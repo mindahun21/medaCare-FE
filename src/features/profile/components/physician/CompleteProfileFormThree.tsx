@@ -11,36 +11,27 @@ export default function CompleteProfileFormThree() {
         label="Upload Medical Lisence Document"
         accept={{
           'application/pdf': ['.pdf'],
-          'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-            ['.docx'],
-          'application/msword': ['.doc'],
         }}
         maxSize={25 * 1024 * 1024} // 25MB
-        description="Please upload files in pdf, docx or doc format and make sure the file size is under 25 MB."
+        description="Please upload files in pdf format and make sure the file size is under 25 MB."
       />
       <FileUploadInput<CompletePhysicianProfileType>
         name="specialization"
         label="Upload Specializations"
         accept={{
           'application/pdf': ['.pdf'],
-          'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-            ['.docx'],
-          'application/msword': ['.doc'],
         }}
         maxSize={25 * 1024 * 1024} // 25MB
-        description="Please upload files in pdf, docx or doc format and make sure the file size is under 25 MB."
+        description="Please upload files in pdf format and make sure the file size is under 25 MB."
       />
       <FileUploadInput<CompletePhysicianProfileType>
-        name="medicalLicense"
+        name="degreeCertificate"
         label="Upload Degree Certificate"
         accept={{
           'application/pdf': ['.pdf'],
-          'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-            ['.docx'],
-          'application/msword': ['.doc'],
         }}
         maxSize={25 * 1024 * 1024} // 25MB
-        description="Please upload files in pdf, docx or doc format and make sure the file size is under 25 MB."
+        description="Please upload files in pdf format and make sure the file size is under 25 MB."
       />
     </div>
   );

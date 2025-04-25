@@ -10,8 +10,10 @@ export default function CompleteProfileFormOne() {
     formState: { errors },
   } = useFormContext<CompletePhysicianProfileType>();
   return (
-    <div className="w-full space-y-5 md:space-y-10 ">
-      <h1 className="text-primary-teal text-2xl">Personal Information</h1>
+    <div className="w-full flex flex-col gap-[37px]">
+      <h1 className="text-primary-teal text-[20px] leading-[28px] ">
+        Personal Information
+      </h1>
       <div>
         <TextField
           {...register('phoneNumber')}

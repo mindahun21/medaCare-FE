@@ -8,21 +8,21 @@ import Services from '../ui/guest/Services';
 
 export default function Guest() {
   return (
-    <div className="guest-bg-gradient">
-      <div className="flex flex-col overflow-y-auto scrollbar-hide font-manrope ">
-        <div className="flex flex-col pt-[30px] max-w-[1440px] mx-auto">
-          <div className="h-[108px]">
-            <Header />
-          </div>
+    <div className="flex flex-col overflow-y-auto scrollbar-hide font-manrope  guest-bg-gradient">
+      <div className="flex flex-col max-w-[1440px] mx-auto px-5">
+        <div className="h-[108px]">
+          <Header />
+        </div>
+        <div className="px-[25px] pt-[30px]">
           <Hero />
           <About />
         </div>
-
-        <HowItWorks />
-        <Services />
-        <ContactUs />
-        <Footer />
       </div>
+
+      <HowItWorks />
+      <Services />
+      <ContactUs />
+      <Footer />
     </div>
   );
 }

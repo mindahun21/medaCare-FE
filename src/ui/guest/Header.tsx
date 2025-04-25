@@ -23,11 +23,11 @@ export default function Header() {
     <header
       className={`w-full h-[108px] z-50 flex items-center text-neutrals-900 transition-all duration-300 ease-in-out ${
         isScrolled
-          ? 'fixed top-0 left-0 bg-white shadow-md px-20 guest-bg-gradient '
+          ? 'fixed top-0 left-0 bg-white shadow-md px-20 guest-bg-gradient  '
           : 'relative'
       } `}
     >
-      <div className="mx-auto flex justify-between items-center h-full w-full">
+      <div className="mx-auto flex justify-between items-center h-full w-full max-w-[1440px]">
         {/* Logo */}
         <div className="">
           <img

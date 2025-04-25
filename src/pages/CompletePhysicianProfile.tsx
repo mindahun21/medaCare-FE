@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import CompleteProfileFormOne from '../features/profile/components/physician/CompleteProfileFormOne';
 import CompleteProfileFormThree from '../features/profile/components/physician/CompleteProfileFormThree';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -14,10 +14,14 @@ import CompleteProfileFormTwo from '../features/profile/components/physician/Com
 import { useMutation } from '@tanstack/react-query';
 import { submitPhysicianProfile } from '../features/profile/services/completeProfile';
 import { useNavigate } from 'react-router-dom';
-// import { useSelector } from 'react-redux';
-// import { RootState } from '../data/store';
+import { useMessage } from '../contexts/MessageContext';
+import { useSelector } from 'react-redux';
+import { RootState } from '../data/store';
+import PageLoader from '../ui/shared/PageLoader';
 
 export default function CompletePhysicianProfile() {
+  const { user, loading } = useSelector((state: RootState) => state.auth);
+  const { showMessage } = useMessage();
   const [currentStep, setCurrentStep] = useState(1);
   const navigate = useNavigate();
   const totalStep = 3;
@@ -29,6 +33,12 @@ export default function CompletePhysicianProfile() {
     },
     mode: 'onTouched',
   });
+
+  useEffect(() => {
+    if (!loading && !user) {
+      navigate('/login');
+    }
+  }, [user, loading, navigate]);
 
   const goToNextStep = async () => {
     let isStepValid = true;
@@ -59,7 +69,9 @@ export default function CompletePhysicianProfile() {
     onSuccess: () => {
       navigate('/application-submitted');
     },
-    onError: () => {},
+    onError: () => {
+      showMessage({ type: 'error', text: 'application submition failed' });
+    },
   });
 
   const handleSubmit = async () => {
@@ -73,9 +85,10 @@ export default function CompletePhysicianProfile() {
       gender: values.gender,
     };
     mutation.mutate(payload);
-
-    navigate('/application-submitted');
   };
+
+  const stepTitles = ['Personal Info', 'Personal Docs', 'Professional Docs'];
+
   const renderForm = () => {
     switch (currentStep) {
       case 1:
@@ -89,12 +102,16 @@ export default function CompletePhysicianProfile() {
     }
   };
 
+  if (loading || !user) {
+    return <PageLoader />;
+  }
+
   return (
     <div className="min-h-screen w-full gradient-teal-light flex justify-center items-center overflow-y-auto scrollbar-hide">
       <div className="mx-4 bg-white min-h-[700px flex justify-center w-full sm:w-[500px] md:w-[700px] rounded-2xl shadow-lg my-[50px]">
-        <div className=" flex flex-col gap-5 justify-center items-center sm:py-10 h-full w-full max-w-[500px] ">
+        <div className=" flex flex-col gap-2 justify-center items-center sm:py-10 h-full w-full max-w-[500px] ">
           <AuthBanner />
-          <h1 className="text-4xl font-semibold text-center gradient-primary">
+          <h1 className="text-4xl font-semibold text-center gradient-primary pb-3">
             Complete your profile
           </h1>
 
@@ -129,8 +146,14 @@ export default function CompletePhysicianProfile() {
                         step
                       )}
                     </div>
-                    <span className="text-xs text-gray-600 mt-1">
-                      Step {step}
+                    <span
+                      className={`text-xs ${
+                        isCompleted || isActive
+                          ? 'text-[#000000DE] font-bold'
+                          : 'text-[#00000099]'
+                      } mt-3`}
+                    >
+                      {stepTitles[index]}
                     </span>
                   </div>
                   {step !== totalStep && (
@@ -138,13 +161,17 @@ export default function CompletePhysicianProfile() {
                       className={`border-b-[1px] w-[112px] rounded-full transition-all duration-300 ${
                         currentStep > step
                           ? 'text-primary-blues-500'
-                          : 'bg-[#BDBDBD] '
+                          : 'text-[#BDBDBD] '
                       }`}
                     ></div>
                   )}
                 </React.Fragment>
               );
             })}
+          </div>
+
+          <div className="w-full text-primary-blues-500 pt-2">
+            <span>step {currentStep}</span>/ <span>{3}</span>
           </div>
 
           {/* Form */}
@@ -154,7 +181,7 @@ export default function CompletePhysicianProfile() {
           <div className="w-full flex justify-between mt-4">
             {currentStep > 1 && (
               <button
-                className="bg-primary-teal-light px-4 py-2 text-secondary-burgandy rounded-md font-bold"
+                className="bg-neutrals-300 px-4 py-2 text-secondary-burgandy rounded-md font-bold w-[130px] h-[44px] cursor-pointer hover:opacity-90 "
                 onClick={gotoPrev}
               >
                 Back
@@ -162,9 +189,17 @@ export default function CompletePhysicianProfile() {
             )}
             <div className="flex-1" />
             {currentStep == totalStep ? (
-              <PrimaryButton text="COMPLETE" onClick={handleSubmit} />
+              <PrimaryButton
+                text="COMPLETE"
+                onClick={handleSubmit}
+                className="px-[62px] py-[8px]"
+              />
             ) : (
-              <PrimaryButton text="Next" onClick={goToNextStep} />
+              <PrimaryButton
+                text="Next"
+                onClick={goToNextStep}
+                className="px-[62px] py-[8px]"
+              />
             )}
           </div>
         </div>

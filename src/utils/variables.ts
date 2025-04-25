@@ -14,9 +14,13 @@ export const SharedTextFieldProps: Partial<TextFieldProps> = {
     },
     '& .MuiOutlinedInput-root': {
       bgcolor: 'white',
-      color: 'var(--color-primary-teal)',
+      color: '#B0B0B0DE)',
       '& fieldset': {
-        borderColor: 'var(--color-neutrals-300)',
+        borderColor: '#B0B0B0DE',
+      },
+      '& input::placeholder': {
+        color: '#B0B0B0DE',
+        opacity: 1,
       },
       '&:hover fieldset': {
         borderColor: 'var(--color-primary-teal)',

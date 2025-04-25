@@ -1,16 +1,12 @@
 import React, { useState } from 'react';
-import {
-  TextField,
-  Button,
-  CircularProgress,
-  TextFieldProps,
-} from '@mui/material';
+import { TextField, Button, CircularProgress } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 import { useAppDispatch, useAppSelector } from '../../../data/hooks';
 import { useNavigate } from 'react-router-dom';
 import { verifyEmail } from '../services/authApi';
 import { setToken } from '../../../data/authSlice';
 import { useMessage } from '../../../contexts/MessageContext';
+import { SharedTextFieldProps } from '../../../utils/variables';
 
 export default function VerifyEmailForm() {
   const { showMessage } = useMessage();
@@ -48,35 +44,6 @@ export default function VerifyEmailForm() {
       return;
     }
     mutation.mutate({ email: email, token: tokenInput });
-  };
-
-  const SharedTextFieldProps: Partial<TextFieldProps> = {
-    variant: 'outlined',
-    fullWidth: true,
-    autoComplete: 'off',
-    sx: {
-      '& label': {
-        fontWeight: 700,
-        fontSize: '1rem',
-      },
-      '& label.Mui-focused': {
-        color: 'var(--color-primary-teal)',
-      },
-      '& .MuiOutlinedInput-root': {
-        bgcolor: 'white',
-        color: 'var(--color-primary-teal)',
-        '& fieldset': {
-          borderColor: 'var(--color-primary-teal)',
-        },
-        '&:hover fieldset': {
-          borderColor: 'var(--color-primary-teal)',
-        },
-        '&.Mui-focused fieldset': {
-          borderColor: 'var(--color-primary-teal)',
-          borderWidth: 2,
-        },
-      },
-    },
   };
 
   return (

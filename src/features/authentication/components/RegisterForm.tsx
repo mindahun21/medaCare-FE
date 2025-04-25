@@ -8,7 +8,6 @@ import {
   Button,
   CircularProgress,
 } from '@mui/material';
-import type { TextFieldProps } from '@mui/material';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { RegisterFormData } from '../../../types/auth';
@@ -17,6 +16,7 @@ import { useAppDispatch } from '../../../data/hooks';
 import { setEmail } from '../../../data/authSlice';
 import { useMessage } from '../../../contexts/MessageContext';
 import { AxiosError } from 'axios';
+import { SharedTextFieldProps } from '../../../utils/variables';
 
 type ValidationErrorResponse = {
   status: 'error';
@@ -112,35 +112,6 @@ export default function RegisterForm() {
     mutation.mutate(data);
   };
 
-  const sharedTextFieldProps: Partial<TextFieldProps> = {
-    fullWidth: true,
-    variant: 'outlined',
-    autoComplete: 'off',
-    sx: {
-      '& label': {
-        fontWeight: 700,
-        fontSize: '1rem',
-      },
-      '& label.Mui-focused': {
-        color: 'var(--color-primary-teal)',
-      },
-      '& .MuiOutlinedInput-root': {
-        bgcolor: 'white',
-        color: 'var(--color-primary-teal)',
-        '& fieldset': {
-          borderColor: 'var(--color-primary-teal)',
-        },
-        '&:hover fieldset': {
-          borderColor: 'var(--color-primary-teal)',
-        },
-        '&.Mui-focused fieldset': {
-          borderColor: 'var(--color-primary-teal)',
-          borderWidth: 2,
-        },
-      },
-    },
-  };
-
   return (
     <form
       onSubmit={handleSubmit}
@@ -161,7 +132,7 @@ export default function RegisterForm() {
           onChange={handleChange}
           error={!!errors.firstName}
           helperText={errors.firstName}
-          {...sharedTextFieldProps}
+          {...SharedTextFieldProps}
         />
       </div>
       <div>
@@ -172,7 +143,7 @@ export default function RegisterForm() {
           onChange={handleChange}
           error={!!errors.lastName}
           helperText={errors.lastName}
-          {...sharedTextFieldProps}
+          {...SharedTextFieldProps}
         />
       </div>
       <div>
@@ -183,7 +154,7 @@ export default function RegisterForm() {
           onChange={handleChange}
           error={!!errors.email}
           helperText={errors.email}
-          {...sharedTextFieldProps}
+          {...SharedTextFieldProps}
         />
       </div>
       <div>
@@ -210,7 +181,7 @@ export default function RegisterForm() {
               ),
             },
           }}
-          {...sharedTextFieldProps}
+          {...SharedTextFieldProps}
         />
       </div>
       <div>
@@ -237,7 +208,7 @@ export default function RegisterForm() {
               ),
             },
           }}
-          {...sharedTextFieldProps}
+          {...SharedTextFieldProps}
         />
       </div>
 

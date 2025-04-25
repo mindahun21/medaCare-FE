@@ -10,13 +10,13 @@ import {
   Button,
   CircularProgress,
 } from '@mui/material';
-import type { TextFieldProps } from '@mui/material';
 import { LoginFormData } from '../../../types/auth';
 import { useAppDispatch } from '../../../data/hooks';
 import { setToken } from '../../../data/authSlice';
 import { useNavigate } from 'react-router-dom';
 import { useMessage } from '../../../contexts/MessageContext';
 import { AxiosError } from 'axios';
+import { SharedTextFieldProps } from '../../../utils/variables';
 
 type ErrorResponse = {
   status: string;
@@ -92,35 +92,6 @@ export default function LoginForm() {
     e.preventDefault();
     if (!validate()) return;
     mutation.mutate(form);
-  };
-
-  const SharedTextFieldProps: Partial<TextFieldProps> = {
-    variant: 'outlined',
-    fullWidth: true,
-    autoComplete: 'off',
-    sx: {
-      '& label': {
-        fontWeight: 700,
-        fontSize: '0.8rem',
-      },
-      '& label.Mui-focused': {
-        color: 'var(--color-primary-teal)',
-      },
-      '& .MuiOutlinedInput-root': {
-        bgcolor: 'white',
-        color: 'var(--color-primary-teal)',
-        '& fieldset': {
-          borderColor: 'var(--color-primary-teal)',
-        },
-        '&:hover fieldset': {
-          borderColor: 'var(--color-primary-teal)',
-        },
-        '&.Mui-focused fieldset': {
-          borderColor: 'var(--color-primary-teal)',
-          borderWidth: 2,
-        },
-      },
-    },
   };
 
   return (

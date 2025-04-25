@@ -13,11 +13,14 @@ import PrimaryButton from '../ui/shared/PrimaryButton';
 import { Link, useNavigate } from 'react-router';
 import { useMutation } from '@tanstack/react-query';
 import { sendInstitutionrequest } from '../features/authentication/services/authApi';
+import { useMessage } from '../contexts/MessageContext';
 
 export default function InstitutionRequest() {
+  const { showMessage } = useMessage();
   const [currentStep, setCurrentStep] = useState(1);
   const totalStep = 2;
   const navigate = useNavigate();
+  const stepTitles = ['Basic Info', 'Legal Docs'];
 
   const methods = useForm<InstitutionRequestSchemaType>({
     resolver: zodResolver(InstitutionRequestSchema),
@@ -68,7 +71,9 @@ export default function InstitutionRequest() {
     onSuccess: () => {
       navigate('/application-submitted');
     },
-    onError: () => {},
+    onError: () => {
+      showMessage({ type: 'error', text: 'application submition failed' });
+    },
   });
 
   const handleSubmit = async () => {
@@ -88,6 +93,7 @@ export default function InstitutionRequest() {
 
     mutation.mutate(payload);
   };
+
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-[#DEF1FF] to-[#FFF] flex justify-center items-center overflow-y-auto scrollbar-hide py-[50px] ">
       <div className="mx-4 bg-white w-[800px] flex flex-col items-center justify-center px-[150px]">
@@ -129,7 +135,7 @@ export default function InstitutionRequest() {
                       )}
                     </div>
                     <span className="text-xs text-gray-600 mt-1">
-                      Step {step}
+                      {stepTitles[index]}
                     </span>
                   </div>
                   {step !== totalStep && (
@@ -173,7 +179,7 @@ export default function InstitutionRequest() {
             )}
           </div>
         </div>
-        <div className="my-7 pb-10">
+        <div className="mt-20 pb-10">
           <p className="text-primary-teal text-2xl">
             Already have an account?
             <Link

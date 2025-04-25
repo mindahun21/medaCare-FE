@@ -8,7 +8,7 @@ export default function ChooseAccountType() {
   const [accountType, setAccountType] = useState('physician');
   const navigate = useNavigate();
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col pb-20">
       <div className="px-5">
         <Header />
       </div>

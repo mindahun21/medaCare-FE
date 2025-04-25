@@ -2,10 +2,7 @@ import React from 'react';
 
 export default function About() {
   return (
-    <section
-      id="about"
-      className="flex justify-center items-center mx-[83px] relative"
-    >
+    <section id="about" className="flex justify-center items-center relative">
       <div className="w-full p-[2px] rounded-xl bg-gradient-to-r from-[#C5ECFF] to-[#95DDFF]  my-[50px] z-10 mx-[23px] ">
         <div className="w-full flex flex-col bg-gradient-to-br from-[#FFFFFF] to-[#F8FDFF] rounded-[10px] p-[60px] ">
           <h1 className="font-bold text-[33.73px] leading-[42px] text-center">

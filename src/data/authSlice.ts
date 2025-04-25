@@ -92,6 +92,7 @@ const authSlice = createSlice({
       .addCase(fetchUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || 'Failed to fetch user';
+        // localStorage.removeItem('auth');
       });
   },
 });

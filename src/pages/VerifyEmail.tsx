@@ -21,7 +21,7 @@ export default function VerifyEmail() {
     }
   };
   return (
-    <div className="h-screen w-full bg-gradient-to-b from-[#DEF1FF] to-[#DEF1FF4D] flex justify-center items-center backdrop-blur-[11px] ">
+    <div className="min-h-screen py-10 w-full bg-gradient-to-b from-[#DEF1FF] to-[#DEF1FF4D] flex justify-center items-center backdrop-blur-[11px] ">
       <div className="w-[500px] gap-[25px] p-[34px]  rounded-[17px] bg-white flex flex-col items-center ">
         <div className="flex w-[968px] rounded-[30px]">
           <div className="flex flex-col justify-center items-center min-w-96 sm:w-[400px] gap-3 m-auto px-4">

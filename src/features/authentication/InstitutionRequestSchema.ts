@@ -154,43 +154,25 @@ export const InstitutionRequestSchema = z
     subcity: z.string().optional(),
     street: z.string().min(1, 'street is required'),
     businessDocument: z
-      .custom<File>((file) => file instanceof File, {
-        message: 'File is required field',
+      .custom<File | null>((file) => file instanceof File || file === null, {
+        message: 'File is required',
       })
-      .refine((file) => file.size <= 25 * 1024 * 1024, {
+      .refine((file) => !file || file.size <= 25 * 1024 * 1024, {
         message: 'File size should not exceed 25 MB',
       })
-      .refine(
-        (file) =>
-          [
-            'application/pdf',
-            'application/msword',
-            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-          ].includes(file.type),
-        {
-          message:
-            'Invalid file type. Only PDF, DOC, and DOCX files are allowed',
-        }
-      ),
+      .refine((file) => !file || ['application/pdf'].includes(file.type), {
+        message: 'Invalid file type. Only PDF files are allowed',
+      }),
     medicalLicense: z
-      .custom<File>((file) => file instanceof File, {
-        message: 'File is required field',
+      .custom<File | null>((file) => file instanceof File || file === null, {
+        message: 'File is required',
       })
-      .refine((file) => file.size <= 25 * 1024 * 1024, {
+      .refine((file) => !file || file.size <= 25 * 1024 * 1024, {
         message: 'File size should not exceed 25 MB',
       })
-      .refine(
-        (file) =>
-          [
-            'application/pdf',
-            'application/msword',
-            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-          ].includes(file.type),
-        {
-          message:
-            'Invalid file type. Only PDF, DOC, and DOCX files are allowed',
-        }
-      ),
+      .refine((file) => !file || ['application/pdf'].includes(file.type), {
+        message: 'Invalid file type. Only PDF files are allowed',
+      }),
   })
   .superRefine((data, ctx) => {
     const subcities = subcityOptions[data.region];
