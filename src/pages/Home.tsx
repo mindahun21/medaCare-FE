@@ -1,11 +1,12 @@
-import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { RootState } from '../data/store';
+import { useNavigate } from 'react-router-dom';
 
 export default function Home() {
-  return (
-    <div className=" h-screen w-screen flex items-center justify-center">
-      <Link to="/register" className="text-3xl text-green-600 hover:underline">
-        Get Started
-      </Link>
-    </div>
-  );
+  const navigate = useNavigate();
+  const { user } = useSelector((state: RootState) => state.auth);
+  if (user?.firstLogin) {
+    navigate('/profile/complete');
+  }
+  return <div className="text-9xl text-green-900">home page</div>;
 }

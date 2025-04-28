@@ -10,11 +10,26 @@ import {
   Button,
   CircularProgress,
 } from '@mui/material';
-import type { TextFieldProps } from '@mui/material';
-import { LoginFormData } from '../types';
+import { LoginFormData } from '../../../types/auth';
+import { useAppDispatch } from '../../../data/hooks';
+import { setToken } from '../../../data/authSlice';
+import { useNavigate } from 'react-router-dom';
+import { useMessage } from '../../../contexts/MessageContext';
+import { AxiosError } from 'axios';
+import { SharedTextFieldProps } from '../../../utils/variables';
+
+type ErrorResponse = {
+  status: string;
+  message: string;
+};
 
 export default function LoginForm() {
-  type LoginFormErrors = Partial<Record<'email' | 'password', string>>;
+  const { showMessage } = useMessage();
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  type LoginFormErrors = Partial<
+    Record<'email' | 'password' | 'noneField', string>
+  >;
   const [form, setForm] = useState<LoginFormData>({
     email: '',
     password: '',
@@ -25,11 +40,35 @@ export default function LoginForm() {
 
   const mutation = useMutation({
     mutationFn: loginUser,
-    onSuccess: () => {
-      alert('Login successful!');
+    onSuccess: async (data) => {
+      const token = data.data?.data?.token;
+      const expiresAt = data.data?.data?.expiresAt;
+      dispatch(setToken({ token: token, expiresAt: expiresAt }));
+      showMessage({ type: 'success', text: 'Login Successful!' });
+      navigate('/home');
     },
-    onError: () => {
-      alert('Login failed. Please try again.');
+    onError: (err) => {
+      const axiosError = err as AxiosError;
+      const errorData = axiosError.response?.data as ErrorResponse;
+
+      if (axiosError) {
+        if (axiosError.response?.status === 401) {
+          setErrors((prev) => ({
+            ...prev,
+            noneField: 'Email or password is incorrect',
+          }));
+        } else if (errorData.message) {
+          showMessage({
+            type: 'error',
+            text: errorData.message,
+          });
+          setErrors((prev) => ({
+            ...prev,
+            noneField: errorData.message,
+          }));
+        }
+      }
+      showMessage({ type: 'error', text: 'Something went wrong!' });
     },
   });
 
@@ -55,43 +94,18 @@ export default function LoginForm() {
     mutation.mutate(form);
   };
 
-  const SharedTextFieldProps: Partial<TextFieldProps> = {
-    variant: 'outlined',
-    fullWidth: true,
-    autoComplete: 'off',
-    sx: {
-      '& label': {
-        fontWeight: 700,
-        fontSize: '1rem',
-      },
-      '& label.Mui-focused': {
-        color: 'var(--color-primary-teal)',
-      },
-      '& .MuiOutlinedInput-root': {
-        bgcolor: 'white',
-        color: 'var(--color-primary-teal)',
-        '& fieldset': {
-          borderColor: 'var(--color-primary-teal)',
-        },
-        '&:hover fieldset': {
-          borderColor: 'var(--color-primary-teal)',
-        },
-        '&.Mui-focused fieldset': {
-          borderColor: 'var(--color-primary-teal)',
-          borderWidth: 2,
-        },
-      },
-    },
-  };
-
   return (
     <form
       onSubmit={handleSubmit}
-      className="p-8 w-full space-y-5 md:space-y-10"
+      className="w-full space-y-5 md:space-y-10 py-10"
     >
+      {errors.noneField && (
+        <p className="text-red-500 text-center">{errors.noneField}</p>
+      )}
       <div>
         <TextField
           id="email"
+          name="email"
           label="Email"
           value={form.email}
           onChange={handleChange}
@@ -103,6 +117,7 @@ export default function LoginForm() {
       <div>
         <TextField
           id="password"
+          name="password"
           label="Password"
           type={showPassword ? 'text' : 'password'}
           value={form.password}
@@ -142,12 +157,15 @@ export default function LoginForm() {
             backgroundColor: 'var(--color-secondary-burgandy)',
           },
           '&.Mui-disabled': {
-            opacity: 0.5,
+            backgroundColor: 'var(--color-secondary-burgandy-disabled)',
+            opacity: 0.8,
           },
         }}
       >
         {mutation.isPending ? (
-          <CircularProgress size={20} color="inherit" />
+          <span className="text-primary-teal">
+            <CircularProgress size={20} color="inherit" />
+          </span>
         ) : (
           'Sign In'
         )}

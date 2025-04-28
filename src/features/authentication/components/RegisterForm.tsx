@@ -8,19 +8,39 @@ import {
   Button,
   CircularProgress,
 } from '@mui/material';
-import type { TextFieldProps } from '@mui/material';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { RegisterFormData } from '../types';
+import { RegisterFormData } from '../../../types/auth';
+import { useNavigate } from 'react-router-dom';
+import { useAppDispatch } from '../../../data/hooks';
+import { setEmail } from '../../../data/authSlice';
+import { useMessage } from '../../../contexts/MessageContext';
+import { AxiosError } from 'axios';
+import { SharedTextFieldProps } from '../../../utils/variables';
+
+type ValidationErrorResponse = {
+  status: 'error';
+  message: string;
+  errors?: Record<string, string>;
+};
 
 export default function RegisterForm() {
-  type RegisterFormErrors = Partial<Record<keyof RegisterFormData, string>>;
+  const { showMessage } = useMessage();
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  type RegisterFormErrors = Partial<
+    Record<keyof RegisterFormData, string> & {
+      noneField: string;
+    }
+  >;
   const [form, setForm] = useState<RegisterFormData>({
     firstName: '',
     lastName: '',
     email: '',
     password: '',
     confirmPassword: '',
+    origin: 'SELF_REGISTERED',
+    role: 'PHYSICIAN',
   });
 
   const [showPassword, setShowPassword] = useState(false);
@@ -29,10 +49,30 @@ export default function RegisterForm() {
   const mutation = useMutation({
     mutationFn: registerUser,
     onSuccess: () => {
-      alert('Registered successfully!');
+      showMessage({
+        type: 'success',
+        text: 'Registration successful, now verify your email.',
+      });
+      const email = form.email;
+      dispatch(setEmail(email));
+      navigate('/verify-email');
     },
-    onError: () => {
-      alert('Registration failed. Try again.');
+    onError: (err) => {
+      const axiosError = err as AxiosError<ValidationErrorResponse>;
+      const response = axiosError.response?.data;
+      if (response?.errors) {
+        setErrors(response.errors);
+      }
+      if (response?.message) {
+        setErrors((prev) => ({
+          ...prev,
+          noneField: response.message,
+        }));
+      }
+
+      const fallbackMessage =
+        response?.message || 'Something went wrong, please try again.';
+      showMessage({ type: 'error', text: fallbackMessage });
     },
   });
 
@@ -67,43 +107,23 @@ export default function RegisterForm() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validate()) return;
-    mutation.mutate(form);
-  };
-
-  const sharedTextFieldProps: Partial<TextFieldProps> = {
-    fullWidth: true,
-    variant: 'outlined',
-    autoComplete: 'off',
-    sx: {
-      '& label': {
-        fontWeight: 700,
-        fontSize: '1rem',
-      },
-      '& label.Mui-focused': {
-        color: 'var(--color-primary-teal)',
-      },
-      '& .MuiOutlinedInput-root': {
-        bgcolor: 'white',
-        color: 'var(--color-primary-teal)',
-        '& fieldset': {
-          borderColor: 'var(--color-primary-teal)',
-        },
-        '&:hover fieldset': {
-          borderColor: 'var(--color-primary-teal)',
-        },
-        '&.Mui-focused fieldset': {
-          borderColor: 'var(--color-primary-teal)',
-          borderWidth: 2,
-        },
-      },
-    },
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { confirmPassword, ...data } = form;
+    mutation.mutate(data);
   };
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="p-8 w-full space-y-5 md:space-y-10"
+      className="w-full space-y-4 md:space-y-5 py-10"
     >
+      {errors.noneField && (
+        <div className=" flex justify-center ">
+          <p className="text-red-500 text-center text-2xl ">
+            {errors.noneField}
+          </p>
+        </div>
+      )}
       <div>
         <TextField
           label="First Name"
@@ -112,7 +132,7 @@ export default function RegisterForm() {
           onChange={handleChange}
           error={!!errors.firstName}
           helperText={errors.firstName}
-          {...sharedTextFieldProps}
+          {...SharedTextFieldProps}
         />
       </div>
       <div>
@@ -123,7 +143,7 @@ export default function RegisterForm() {
           onChange={handleChange}
           error={!!errors.lastName}
           helperText={errors.lastName}
-          {...sharedTextFieldProps}
+          {...SharedTextFieldProps}
         />
       </div>
       <div>
@@ -134,7 +154,7 @@ export default function RegisterForm() {
           onChange={handleChange}
           error={!!errors.email}
           helperText={errors.email}
-          {...sharedTextFieldProps}
+          {...SharedTextFieldProps}
         />
       </div>
       <div>
@@ -161,7 +181,7 @@ export default function RegisterForm() {
               ),
             },
           }}
-          {...sharedTextFieldProps}
+          {...SharedTextFieldProps}
         />
       </div>
       <div>
@@ -188,7 +208,7 @@ export default function RegisterForm() {
               ),
             },
           }}
-          {...sharedTextFieldProps}
+          {...SharedTextFieldProps}
         />
       </div>
 
@@ -203,15 +223,18 @@ export default function RegisterForm() {
           borderRadius: '0.3rem',
           backgroundColor: 'var(--color-secondary-burgandy)',
           '&:hover': {
-            backgroundColor: 'var(--color-secondary-burgandy)',
+            backgroundColor: 'var(--color-secondary-burgandy-hover)',
           },
           '&.Mui-disabled': {
-            opacity: 0.5,
+            backgroundColor: 'var(--color-secondary-burgandy-disabled)',
+            opacity: 0.8,
           },
         }}
       >
         {mutation.isPending ? (
-          <CircularProgress size={20} color="inherit" />
+          <span className="text-primary-teal">
+            <CircularProgress size={20} color="inherit" />
+          </span>
         ) : (
           'Sign Up'
         )}
