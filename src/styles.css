@@ -10,6 +10,7 @@
 
   --color-primary-teal: #1d586e;
   --color-primary-teal-light: #84c4d6;
+  --color-primary-teal-100: #def1ff;
   --color-primary-blues-200: #b6e6ff;
   --color-primary-blues-500: #00a4f4;
   --color-primary-blues-700: #0069ab;
@@ -24,6 +25,8 @@
   --color-neutrals-300: #b0b0b0;
   --color-secondary-gray: #6d6d6d;
   --color-secondary-gray-light: #b0b0b0;
+  --color-secondary-gray-surface: #f2f2f2;
+  --color-secondary-gray-border: #e4e4e4;
 }
 
 .gradient-primary {

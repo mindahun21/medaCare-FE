@@ -3,6 +3,7 @@ import TextField from '@mui/material/TextField';
 import { SharedTextFieldProps } from '../../../../utils/variables';
 import { CompletePhysicianProfileType } from '../../completeProfileSchema';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import FileUploadInput from '../../../../ui/shared/inputFields/FileUploadInput';
 
 export default function CompleteProfileFormOne() {
   const {
@@ -65,6 +66,17 @@ export default function CompleteProfileFormOne() {
           }}
         />
       </div>
+      <FileUploadInput<CompletePhysicianProfileType>
+        name="profilePhoto"
+        label="Upload profile photo"
+        accept={{
+          'image/jpeg': ['.jpeg'],
+          'image/png': ['.png'],
+          'image/jpg': ['.jpg'],
+        }}
+        maxSize={5 * 1024 * 1024}
+        description="Please upload file only in jpeg, png, jpg format and makesure the file size is under 5 MB."
+      />
     </div>
   );
 }

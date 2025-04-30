@@ -1,6 +1,6 @@
 export type Role = {
   id: number;
-  name: 'USER' | 'ADMIN' | 'INSTITUTION' | 'PHYSICIAN';
+  name: 'PATIENT' | 'ADMIN' | 'INSTITUTION' | 'PHYSICIAN';
   description: string;
   createdAt: string;
   updatedAt: string;

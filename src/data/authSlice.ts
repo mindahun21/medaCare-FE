@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { User } from '../types/user';
 import { requestUser } from '../features/dashboard/services/user';
+import { RootState } from './store';
 
 // Define a type for the auth state
 interface AuthState {
@@ -16,7 +17,6 @@ interface AuthState {
 // Load initial token from localStorage
 const persistedAuth = localStorage.getItem('auth');
 const parsedAuth = persistedAuth ? JSON.parse(persistedAuth) : null;
-
 const initialState: AuthState = {
   user: null,
   token: parsedAuth?.token || null,
@@ -42,6 +42,17 @@ export const fetchUser = createAsyncThunk<User, void, { rejectValue: string }>(
     }
   }
 );
+
+export const initializeAuth = createAsyncThunk<
+  void,
+  void,
+  { state: RootState }
+>('auth/initializeAuth', async (_, { dispatch, getState }) => {
+  const { token } = getState().auth;
+  if (token) {
+    await dispatch(fetchUser());
+  }
+});
 
 const authSlice = createSlice({
   name: 'auth',
@@ -92,7 +103,7 @@ const authSlice = createSlice({
       .addCase(fetchUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || 'Failed to fetch user';
-        // localStorage.removeItem('auth');
+        localStorage.removeItem('auth');
       });
   },
 });

@@ -1,60 +1,46 @@
-import React, { useEffect, useState } from 'react';
-import { Navigate, Outlet } from 'react-router-dom';
+import { Navigate, Outlet, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { selectIsAuthenticated } from '../../features/authentication/AuthSelectors';
+import {
+  selectIsAuthenticated,
+  selectUserRole,
+} from '../../features/authentication/AuthSelectors';
 import { RootState } from '../../data/store';
-import { useAppDispatch } from '../../data/hooks';
-import { fetchUser, logout } from '../../data/authSlice';
-import { CircularProgress } from '@mui/material';
+import PageLoader from '../shared/PageLoader';
+import { useEffect } from 'react';
+import Unauthorized from './Unauthorized';
 
 export default function ProtectedRoute({
   allowedRoles,
 }: {
   allowedRoles: string[];
 }) {
-  const dispatch = useAppDispatch();
-
   const isAuthenticated = useSelector(selectIsAuthenticated);
-  const { user, expiresAt, loading } = useSelector(
+  const role = useSelector(selectUserRole);
+  const { loading, token, user } = useSelector(
     (state: RootState) => state.auth
   );
-
-  const [hasCheckedAuth, setHasCheckedAuth] = useState(false);
-
-  useEffect(() => {
-    const auth = localStorage.getItem('auth');
-    const parsed = auth ? JSON.parse(auth) : null;
-
-    if (parsed?.token && !user) {
-      dispatch(fetchUser()).finally(() => setHasCheckedAuth(true));
-    } else {
-      setHasCheckedAuth(true);
-    }
-  }, [dispatch, user]);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const now = Date.now();
-    if (expiresAt && expiresAt < now) {
-      dispatch(logout());
-    } else if (expiresAt) {
-      const timeout = expiresAt - now;
-      const timer = setTimeout(() => dispatch(logout()), timeout);
-      return () => clearTimeout(timer);
+    if (!token && !isAuthenticated) {
+      navigate('/login');
     }
-  }, [expiresAt, dispatch]);
+    if (isAuthenticated && user?.firstLogin && user.role.name == 'PHYSICIAN') {
+      navigate('/profile/complete');
+    }
+  }, [loading, token, navigate, isAuthenticated, user]);
 
-  if (!hasCheckedAuth || loading) {
-    return (
-      <div className="h-screen flex justify-center items-center bg-gradient-to-br from-[#DEF1FF] to-[#FFF]">
-        <CircularProgress size={50} />
-      </div>
-    );
+  if (loading || (token && !isAuthenticated)) {
+    return <PageLoader />;
   }
-  const role = user?.role.name;
 
-  if (!user || !isAuthenticated) return <Navigate to="/login" />;
-  if (!allowedRoles.includes(role!)) return <Navigate to="/unauthorized" />;
-  if (user?.firstLogin && role == 'PHYSICIAN')
-    return <Navigate to="/profile/complete" />;
+  if (!isAuthenticated) {
+    return <Navigate to="/" />;
+  }
+
+  if (role == 'PATIENT') return <Navigate to="/patient/redirect" />;
+
+  if (!allowedRoles.includes(role || '')) return <Unauthorized />;
+
   return <Outlet />;
 }
