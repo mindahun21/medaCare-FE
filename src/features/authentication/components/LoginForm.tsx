@@ -3,20 +3,17 @@ import { useMutation } from '@tanstack/react-query';
 import { loginUser } from '../services/authApi';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import {
-  TextField,
-  InputAdornment,
-  IconButton,
-  Button,
-  CircularProgress,
-} from '@mui/material';
+import { TextField, InputAdornment, IconButton } from '@mui/material';
 import { LoginFormData } from '../../../types/auth';
 import { useAppDispatch } from '../../../data/hooks';
-import { setToken } from '../../../data/authSlice';
+import { fetchUser, setToken } from '../../../data/authSlice';
 import { useNavigate } from 'react-router-dom';
 import { useMessage } from '../../../contexts/MessageContext';
 import { AxiosError } from 'axios';
 import { SharedTextFieldProps } from '../../../utils/variables';
+import { RootState } from '../../../data/store';
+import { useSelector } from 'react-redux';
+import SubmitButton from '../../../ui/shared/SubmitButton';
 
 type ErrorResponse = {
   status: string;
@@ -27,6 +24,7 @@ export default function LoginForm() {
   const { showMessage } = useMessage();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const { user } = useSelector((state: RootState) => state.auth);
   type LoginFormErrors = Partial<
     Record<'email' | 'password' | 'noneField', string>
   >;
@@ -44,8 +42,13 @@ export default function LoginForm() {
       const token = data.data?.data?.token;
       const expiresAt = data.data?.data?.expiresAt;
       dispatch(setToken({ token: token, expiresAt: expiresAt }));
+      await dispatch(fetchUser());
       showMessage({ type: 'success', text: 'Login Successful!' });
-      navigate('/home');
+      if (user?.firstLogin && user.role.name == 'PHYSICIAN') {
+        navigate('/profile/complete');
+      } else {
+        navigate('/dashboard');
+      }
     },
     onError: (err) => {
       const axiosError = err as AxiosError;
@@ -143,33 +146,7 @@ export default function LoginForm() {
         />
       </div>
 
-      <Button
-        type="submit"
-        fullWidth
-        variant="contained"
-        disabled={mutation.isPending}
-        sx={{
-          fontWeight: 600,
-          py: 1.5,
-          borderRadius: '0.3rem',
-          backgroundColor: 'var(--color-secondary-burgandy)',
-          '&:hover': {
-            backgroundColor: 'var(--color-secondary-burgandy)',
-          },
-          '&.Mui-disabled': {
-            backgroundColor: 'var(--color-secondary-burgandy-disabled)',
-            opacity: 0.8,
-          },
-        }}
-      >
-        {mutation.isPending ? (
-          <span className="text-primary-teal">
-            <CircularProgress size={20} color="inherit" />
-          </span>
-        ) : (
-          'Sign In'
-        )}
-      </Button>
+      <SubmitButton text="Sign In" isPending={mutation.isPending} />
     </form>
   );
 }

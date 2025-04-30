@@ -18,9 +18,13 @@ import { useMessage } from '../contexts/MessageContext';
 import { useSelector } from 'react-redux';
 import { RootState } from '../data/store';
 import PageLoader from '../ui/shared/PageLoader';
+import { selectIsAuthenticated } from '../features/authentication/AuthSelectors';
+import SubmitButton from '../ui/shared/SubmitButton';
+import Logout from '../features/authentication/components/Logout';
 
 export default function CompletePhysicianProfile() {
-  const { user, loading } = useSelector((state: RootState) => state.auth);
+  const { token, loading } = useSelector((state: RootState) => state.auth);
+  const isAuthenticated = useSelector(selectIsAuthenticated);
   const { showMessage } = useMessage();
   const [currentStep, setCurrentStep] = useState(1);
   const navigate = useNavigate();
@@ -35,10 +39,10 @@ export default function CompletePhysicianProfile() {
   });
 
   useEffect(() => {
-    if (!loading && !user) {
+    if (!token && !isAuthenticated) {
       navigate('/login');
     }
-  }, [user, loading, navigate]);
+  }, [token, isAuthenticated, navigate]);
 
   const goToNextStep = async () => {
     let isStepValid = true;
@@ -102,12 +106,12 @@ export default function CompletePhysicianProfile() {
     }
   };
 
-  if (loading || !user) {
+  if (loading || (token && !isAuthenticated)) {
     return <PageLoader />;
   }
 
   return (
-    <div className="min-h-screen w-full gradient-teal-light flex justify-center items-center overflow-y-auto scrollbar-hide">
+    <div className="min-h-screen w-full gradient-teal-light flex justify-center items-center overflow-y-auto scrollbar-hide relative">
       <div className="mx-4 bg-white min-h-[700px flex justify-center w-full sm:w-[500px] md:w-[700px] rounded-2xl shadow-lg my-[50px]">
         <div className=" flex flex-col gap-2 justify-center items-center sm:py-10 h-full w-full max-w-[500px] ">
           <AuthBanner />
@@ -178,7 +182,7 @@ export default function CompletePhysicianProfile() {
           <FormProvider {...methods}>{renderForm()}</FormProvider>
 
           {/* Navigation */}
-          <div className="w-full flex justify-between mt-4">
+          <div className="w-full flex justify-between mt-[37px]">
             {currentStep > 1 && (
               <button
                 className="bg-neutrals-300 px-4 py-2 text-secondary-burgandy rounded-md font-bold w-[130px] h-[44px] cursor-pointer hover:opacity-90 "
@@ -189,11 +193,14 @@ export default function CompletePhysicianProfile() {
             )}
             <div className="flex-1" />
             {currentStep == totalStep ? (
-              <PrimaryButton
-                text="COMPLETE"
-                onClick={handleSubmit}
-                className="px-[62px] py-[8px]"
-              />
+              <div className="w-[150px]">
+                <SubmitButton
+                  text="COMPLETE"
+                  type="button"
+                  onClick={handleSubmit}
+                  isPending={mutation.isPending}
+                />
+              </div>
             ) : (
               <PrimaryButton
                 text="Next"
@@ -203,6 +210,9 @@ export default function CompletePhysicianProfile() {
             )}
           </div>
         </div>
+      </div>
+      <div className="absolute top-10 right-10">
+        <Logout />
       </div>
     </div>
   );

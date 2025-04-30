@@ -5,14 +5,30 @@ import TextButton from '../ui/shared/TextButton';
 import { useMutation } from '@tanstack/react-query';
 import { resendEmail } from '../features/authentication/services/authApi';
 import { useAppSelector } from '../data/hooks';
+import { useMessage } from '../contexts/MessageContext';
 
 export default function VerifyEmail() {
   const email = useAppSelector((state) => state.auth.email);
+  const { showMessage } = useMessage();
 
   const mutation = useMutation({
     mutationFn: resendEmail,
-    onSuccess: () => {},
-    onError: () => {},
+    onSuccess: () => {
+      showMessage({
+        type: 'success',
+        text: 'A verification email has been sent to your email address. Please check your inbox.',
+      });
+    },
+    onError: (error: unknown) => {
+      const errorMessage =
+        (error as { response?: { data?: { message?: string } } })?.response
+          ?.data?.message ||
+        'Failed to resend the verification email. Please try again later.';
+      showMessage({
+        type: 'error',
+        text: errorMessage,
+      });
+    },
   });
 
   const handleResendEmail = () => {
@@ -28,7 +44,7 @@ export default function VerifyEmail() {
             <AuthBanner />
             <VerifyEmailForm />
             <div className="mt-5">
-              <p className="text-primary-teal text-2xl">
+              <p className="text-primary-teal">
                 Didn&#x27;t receive the email?
                 <TextButton text="Send again" onClick={handleResendEmail} />
               </p>

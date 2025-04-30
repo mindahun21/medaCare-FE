@@ -38,8 +38,6 @@ export async function resendEmail({ email }: { email: string }) {
 export async function sendInstitutionrequest(
   formData: Partial<InstitutionRequestSchemaType>
 ) {
-  const response = await apiClient.post('institutions', formData, {
-    headers: { 'Content-Type': 'multipart/form-data' },
-  });
+  const response = await apiClient.post('institutions', formData);
   return response;
 }

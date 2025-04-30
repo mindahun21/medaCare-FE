@@ -16,7 +16,7 @@ import {
 } from '../InstitutionRequestSchema';
 
 export default function InstitutionRequestFormOne() {
-  const selectedRegion = useWatch({ name: 'region' });
+  const selectedRegion = useWatch({ name: 'regionOrState' });
   const availableSubcities = subcityOptions[selectedRegion] || [];
   const {
     register,
@@ -28,16 +28,16 @@ export default function InstitutionRequestFormOne() {
         Basic Institution Information
       </h1>
       <TextField
-        {...register('institutionName')}
+        {...register('name')}
         required
         fullWidth
         type="text"
-        id="institutionName"
-        name="institutionName"
+        id="name"
+        name="name"
         label="Institution Name"
         placeholder="Enter your institution name"
-        error={!!errors.institutionName}
-        helperText={errors.institutionName?.message}
+        error={!!errors.name}
+        helperText={errors.name?.message}
         {...SharedTextFieldProps}
       />
       <div className="w-full">
@@ -46,7 +46,7 @@ export default function InstitutionRequestFormOne() {
           <Select
             labelId="institution-type"
             id="institution-type"
-            {...register('institutionType')}
+            {...register('type')}
             defaultValue=""
             label="Institution Type"
           >
@@ -59,10 +59,8 @@ export default function InstitutionRequestFormOne() {
               </MenuItem>
             ))}
           </Select>
-          {errors.institutionType && (
-            <p className="text-red-500 text-xs">
-              {errors.institutionType?.message}
-            </p>
+          {errors.type && (
+            <p className="text-red-500 text-xs">{errors.type?.message}</p>
           )}
         </FormControl>
       </div>
@@ -92,7 +90,7 @@ export default function InstitutionRequestFormOne() {
           <Select
             labelId="rigion-state"
             id="rigion"
-            {...register('region')}
+            {...register('regionOrState')}
             defaultValue=""
             label="Rigion/state"
           >
@@ -105,10 +103,8 @@ export default function InstitutionRequestFormOne() {
               </MenuItem>
             ))}
           </Select>
-          {errors.region && (
-            <p className="text-red-500 text-xs">
-              {errors.institutionType?.message}
-            </p>
+          {errors.regionOrState && (
+            <p className="text-red-500 text-xs">{errors.type?.message}</p>
           )}
         </FormControl>
       </div>
@@ -118,20 +114,20 @@ export default function InstitutionRequestFormOne() {
           <Select
             labelId="district-label"
             id="sub-city"
-            {...register('subcity')}
+            {...register('subCityOrDistrict')}
             defaultValue=""
             label="sub-city/District"
           >
             <MenuItem value="">Select Sub-city/District</MenuItem>
-            {availableSubcities.map((subcity) => (
-              <MenuItem key={subcity} value={subcity}>
-                {subcity}
+            {availableSubcities.map((subCityOrDistrict) => (
+              <MenuItem key={subCityOrDistrict} value={subCityOrDistrict}>
+                {subCityOrDistrict}
               </MenuItem>
             ))}
           </Select>
-          {errors.subcity && (
+          {errors.subCityOrDistrict && (
             <p className="text-red-500 text-xs mt-1">
-              {errors.subcity.message}
+              {errors.subCityOrDistrict.message}
             </p>
           )}
         </FormControl>

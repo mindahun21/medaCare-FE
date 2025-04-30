@@ -14,6 +14,7 @@ import { Link, useNavigate } from 'react-router';
 import { useMutation } from '@tanstack/react-query';
 import { sendInstitutionrequest } from '../features/authentication/services/authApi';
 import { useMessage } from '../contexts/MessageContext';
+import SubmitButton from '../ui/shared/SubmitButton';
 
 export default function InstitutionRequest() {
   const { showMessage } = useMessage();
@@ -25,9 +26,9 @@ export default function InstitutionRequest() {
   const methods = useForm<InstitutionRequestSchemaType>({
     resolver: zodResolver(InstitutionRequestSchema),
     defaultValues: {
-      institutionName: '',
+      name: '',
       email: '',
-      subcity: '',
+      subCityOrDistrict: '',
       street: '',
     },
     mode: 'onTouched',
@@ -36,11 +37,11 @@ export default function InstitutionRequest() {
     let isStepValid = true;
     if (currentStep === 1) {
       isStepValid = await methods.trigger([
-        'institutionName',
-        'institutionType',
+        'name',
+        'type',
         'email',
-        'region',
-        'subcity',
+        'regionOrState',
+        'subCityOrDistrict',
         'street',
       ]);
     }
@@ -83,11 +84,11 @@ export default function InstitutionRequest() {
     const values = methods.getValues();
 
     const payload: Partial<InstitutionRequestSchemaType> = {
-      institutionName: values.institutionName,
-      institutionType: values.institutionType,
+      name: values.name,
+      type: values.type,
       email: values.email,
-      region: values.region,
-      subcity: values.subcity,
+      regionOrState: values.regionOrState,
+      subCityOrDistrict: values.subCityOrDistrict,
       street: values.street,
     };
 
@@ -165,11 +166,14 @@ export default function InstitutionRequest() {
             )}
             <div className="flex-1" />
             {currentStep == totalStep ? (
-              <PrimaryButton
-                text="COMPLETE"
-                className="px-10"
-                onClick={handleSubmit}
-              />
+              <div className="w-[150px]">
+                <SubmitButton
+                  text="COMPLETE"
+                  type="button"
+                  onClick={handleSubmit}
+                  isPending={mutation.isPending}
+                />
+              </div>
             ) : (
               <PrimaryButton
                 text="NEXT"

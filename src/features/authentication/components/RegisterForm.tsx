@@ -1,13 +1,7 @@
 import React, { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { registerUser } from '../services/authApi';
-import {
-  TextField,
-  InputAdornment,
-  IconButton,
-  Button,
-  CircularProgress,
-} from '@mui/material';
+import { TextField, InputAdornment, IconButton } from '@mui/material';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { RegisterFormData } from '../../../types/auth';
@@ -17,6 +11,7 @@ import { setEmail } from '../../../data/authSlice';
 import { useMessage } from '../../../contexts/MessageContext';
 import { AxiosError } from 'axios';
 import { SharedTextFieldProps } from '../../../utils/variables';
+import SubmitButton from '../../../ui/shared/SubmitButton';
 
 type ValidationErrorResponse = {
   status: 'error';
@@ -212,33 +207,7 @@ export default function RegisterForm() {
         />
       </div>
 
-      <Button
-        type="submit"
-        fullWidth
-        variant="contained"
-        disabled={mutation.isPending}
-        sx={{
-          fontWeight: 600,
-          py: 1.5,
-          borderRadius: '0.3rem',
-          backgroundColor: 'var(--color-secondary-burgandy)',
-          '&:hover': {
-            backgroundColor: 'var(--color-secondary-burgandy-hover)',
-          },
-          '&.Mui-disabled': {
-            backgroundColor: 'var(--color-secondary-burgandy-disabled)',
-            opacity: 0.8,
-          },
-        }}
-      >
-        {mutation.isPending ? (
-          <span className="text-primary-teal">
-            <CircularProgress size={20} color="inherit" />
-          </span>
-        ) : (
-          'Sign Up'
-        )}
-      </Button>
+      <SubmitButton isPending={mutation.isPending} text="Sign Up" />
     </form>
   );
 }

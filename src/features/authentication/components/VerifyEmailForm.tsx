@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { TextField, Button, CircularProgress } from '@mui/material';
+import { TextField } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 import { useAppDispatch, useAppSelector } from '../../../data/hooks';
 import { useNavigate } from 'react-router-dom';
 import { verifyEmail } from '../services/authApi';
-import { setToken } from '../../../data/authSlice';
+import { fetchUser, setToken } from '../../../data/authSlice';
 import { useMessage } from '../../../contexts/MessageContext';
 import { SharedTextFieldProps } from '../../../utils/variables';
+import SubmitButton from '../../../ui/shared/SubmitButton';
 
 export default function VerifyEmailForm() {
   const { showMessage } = useMessage();
@@ -23,6 +24,9 @@ export default function VerifyEmailForm() {
       const token = data.data?.data?.token;
       const expiresAt = data.data?.data?.expiresAt;
       dispatch(setToken({ token: token, expiresAt: expiresAt }));
+      await dispatch(fetchUser());
+      showMessage({ type: 'success', text: 'Account verified successfully' });
+
       navigate('/profile/complete');
     },
 
@@ -68,30 +72,7 @@ export default function VerifyEmailForm() {
         />
       </div>
 
-      <Button
-        type="submit"
-        fullWidth
-        variant="contained"
-        disabled={mutation.isPending}
-        sx={{
-          fontWeight: 600,
-          py: 1.5,
-          borderRadius: '0.3rem',
-          backgroundColor: 'var(--color-secondary-burgandy)',
-          '&:hover': {
-            backgroundColor: 'var(--color-secondary-burgandy)',
-          },
-          '&.Mui-disabled': {
-            opacity: 0.5,
-          },
-        }}
-      >
-        {mutation.isPending ? (
-          <CircularProgress size={20} color="inherit" />
-        ) : (
-          'Verify Email'
-        )}
-      </Button>
+      <SubmitButton isPending={mutation.isPending} text="Verify Email" />
     </form>
   );
 }

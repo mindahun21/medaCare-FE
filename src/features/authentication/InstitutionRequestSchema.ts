@@ -142,16 +142,16 @@ export const subcityOptions: Record<string, string[]> = {
 
 export const InstitutionRequestSchema = z
   .object({
-    institutionName: z.string().min(1, 'Institution Name is required'),
-    institutionType: z.enum(institutionTypes, {
+    name: z.string().min(1, 'Institution Name is required'),
+    type: z.enum(institutionTypes, {
       required_error: 'Institution type is required',
       invalid_type_error: 'Invalid institution type selected',
     }),
     email: z.string().email({ message: 'Invalid email address' }),
-    region: z.enum(ethiopianRegions, {
+    regionOrState: z.enum(ethiopianRegions, {
       required_error: 'Region is required',
     }),
-    subcity: z.string().optional(),
+    subCityOrDistrict: z.string().optional(),
     street: z.string().min(1, 'street is required'),
     businessDocument: z
       .custom<File | null>((file) => file instanceof File || file === null, {
@@ -175,8 +175,11 @@ export const InstitutionRequestSchema = z
       }),
   })
   .superRefine((data, ctx) => {
-    const subcities = subcityOptions[data.region];
-    if (subcities && (!data.subcity || !subcities.includes(data.subcity))) {
+    const subcities = subcityOptions[data.regionOrState];
+    if (
+      subcities &&
+      (!data.subCityOrDistrict || !subcities.includes(data.subCityOrDistrict))
+    ) {
       ctx.addIssue({
         path: ['subcity'],
         code: z.ZodIssueCode.custom,
