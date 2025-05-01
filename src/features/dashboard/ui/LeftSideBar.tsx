@@ -2,6 +2,7 @@ import { Link, useLocation } from 'react-router-dom';
 import AuthBanner from '../../authentication/components/AuthBanner';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import Role from '../../../ui/shared/Role';
+import EventNoteIcon from '@mui/icons-material/EventNote';
 
 export default function LeftSideBar({ isOpen }: { isOpen: boolean }) {
   const location = useLocation();
@@ -26,7 +27,7 @@ export default function LeftSideBar({ isOpen }: { isOpen: boolean }) {
         <Item
           isActive={location.pathname.endsWith('/physicians')}
           isOpen={isOpen}
-          icon={<DashboardIcon />}
+          icon={<EventNoteIcon />}
           text="Physicians"
           to="/physicians"
         />
@@ -34,9 +35,18 @@ export default function LeftSideBar({ isOpen }: { isOpen: boolean }) {
           <Item
             isActive={location.pathname.endsWith('/institutions')}
             isOpen={isOpen}
-            icon={<DashboardIcon />}
+            icon={<EventNoteIcon />}
             text="Institutions"
             to="/institutions"
+          />
+        </Role>
+        <Role allowedRoles={['ADMIN']} fallback={null}>
+          <Item
+            isActive={location.pathname.endsWith('/patients')}
+            isOpen={isOpen}
+            icon={<EventNoteIcon />}
+            text="Patients"
+            to="/patients"
           />
         </Role>
       </div>

@@ -22,12 +22,20 @@ import Dashboard from './features/dashboard/pages/Dashboard';
 import DashboardLayout from './ui/Layouts/DashboardLayout';
 import Physicians from './features/dashboard/pages/Physicians';
 import Institutions from './features/dashboard/pages/Institutions';
+import Patients from './features/dashboard/pages/Patients';
+import PhysicianDetail from './features/dashboard/pages/PhysicianDetail';
+import InstitutionDetail from './features/dashboard/pages/InstitutionDetail';
 
 const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
-  { path: '/', index: true, element: <Guest /> },
   {
+    path: '/',
+    element: <Guest />,
+    index: true,
+  },
+  {
+    path: '/',
     element: <DashboardLayout />,
     children: [
       {
@@ -39,19 +47,16 @@ const router = createBrowserRouter([
       {
         element: <ProtectedRoutes allowedRoles={['ADMIN', 'ORG_ADMIN']} />,
         children: [
-          {
-            path: 'physicians',
-            element: <Physicians />,
-          },
+          { path: 'physicians', element: <Physicians /> },
+          { path: 'physicians/detail/:id', element: <PhysicianDetail /> },
+          { path: 'patients', element: <Patients /> },
         ],
       },
       {
         element: <ProtectedRoutes allowedRoles={['ADMIN']} />,
         children: [
-          {
-            path: 'institutions',
-            element: <Institutions />,
-          },
+          { path: 'institutions', element: <Institutions /> },
+          { path: 'institutions/detail/:id', element: <InstitutionDetail /> },
         ],
       },
     ],

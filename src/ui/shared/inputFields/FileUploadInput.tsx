@@ -31,7 +31,6 @@ function FileUploadInput<T extends FieldValues>({
     clearErrors,
     formState: { errors },
   } = useFormContext<T>();
-  // const inputRef = useRef<HTMLInputElement>(null);
 
   const onDrop = (acceptedFiles: File[]) => {
     setValue(name, acceptedFiles[0] as PathValue<T, Path<T>>);

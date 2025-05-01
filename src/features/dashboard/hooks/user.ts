@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { useAppSelector } from '../../../data/hooks'; // or wherever you define it
+import { useAppSelector } from '../../../data/hooks';
 import { requestUser } from '../services/user';
 
 export const useUser = () => {

@@ -3,7 +3,6 @@ import { User } from '../types/user';
 import { requestUser } from '../features/dashboard/services/user';
 import { RootState } from './store';
 
-// Define a type for the auth state
 interface AuthState {
   user: User | null;
   token: string | null;
@@ -14,7 +13,6 @@ interface AuthState {
   expiresAt: number | null;
 }
 
-// Load initial token from localStorage
 const persistedAuth = localStorage.getItem('auth');
 const parsedAuth = persistedAuth ? JSON.parse(persistedAuth) : null;
 const initialState: AuthState = {
@@ -27,7 +25,6 @@ const initialState: AuthState = {
   expiresAt: parsedAuth?.expiresAt || null,
 };
 
-// Thunk to load user data
 export const fetchUser = createAsyncThunk<User, void, { rejectValue: string }>(
   'auth/fetchUser',
   async (_, { rejectWithValue }) => {
