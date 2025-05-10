@@ -12,17 +12,17 @@ export default function CompleteProfileFormThree() {
         accept={{
           'application/pdf': ['.pdf'],
         }}
-        maxSize={25 * 1024 * 1024} // 25MB
-        description="Please upload files in pdf format and make sure the file size is under 25 MB."
+        maxSize={9 * 1024 * 1024} // 9MB
+        description="Please upload files in pdf format and make sure the file size is under 9 MB."
       />
       <FileUploadInput<CompletePhysicianProfileType>
-        name="specialization"
-        label="Upload Specializations"
+        name="specializationDoc"
+        label="Upload Specialization"
         accept={{
           'application/pdf': ['.pdf'],
         }}
-        maxSize={25 * 1024 * 1024} // 25MB
-        description="Please upload files in pdf format and make sure the file size is under 25 MB."
+        maxSize={9 * 1024 * 1024} // 9MB
+        description="Please upload files in pdf format and make sure the file size is under 9 MB."
       />
       <FileUploadInput<CompletePhysicianProfileType>
         name="degreeCertificate"
@@ -30,8 +30,8 @@ export default function CompleteProfileFormThree() {
         accept={{
           'application/pdf': ['.pdf'],
         }}
-        maxSize={25 * 1024 * 1024} // 25MB
-        description="Please upload files in pdf format and make sure the file size is under 25 MB."
+        maxSize={9 * 1024 * 1024} // 9MB
+        description="Please upload files in pdf format and make sure the file size is under 9 MB."
       />
     </div>
   );

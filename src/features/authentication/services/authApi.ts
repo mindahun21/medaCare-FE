@@ -1,6 +1,5 @@
 import apiClient from '../../../services/apiClient';
 import { LoginFormData, RegisterRequestData } from '../../../types/auth';
-import { InstitutionRequestSchemaType } from '../InstitutionRequestSchema';
 
 export async function registerUser(formData: RegisterRequestData) {
   const response = await apiClient.post('auth/signup', formData);
@@ -35,9 +34,11 @@ export async function resendEmail({ email }: { email: string }) {
   return response;
 }
 
-export async function sendInstitutionrequest(
-  formData: Partial<InstitutionRequestSchemaType>
-) {
-  const response = await apiClient.post('institutions', formData);
+export async function sendInstitutionrequest(formData: FormData) {
+  const response = await apiClient.post('institutions', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
   return response;
 }

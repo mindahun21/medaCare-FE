@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   useReactTable,
   getCoreRowModel,
@@ -17,8 +17,8 @@ import { useDashboardContext } from '../context/DashBoardContext';
 export interface TableProps<T extends { id: string | number }> {
   data: T[];
   columns: ColumnDef<T>[];
-  getActions?: (row: T) => React.ReactNode;
-  onRowClicked: (id: string | number) => void;
+  getActions?: (row: T, closeDropdown: () => void) => React.ReactNode;
+  onRowClicked?: (id: string | number) => void;
 }
 
 export default function Table<T extends { id: string | number }>({
@@ -32,7 +32,24 @@ export default function Table<T extends { id: string | number }>({
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [openRowId, setOpenRowId] = useState<string | null>(null);
+  const [rowPosition, setRowPosition] = useState('bottom');
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
 
+  const handleToggleDropdown = (rowId: string) => {
+    if (openRowId === rowId) {
+      setOpenRowId(null);
+      return;
+    }
+
+    requestAnimationFrame(() => {
+      const rect = buttonRef.current?.getBoundingClientRect();
+      const spaceBelow = window.innerHeight - (rect?.bottom || 0);
+
+      const newPosition = spaceBelow < 200 ? 'top' : 'bottom';
+      setRowPosition(newPosition);
+      setOpenRowId(rowId);
+    });
+  };
   const table = useReactTable({
     data,
     columns,
@@ -49,7 +66,7 @@ export default function Table<T extends { id: string | number }>({
   });
 
   return (
-    <table className="min-w-full table-auto border">
+    <table className="min-w-full table-auto border border-[#EAECF0]">
       <thead className="bg-primary-teal-100 text-left h-[52px] text-[#667085] font-medium text-[14px]">
         {table.getHeaderGroups().map((headerGroup) => (
           <tr key={headerGroup.id}>
@@ -66,15 +83,15 @@ export default function Table<T extends { id: string | number }>({
                   )}
                   <span>
                     {header.column.getIsSorted() === 'asc' &&
-                      header.id !== 'actions' && (
+                      header.column.columnDef.enableSorting && (
                         <ArrowUpwardOutlinedIcon sx={{ fontSize: 16 }} />
                       )}
                     {header.column.getIsSorted() === 'desc' &&
-                      header.id !== 'actions' && (
+                      header.column.columnDef.enableSorting && (
                         <ArrowDownwardOutlinedIcon sx={{ fontSize: 16 }} />
                       )}
                     {header.column.getIsSorted() === false &&
-                      header.id !== 'actions' && (
+                      header.column.columnDef.enableSorting && (
                         <ArrowDownwardOutlinedIcon sx={{ fontSize: 16 }} />
                       )}
                   </span>
@@ -90,7 +107,7 @@ export default function Table<T extends { id: string | number }>({
           <tr
             key={row.id}
             className="hover:bg-primary-teal-surface h-[52px] text-[16px] cursor-pointer"
-            onClick={() => onRowClicked(row.original.id)}
+            onClick={() => onRowClicked?.(row.original.id)}
           >
             {row.getVisibleCells().map((cell) => (
               <td
@@ -106,18 +123,22 @@ export default function Table<T extends { id: string | number }>({
                     onClick={(e) => e.stopPropagation()}
                   >
                     <button
+                      ref={buttonRef}
                       className="p-2 hover:bg-gray-200 rounded-full z-40"
-                      onClick={() =>
-                        setOpenRowId((prev) =>
-                          prev === row.id ? null : row.id
-                        )
-                      }
+                      onClick={() => handleToggleDropdown(row.id)}
                     >
                       <MoreVertOutlinedIcon />
                     </button>
                     {openRowId === row.id && (
-                      <div className="absolute right-0 mt-2 w-48 bg-white border-[1px] border-[#2CA6FF] rounded shadow-lg z-10">
-                        {getActions && getActions(row.original)}
+                      <div
+                        className={`absolute right-4 w-48 bg-white border border-[#2CA6FF] rounded shadow-lg z-10 ${
+                          rowPosition === 'top'
+                            ? 'bottom-full mb-2'
+                            : 'top-full mt-2'
+                        }`}
+                      >
+                        {getActions &&
+                          getActions(row.original, () => setOpenRowId(null))}
                       </div>
                     )}
                   </div>

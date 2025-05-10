@@ -1,5 +1,7 @@
+import { useEffect } from 'react';
 import { useMessage } from '../contexts/MessageContext';
 import { twMerge } from 'tailwind-merge';
+import CloseIcon from '@mui/icons-material/Close';
 
 const messageColors = {
   success: 'bg-green-600 text-white',
@@ -11,11 +13,15 @@ const messageColors = {
 export default function GlobalMessage() {
   const { message, clearMessage } = useMessage();
 
-  if (message && message.duration !== 0) {
-    setTimeout(() => {
+  useEffect(() => {
+    if (!message || message.duration === 0) return;
+
+    const timeout = setTimeout(() => {
       clearMessage();
-    }, message.duration || 5000);
-  }
+    }, message.duration || 8000);
+
+    return () => clearTimeout(timeout);
+  }, [message, clearMessage]);
 
   return (
     <div className="fixed bottom-6 right-6 z-50">
@@ -29,6 +35,12 @@ export default function GlobalMessage() {
           <div className="text-lg font-medium">{message.text}</div>
         </div>
       )}
+      <button
+        className="absolute top-1 right-2 border border-white flex items-center text-white rounded-full cursor-pointer"
+        onClick={() => clearMessage()}
+      >
+        <CloseIcon sx={{ height: 16, width: 16 }} />
+      </button>
     </div>
   );
 }

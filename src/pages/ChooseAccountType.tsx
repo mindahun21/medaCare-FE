@@ -8,11 +8,9 @@ export default function ChooseAccountType() {
   const [accountType, setAccountType] = useState('physician');
   const navigate = useNavigate();
   return (
-    <div className="flex flex-col pb-20">
-      <div className="px-5">
-        <Header />
-      </div>
-      <div className=" flex justify-center flex-col items-center">
+    <div className="flex flex-col min-h-screen pb-20 w-full bg overflow-hidden bg-gradient-to-br from-[#DEF1FF] to-[#FFF] justify-center items-center">
+      <Header />
+      <div className=" flex justify-center flex-col items-center mt-[108px] ">
         <h1 className="text-center font-bold text-[36px] leading-[100%] pt-[56px] text-[#333333] ">
           What kind of user are you?
         </h1>
@@ -32,7 +30,7 @@ export default function ChooseAccountType() {
             } `}
             onClick={() => setAccountType('physician')}
           >
-            <div className="flex justify-center w-[204px] pt-[26px]">
+            <div className="flex justify-center w-[204px] h-[206px] pt-[26px]">
               <img
                 src="./images/physician.png"
                 alt="Physician"
@@ -57,7 +55,7 @@ export default function ChooseAccountType() {
             } `}
             onClick={() => setAccountType('institution')}
           >
-            <div className="flex justify-center w-[204px] pt-[26px] ">
+            <div className="flex justify-center w-[204px] h-[206px] pt-[26px] ">
               <img
                 src="./images/institution_image.png"
                 alt="Institution"

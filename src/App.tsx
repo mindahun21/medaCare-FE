@@ -4,7 +4,7 @@ import Register from './pages/Register';
 import NotFound from './pages/NotFound';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Guest from './pages/Guest';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import VerifyEmail from './pages/VerifyEmail';
 import ProtectedRoutes from './ui/Layouts/ProtectedRoutes';
 import { MessageProvider } from './contexts/MessageContext';
@@ -25,38 +25,64 @@ import Institutions from './features/dashboard/pages/Institutions';
 import Patients from './features/dashboard/pages/Patients';
 import PhysicianDetail from './features/dashboard/pages/PhysicianDetail';
 import InstitutionDetail from './features/dashboard/pages/InstitutionDetail';
+import axios from 'axios';
+import PublicRoute from './ui/Layouts/PublicRoutes';
+import PatientsDetail from './features/dashboard/pages/PatientsDetail';
+import Schedules from './features/dashboard/pages/Schedules';
+import Appointments from './features/dashboard/pages/Appointments';
+import PatientAppointmentDetail from './features/dashboard/pages/PatientAppointmentDetail';
+import Role from './ui/shared/Role';
+import ConsultationChat from './ui/shared/ConsultationChat';
+import { selectUser } from './features/authentication/AuthSelectors';
 
 const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Guest />,
-    index: true,
+    element: <PublicRoute />,
+    children: [{ index: true, element: <Guest /> }],
   },
   {
-    path: '/',
-    element: <DashboardLayout />,
+    path: 'home',
+    element: (
+      <ProtectedRoutes allowedRoles={['PHYSICIAN', 'ADMIN', 'ORG_ADMIN']} />
+    ),
     children: [
       {
-        element: (
-          <ProtectedRoutes allowedRoles={['PHYSICIAN', 'ADMIN', 'ORG_ADMIN']} />
-        ),
-        children: [{ path: 'dashboard', element: <Dashboard /> }],
-      },
-      {
-        element: <ProtectedRoutes allowedRoles={['ADMIN', 'ORG_ADMIN']} />,
+        element: <DashboardLayout />,
         children: [
-          { path: 'physicians', element: <Physicians /> },
-          { path: 'physicians/detail/:id', element: <PhysicianDetail /> },
-          { path: 'patients', element: <Patients /> },
-        ],
-      },
-      {
-        element: <ProtectedRoutes allowedRoles={['ADMIN']} />,
-        children: [
-          { path: 'institutions', element: <Institutions /> },
-          { path: 'institutions/detail/:id', element: <InstitutionDetail /> },
+          { path: 'dashboard', element: <Dashboard /> },
+          {
+            element: <ProtectedRoutes allowedRoles={['ADMIN', 'ORG_ADMIN']} />,
+            children: [
+              { path: 'patients', element: <Patients /> },
+              { path: 'patients/detail/:id', element: <PatientsDetail /> },
+              { path: 'physicians', element: <Physicians /> },
+              { path: 'physicians/detail/:id', element: <PhysicianDetail /> },
+            ],
+          },
+          {
+            element: <ProtectedRoutes allowedRoles={['ADMIN']} />,
+            children: [
+              { path: 'institutions', element: <Institutions /> },
+              {
+                path: 'institutions/detail/:id',
+                element: <InstitutionDetail />,
+              },
+            ],
+          },
+          {
+            element: <ProtectedRoutes allowedRoles={['PHYSICIAN']} />,
+            children: [
+              { path: 'schedules', element: <Schedules /> },
+              { path: 'appointments', element: <Appointments /> },
+              {
+                path: 'appointments/detail/:id',
+                element: <PatientAppointmentDetail />,
+              },
+            ],
+          },
         ],
       },
     ],
@@ -84,15 +110,34 @@ const router = createBrowserRouter([
 
 function App() {
   const dispatch: AppDispatch = useDispatch();
+  const user = useSelector(selectUser);
 
   useEffect(() => {
     dispatch(initializeAuth());
   }, [dispatch]);
+
+  useEffect(() => {
+    const keepServerAlive = async () => {
+      try {
+        await axios.get('https://medacare-be.onrender.com/api/hello');
+      } catch {}
+    };
+
+    keepServerAlive();
+
+    const intervalId = setInterval(keepServerAlive, 14 * 60 * 1000);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <MessageProvider>
         <RouterProvider router={router} />
         <GlobalMessage />
+        <Role allowedRoles={['PHYSICIAN']} fallback={null}>
+          {user && user.firstLogin == false && <ConsultationChat />}
+        </Role>
       </MessageProvider>
     </QueryClientProvider>
   );

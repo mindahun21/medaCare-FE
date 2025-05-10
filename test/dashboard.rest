@@ -1,0 +1,49 @@
+@baseUrl = https://medacare-be.onrender.com/api/v1
+@patient_token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ1NDk1MDQ2LCJpYXQiOjE3NDU0OTQxNDYsImp0aSI6ImRjNGY5M2U3NTc5MDQwZGViNWE1OGE4ZmFjM2YzYTcyIiwidXNlcl9pZCI6Mn0.C1ja2HFiDuqZk8m9o5DCiHh9owXQmGIHFYhjOAJzdvI
+@admin_token = Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbjFAZ21haWwuY29tIiwiaWF0IjoxNzQ2NzIyNTU4LCJleHAiOjE3NTQ2MTE5NTh9.Q2cSBgCqSMz3Kgp0hHwu_ppzSijZ_oAFWAh4VwpoCx8
+@institution_token = Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpbnN0aXR1dGlvbjFAZ21haWwuY29tIiwiaWF0IjoxNzQ2NzIyODEzLCJleHAiOjE3NTQ2MTIyMTN9.-cKrEtNHqV_0yU2HNuumKVidluIwiaHexdJ6FFW4HHg
+@physician_token = 
+
+
+###
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin1@gmail.com",
+  "password": "12345678"
+}
+
+###
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "institution1@gmail.com",
+  "password": "12345678"
+}
+
+
+###
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "doctor1@gmail.com",
+  "password": "12345678"
+}
+
+### 
+GET {{baseUrl}}/physicians
+Content-Type: application/json
+Authorization: {{admin_token}}
+
+### 
+GET {{baseUrl}}/physicians
+Content-Type: application/json
+Authorization: {{institution_token}}
+
+### 
+GET {{baseUrl}}/physicians/pending/requests
+Content-Type: application/json
+Authorization: {{admin_token}}

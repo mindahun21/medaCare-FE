@@ -7,13 +7,14 @@ import { TextField, InputAdornment, IconButton } from '@mui/material';
 import { LoginFormData } from '../../../types/auth';
 import { useAppDispatch } from '../../../data/hooks';
 import { fetchUser, setToken } from '../../../data/authSlice';
-import { useNavigate } from 'react-router-dom';
 import { useMessage } from '../../../contexts/MessageContext';
 import { AxiosError } from 'axios';
 import { SharedTextFieldProps } from '../../../utils/variables';
-import { RootState } from '../../../data/store';
-import { useSelector } from 'react-redux';
 import SubmitButton from '../../../ui/shared/SubmitButton';
+import { useNavigate } from 'react-router-dom';
+import { selectUser, selectUserRole } from '../AuthSelectors';
+import { useSelector } from 'react-redux';
+import { isPhysicianEntity } from '../../../types/user';
 
 type ErrorResponse = {
   status: string;
@@ -22,9 +23,8 @@ type ErrorResponse = {
 
 export default function LoginForm() {
   const { showMessage } = useMessage();
-  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { user } = useSelector((state: RootState) => state.auth);
+  const dispatch = useAppDispatch();
   type LoginFormErrors = Partial<
     Record<'email' | 'password' | 'noneField', string>
   >;
@@ -32,6 +32,8 @@ export default function LoginForm() {
     email: '',
     password: '',
   });
+  const user = useSelector(selectUser);
+  const role = useSelector(selectUserRole);
 
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState<LoginFormErrors>({});
@@ -43,12 +45,40 @@ export default function LoginForm() {
       const expiresAt = data.data?.data?.expiresAt;
       dispatch(setToken({ token: token, expiresAt: expiresAt }));
       await dispatch(fetchUser());
-      showMessage({ type: 'success', text: 'Login Successful!' });
-      if (user?.firstLogin && user.role.name == 'PHYSICIAN') {
-        navigate('/profile/complete');
-      } else {
-        navigate('/dashboard');
+      const firstLogin = user?.firstLogin;
+
+      if (
+        role === 'PHYSICIAN' &&
+        user?.entity &&
+        isPhysicianEntity(user?.entity)
+      ) {
+        const status = user?.entity?.accountRequestStatus;
+        if (firstLogin) {
+          navigate('/profile/complete');
+          showMessage({ type: 'info', text: 'Your profile not complete yet!' });
+
+          return;
+        }
+
+        if (status === 'PENDING') {
+          navigate('/');
+          showMessage({
+            type: 'info',
+            text: 'Your account request has been submitted and is pending approval.',
+          });
+          return;
+        }
+        if (status === 'REJECTED') {
+          navigate('/');
+
+          showMessage({
+            type: 'warning',
+            text: 'Your account has been rejected.',
+          });
+        }
       }
+      showMessage({ type: 'success', text: 'Login Successful!' });
+      navigate('/home/dashboard');
     },
     onError: (err) => {
       const axiosError = err as AxiosError;
