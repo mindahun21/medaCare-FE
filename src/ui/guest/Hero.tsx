@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 export default function Hero() {
   const navigate = useNavigate();
   return (
-    <div className="flex flex-col text-neutrals-900">
+    <div id="hero" className="flex flex-col text-neutrals-900">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
         {/* Left side content */}
         <div className="flex flex-col ">

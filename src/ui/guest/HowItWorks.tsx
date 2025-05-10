@@ -30,7 +30,9 @@ export default function HowItWorks() {
       key: 'patients',
       image: './images/patient.png',
       decorations: ['./images/group.png', './images/group.png'],
-      onClick: () => {},
+      onClick: () => {
+        navigate('/patient/redirect');
+      },
     },
     {
       key: 'physicians',
@@ -127,7 +129,7 @@ function RoleSection({
             <Steps />
             <div className="pt-[21px] pl-[49px]">
               <PrimaryButton
-                text={role == 'institutions' ? 'REQUEST' : 'REGSTER'}
+                text={role == 'institutions' ? 'REQUEST' : 'REGISTER'}
                 className="px-[62px] py-[8px]"
                 onClick={() => onClick()}
               />

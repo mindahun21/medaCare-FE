@@ -71,7 +71,7 @@ export default function InstitutionRequestFormOne() {
         type="text"
         id="email"
         name="email"
-        label="Email"
+        label="Institution Email"
         placeholder="Enter your institution email"
         error={!!errors.email}
         helperText={errors.email?.message}

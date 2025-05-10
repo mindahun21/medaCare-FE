@@ -2,13 +2,15 @@ import { Button, CircularProgress } from '@mui/material';
 export default function SubmitButton({
   isPending,
   text,
-  type = 'submit',
   onClick,
+  type = 'submit',
+  icon,
 }: {
   isPending: boolean;
   text: string;
   type?: 'submit' | 'button';
   onClick?: () => void;
+  icon?: React.ReactNode;
 }) {
   return (
     <Button
@@ -30,6 +32,7 @@ export default function SubmitButton({
           opacity: 0.8,
         },
       }}
+      startIcon={!isPending && icon ? icon : undefined}
     >
       {isPending ? (
         <span className="text-primary-teal">

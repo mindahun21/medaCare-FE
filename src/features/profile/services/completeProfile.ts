@@ -1,8 +1,9 @@
 import apiClient from '../../../services/apiClient';
-import { CompletePhysicianProfileType } from '../completeProfileSchema';
 
-export const submitPhysicianProfile = async (
-  data: Partial<CompletePhysicianProfileType>
-) => {
-  return apiClient.post('/physicians', data);
+export const submitPhysicianProfile = async (data: FormData) => {
+  return apiClient.post('/physicians', data, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
 };

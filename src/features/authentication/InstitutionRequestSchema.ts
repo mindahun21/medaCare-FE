@@ -157,8 +157,8 @@ export const InstitutionRequestSchema = z
       .custom<File | null>((file) => file instanceof File || file === null, {
         message: 'File is required',
       })
-      .refine((file) => !file || file.size <= 25 * 1024 * 1024, {
-        message: 'File size should not exceed 25 MB',
+      .refine((file) => !file || file.size <= 9 * 1024 * 1024, {
+        message: 'File size should not exceed 9 MB',
       })
       .refine((file) => !file || ['application/pdf'].includes(file.type), {
         message: 'Invalid file type. Only PDF files are allowed',
@@ -167,8 +167,8 @@ export const InstitutionRequestSchema = z
       .custom<File | null>((file) => file instanceof File || file === null, {
         message: 'File is required',
       })
-      .refine((file) => !file || file.size <= 25 * 1024 * 1024, {
-        message: 'File size should not exceed 25 MB',
+      .refine((file) => !file || file.size <= 9 * 1024 * 1024, {
+        message: 'File size should not exceed 9 MB',
       })
       .refine((file) => !file || ['application/pdf'].includes(file.type), {
         message: 'Invalid file type. Only PDF files are allowed',

@@ -11,9 +11,10 @@ interface AuthState {
   error: string | null;
   isVerified: boolean;
   expiresAt: number | null;
+  authInitialized: boolean;
 }
 
-const persistedAuth = localStorage.getItem('auth');
+const persistedAuth = sessionStorage.getItem('auth');
 const parsedAuth = persistedAuth ? JSON.parse(persistedAuth) : null;
 const initialState: AuthState = {
   user: null,
@@ -23,6 +24,7 @@ const initialState: AuthState = {
   error: null,
   isVerified: false,
   expiresAt: parsedAuth?.expiresAt || null,
+  authInitialized: false,
 };
 
 export const fetchUser = createAsyncThunk<User, void, { rejectValue: string }>(
@@ -61,7 +63,7 @@ const authSlice = createSlice({
       state.user = null;
       state.isVerified = false;
       state.expiresAt = null;
-      localStorage.removeItem('auth');
+      sessionStorage.removeItem('auth');
     },
     setEmail: (state, action: PayloadAction<string>) => {
       state.email = action.payload;
@@ -72,7 +74,7 @@ const authSlice = createSlice({
     ) => {
       state.token = action.payload.token;
       state.expiresAt = action.payload.expiresAt;
-      localStorage.setItem(
+      sessionStorage.setItem(
         'auth',
         JSON.stringify({
           token: action.payload.token,
@@ -100,7 +102,15 @@ const authSlice = createSlice({
       .addCase(fetchUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || 'Failed to fetch user';
-        localStorage.removeItem('auth');
+        sessionStorage.removeItem('auth');
+        state.token = null;
+        state.user = null;
+      })
+      .addCase(initializeAuth.fulfilled, (state) => {
+        state.authInitialized = true;
+      })
+      .addCase(initializeAuth.rejected, (state) => {
+        state.authInitialized = true;
       });
   },
 });

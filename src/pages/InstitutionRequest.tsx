@@ -15,6 +15,7 @@ import { useMutation } from '@tanstack/react-query';
 import { sendInstitutionrequest } from '../features/authentication/services/authApi';
 import { useMessage } from '../contexts/MessageContext';
 import SubmitButton from '../ui/shared/SubmitButton';
+import Header from '../ui/guest/Header';
 
 export default function InstitutionRequest() {
   const { showMessage } = useMessage();
@@ -70,6 +71,10 @@ export default function InstitutionRequest() {
   const mutation = useMutation({
     mutationFn: sendInstitutionrequest,
     onSuccess: () => {
+      showMessage({
+        type: 'success',
+        text: 'application submited successfuly',
+      });
       navigate('/application-submitted');
     },
     onError: () => {
@@ -83,21 +88,27 @@ export default function InstitutionRequest() {
 
     const values = methods.getValues();
 
-    const payload: Partial<InstitutionRequestSchemaType> = {
-      name: values.name,
-      type: values.type,
-      email: values.email,
-      regionOrState: values.regionOrState,
-      subCityOrDistrict: values.subCityOrDistrict,
-      street: values.street,
-    };
+    const formData = new FormData();
+    formData.append('name', values.name);
+    formData.append('type', values.type);
+    formData.append('email', values.email);
+    formData.append('regionOrState', values.regionOrState);
+    formData.append('subCityOrDistrict', values.subCityOrDistrict || '');
+    formData.append('street', values.street);
+    if (values.businessDocument) {
+      formData.append('businessDocument', values.businessDocument);
+    }
+    if (values.medicalLicense) {
+      formData.append('medicalLicense', values.medicalLicense);
+    }
 
-    mutation.mutate(payload);
+    mutation.mutate(formData);
   };
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-[#DEF1FF] to-[#FFF] flex justify-center items-center overflow-y-auto scrollbar-hide py-[50px] ">
-      <div className="mx-4 bg-white w-[800px] flex flex-col items-center justify-center px-[150px]">
+      <Header />
+      <div className="mx-4 bg-white w-[800px] flex flex-col items-center justify-center px-[150px] mt-[108px]">
         <div className=" flex flex-col gap-[11px] justify-center items-center h-full w-full  ">
           <AuthBanner />
           <h1 className="font-semibold text-[40px] leading-[70px] gradient-primary  ">
@@ -183,7 +194,7 @@ export default function InstitutionRequest() {
             )}
           </div>
         </div>
-        <div className="mt-20 pb-10">
+        <div className="my-20 pb-10">
           <p className="text-primary-teal text-2xl">
             Already have an account?
             <Link

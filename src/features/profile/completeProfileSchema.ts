@@ -15,8 +15,14 @@ export const CompletePhysicianProfileSchema = z.object({
     .refine((date) => {
       const today = new Date();
       const dob = new Date(date);
-      return dob < today;
-    }, 'Date of birth must be in the past'),
+      const age = today.getFullYear() - dob.getFullYear();
+      const monthDiff = today.getMonth() - dob.getMonth();
+      const dayDiff = today.getDate() - dob.getDate();
+      return (
+        age > 18 ||
+        (age === 18 && (monthDiff > 0 || (monthDiff === 0 && dayDiff >= 0)))
+      );
+    }, 'You must be at least 18 years old'),
   profilePhoto: z
     .custom<File>((file) => file instanceof File, {
       message: 'Profile photo is required',
@@ -34,8 +40,8 @@ export const CompletePhysicianProfileSchema = z.object({
     .custom<File>((file) => file instanceof File, {
       message: 'this is required field',
     })
-    .refine((file) => file.size <= 25 * 1024 * 1024, {
-      message: 'File size should not exceed 25 MB',
+    .refine((file) => file.size <= 9 * 1024 * 1024, {
+      message: 'File size should not exceed 9 MB',
     })
     .refine((file) => ['application/pdf'].includes(file.type), {
       message: 'Invalid file type. Only PDF files are allowed',
@@ -45,8 +51,8 @@ export const CompletePhysicianProfileSchema = z.object({
     .custom<File>((file) => file instanceof File, {
       message: 'File is required',
     })
-    .refine((file) => file.size <= 25 * 1024 * 1024, {
-      message: 'File size should not exceed 25 MB',
+    .refine((file) => file.size <= 9 * 1024 * 1024, {
+      message: 'File size should not exceed 9 MB',
     })
     .refine((file) => ['application/pdf'].includes(file.type), {
       message: 'Invalid file type. Only PDF files are allowed',
@@ -55,18 +61,18 @@ export const CompletePhysicianProfileSchema = z.object({
     .custom<File>((file) => file instanceof File, {
       message: 'File is required',
     })
-    .refine((file) => file.size <= 25 * 1024 * 1024, {
-      message: 'File size should not exceed 25 MB',
+    .refine((file) => file.size <= 9 * 1024 * 1024, {
+      message: 'File size should not exceed 9 MB',
     })
     .refine((file) => ['application/pdf'].includes(file.type), {
       message: 'Invalid file type. Only PDF files are allowed',
     }),
-  specialization: z
+  specializationDoc: z
     .custom<File>((file) => file instanceof File, {
       message: 'File is required',
     })
-    .refine((file) => file.size <= 25 * 1024 * 1024, {
-      message: 'File size should not exceed 25 MB',
+    .refine((file) => file.size <= 9 * 1024 * 1024, {
+      message: 'File size should not exceed 9 MB',
     })
     .refine((file) => ['application/pdf'].includes(file.type), {
       message: 'Invalid file type. Only PDF files are allowed',
@@ -75,8 +81,8 @@ export const CompletePhysicianProfileSchema = z.object({
     .custom<File>((file) => file instanceof File, {
       message: 'File is required',
     })
-    .refine((file) => file.size <= 25 * 1024 * 1024, {
-      message: 'File size should not exceed 25 MB',
+    .refine((file) => file.size <= 9 * 1024 * 1024, {
+      message: 'File size should not exceed 9 MB',
     })
     .refine((file) => ['application/pdf'].includes(file.type), {
       message: 'Invalid file type. Only PDF files are allowed',

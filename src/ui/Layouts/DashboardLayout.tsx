@@ -6,17 +6,21 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { Avatar, IconButton } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import KeyboardCommandKeyIcon from '@mui/icons-material/KeyboardCommandKey';
-import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import { useSelector } from 'react-redux';
 import { selectUserRole } from '../../features/authentication/AuthSelectors';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { DashboardContext } from '../../features/dashboard/context/DashBoardContext';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { useAppDispatch } from '../../data/hooks';
+import { logout } from '../../data/authSlice';
 
 export default function DashboardLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
   const [globalFilter, setGlobalFilter] = useState('');
   const searchInputRef = useRef<HTMLInputElement>(null);
   const role = useSelector(selectUserRole);
+  const [isDropDownOpen, setIsDropDownOpen] = useState(false);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -90,19 +94,34 @@ export default function DashboardLayout() {
                 </div>
               </div>
             </div>
-            <div className="flex gap-[16px] h-full items-center ">
-              <button className="h-[32px] w-[32px] rounded-[8px] border-[1px] border-[#E7EAE9] flex items-center justify-center ">
-                <NotificationsNoneIcon />
-              </button>
-              <Avatar sx={{ bgcolor: 'var(--color-primary-teal)' }}>
-                {role?.charAt(0)}
-              </Avatar>
-              <span className="font-medium text-[13px] leading-[150%] ">
-                {role}
-              </span>
-              <button className="">
-                <KeyboardArrowDownIcon />
-              </button>
+            <div className="flex gap-[16px] h-full items-center  relative">
+              <div
+                className="h-full flex gap-[16px] items-center cursor-pointer "
+                onClick={() => setIsDropDownOpen((prev) => !prev)}
+              >
+                <Avatar sx={{ bgcolor: 'var(--color-primary-teal)' }}>
+                  {role?.charAt(0)}
+                </Avatar>
+                <span className="font-medium text-[13px] leading-[150%] ">
+                  {role}
+                </span>
+                <button className="">
+                  <KeyboardArrowDownIcon />
+                </button>
+              </div>
+              {isDropDownOpen && (
+                <div
+                  className={` absolute top-[50px] right-0 flex flex-col bg-white border-[1px] border-[#E7EAE9] shadow-md min-w-[200px] `}
+                >
+                  <button
+                    className="w-full h-[40px] items-center hover:bg-gray-100 flex gap-4 px-4 "
+                    onClick={() => dispatch(logout())}
+                  >
+                    <LogoutIcon />
+                    <span>Logout</span>
+                  </button>
+                </div>
+              )}
             </div>
           </div>
           <div className="h-[65px] " />

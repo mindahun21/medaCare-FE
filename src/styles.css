@@ -52,3 +52,8 @@
 .scrollbar-hide {
   scrollbar-width: none;
 }
+
+.recharts-pie-sector:focus {
+  outline: none;
+  stroke: none;
+}

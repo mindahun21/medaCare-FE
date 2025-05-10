@@ -1,147 +1,52 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useAdminPhysicians } from '../hooks/dashboardHooks';
-import Table from '../ui/Table';
-import { Physician } from '../types';
 import PageLoader from '../../../ui/shared/PageLoader';
-import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
-import { useNavigate } from 'react-router-dom';
-import { ColumnDef } from '@tanstack/react-table';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import FilterListIcon from '@mui/icons-material/FilterList';
-import CloudDownloadOutlinedIcon from '@mui/icons-material/CloudDownloadOutlined';
-import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
-import { useMutation } from '@tanstack/react-query';
-import { requestAcceptPhysician } from '../services/dashboardService';
-import { useMessage } from '../../../contexts/MessageContext';
+import PhysicianTable from '../ui/PhysicianTable';
 
 export default function Physicians() {
-  const { data: physicians, isLoading } = useAdminPhysicians();
-  const { showMessage } = useMessage();
-  const navigate = useNavigate();
+  const { data: physicians, isLoading, isError } = useAdminPhysicians();
 
-  const acceptMutation = useMutation({
-    mutationFn: requestAcceptPhysician,
-    onSuccess: (data, variables) => {
-      console.log('data in success:', data);
-      const action = variables.status === 'APPROVED' ? 'accepted' : 'rejected';
-      showMessage({
-        type: 'success',
-        text: `Institution successfully ${action}.`,
-      });
-    },
-    onError: (err, variables) => {
-      console.log('err in Error:', err);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+  const numberOfPages = physicians
+    ? Math.ceil(physicians.length / itemsPerPage)
+    : 0;
 
-      const action = variables.status === 'APPROVED' ? 'accept' : 'reject';
-      showMessage({
-        type: 'error',
-        text: `Failed to ${action} institution.`,
-      });
-    },
-  });
+  const currentPageData = useMemo(() => {
+    if (!physicians) return [];
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return physicians.slice(startIndex, endIndex);
+  }, [currentPage, physicians]);
 
-  const columns: ColumnDef<Physician>[] = useMemo(
-    () => [
-      {
-        header: 'Name',
-        accessorFn: (row: Physician) => `${row.firstName} ${row.lastName}`,
-        id: 'name',
-        enableSorting: true,
-        enableColumnFilter: true,
-      },
-      {
-        header: 'Email',
-        accessorKey: 'email',
-        enableSorting: true,
-        enableColumnFilter: true,
-      },
-      {
-        header: 'Phone Number',
-        accessorKey: 'phoneNumber',
-        enableSorting: true,
-        enableColumnFilter: true,
-      },
-      {
-        header: 'Age',
-        accessorKey: 'age',
-        enableSorting: true,
-        enableColumnFilter: true,
-      },
-      {
-        header: 'Status',
-        accessorKey: 'accountRequestStatus',
-        cell: ({ row }: { row: { original: Physician } }) => {
-          const status = row.original.accountRequestStatus;
-          const statusStyles =
-            status === 'REJECTED'
-              ? 'text-[#DF0004] bg-[#FEB6B6]'
-              : status === 'APPROVED'
-              ? 'text-[#037847] bg-[#ECFDF3]'
-              : 'bg-[#F2F4F7]';
+  const getVisiblePages = (currentPage: number, totalPages: number) => {
+    const visiblePages: (number | string)[] = [];
 
-          return (
-            <div className="flex items-start">
-              <div
-                className={`rounded-[19px] ps-2 py-1 pe-3 flex gap-[4px] items-center ${statusStyles}`}
-              >
-                <FiberManualRecordIcon sx={{ width: 10, height: 10 }} />
-                {status.toLowerCase().replace(/^\w/, (c) => c.toUpperCase())}
-              </div>
-            </div>
-          );
-        },
-      },
-      {
-        header: '',
-        accessorKey: '',
-        id: 'actions',
-      },
-    ],
-    []
-  );
-
-  const handleActionClick = (type: string, data: Physician) => {
-    if (type === 'Accept') {
-      acceptMutation.mutate({ status: 'APPROVED', id: data.id });
-    } else if (type === 'Reject') {
-      acceptMutation.mutate({ status: 'REJECTED', id: data.id });
+    if (totalPages <= 5) {
+      for (let i = 1; i <= totalPages; i++) {
+        visiblePages.push(i);
+      }
+    } else {
+      if (currentPage <= 3) {
+        visiblePages.push(1, 2, 3, '...', totalPages);
+      } else if (currentPage >= totalPages - 2) {
+        visiblePages.push(1, '...', totalPages - 2, totalPages - 1, totalPages);
+      } else {
+        visiblePages.push(1, '...', currentPage, '...', totalPages);
+      }
     }
-  };
 
-  const getActions = (row: Physician) => (
-    <>
-      {row.accountRequestStatus === 'PENDING' && (
-        <>
-          <button
-            className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
-            onClick={() => handleActionClick('Accept', row)}
-          >
-            Accept
-          </button>
-          <button
-            className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
-            onClick={() => handleActionClick('Reject', row)}
-          >
-            Reject
-          </button>
-        </>
-      )}
-      <button
-        className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
-        onClick={() => navigate(`/physicians/detail/${row.id}`)}
-      >
-        View Details
-      </button>
-    </>
-  );
+    return visiblePages;
+  };
 
   if (isLoading) {
     return <PageLoader />;
   }
 
   return (
-    <div className="p-[34px] font-inter">
-      <div className="flex flex-col border-[1px] border-[#EAECF0] w-full min-h-full">
+    <div className="p-[34px] font-inter flex flex-col min-h-[calc(100vh-65px)] justify-between">
+      <div className="flex flex-col border-[1px] border-[#EAECF0] w-full flex-1">
         <div className="w-full flex px-[20px] h-[80px] justify-between items-center ">
           <div className="flex flex-col">
             <p className="font-inter font-medium text-[15px] leading-[23px] ">
@@ -153,33 +58,62 @@ export default function Physicians() {
           </div>
           <div className="flex text-[#344054] text-[12px]  ">
             <button className="flex items-center gap-1 cursor-pointer p-[8px] hover:bg-primary-teal-surface rounded-[6px]">
-              <DeleteOutlineIcon sx={{ height: 17, width: 17 }} />
-              <span>Delete</span>
-            </button>
-            <button className="flex items-center gap-1 cursor-pointer p-[8px] hover:bg-primary-teal-surface rounded-[6px]">
               <FilterListIcon sx={{ height: 17, width: 17 }} />
               <span>Filter</span>
             </button>
-            <button className="flex items-center gap-1 cursor-pointer p-[8px] ms-[10px] border-[1px] border-[#EAECF0] hover:bg-primary-teal-surface rounded-[6px] ">
-              <CloudDownloadOutlinedIcon sx={{ height: 17, width: 17 }} />
-              <span>Export</span>
-            </button>
-            <button className="flex items-center gap-1 cursor-pointer p-[8px] text-white bg-secondary-burgandy rounded-[6px] ms-[10px] ">
-              <AddOutlinedIcon /> <span>Add new Physician</span>
-            </button>
           </div>
         </div>
-        <Table
-          data={physicians ?? []}
-          columns={columns}
-          getActions={getActions}
-          onRowClicked={(id) => navigate(`/physicians/detail/${id}`)}
-        />
-        {physicians?.length === 0 && (
-          <p className="text-center text-sm mt-4 text-gray-500">
+        <PhysicianTable data={currentPageData ?? []} />
+
+        {(physicians?.length === 0 || isError) && (
+          <p className="text-center text-xl mt-4 text-gray-500">
             No physicians found.
           </p>
         )}
+      </div>
+      {/* Pagination Controls */}
+      <div className="flex justify-end mt-4 items-center">
+        <p className="pe-[63px] text-[12px] leading-[100%]">
+          Showing Page <span>{currentPage}</span> /{' '}
+          <span>{numberOfPages || 1}</span>
+        </p>
+
+        {currentPage > 1 && (
+          <button
+            onClick={() => setCurrentPage(currentPage - 1)}
+            className="rounded-full flex items-center justify-center text-[13px] bg-primary-blues-200 py-2 px-4 me-[25px]"
+          >
+            Previous
+          </button>
+        )}
+
+        {getVisiblePages(currentPage, numberOfPages).map((page, index) => (
+          <button
+            key={index}
+            className={`px-4 py-2 mx-1 ${
+              page !== '...' && index !== 0 && 'ms-[17px]'
+            } rounded-full ${
+              currentPage === page
+                ? 'bg-primary-teal text-white'
+                : 'bg-gray-200'
+            }`}
+            onClick={() => typeof page === 'number' && setCurrentPage(page)}
+            disabled={page === '...'}
+          >
+            {page}
+          </button>
+        ))}
+
+        <div className="w-[69px]">
+          {currentPage < numberOfPages && (
+            <button
+              onClick={() => setCurrentPage(currentPage + 1)}
+              className="rounded-full flex items-center justify-center text-[13px] bg-primary-blues-200 py-2 px-4 ms-[25px]"
+            >
+              Next
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

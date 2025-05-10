@@ -2,17 +2,19 @@ import AuthBanner from '../features/authentication/components/AuthBanner';
 import { Divider } from '@mui/material';
 import LoginForm from '../features/authentication/components/LoginForm';
 import TextButton from '../ui/shared/TextButton';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import Header from '../ui/guest/Header';
 
 export default function Login() {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
+  // const [searchParams] = useSearchParams();
 
-  const prevRoute = searchParams.get('prev') || 'register';
+  // const prevRoute = searchParams.get('prev') || 'register';
 
   return (
-    <div className="flex min-h-screen py-20 w-full bg overflow-hidden bg-gradient-to-br from-[#DEF1FF] to-[#FFF] justify-center items-center">
-      <div className="flex w-[968px] rounded-[30px]">
+    <div className="flex flex-col min-h-screen pb-20 w-full bg overflow-hidden bg-gradient-to-br from-[#DEF1FF] to-[#FFF] justify-center items-center">
+      <Header />
+      <div className="flex pt-10 mt-[108px] w-[968px] rounded-[30px]">
         {/* Left Image */}
         <div className="hidden md:flex h-full rounded-l-[30px] overflow-hidden">
           <img
@@ -48,7 +50,7 @@ export default function Login() {
               Don’t have an account?
               <TextButton
                 text="Sign Up"
-                onClick={() => navigate(`/${prevRoute}`)}
+                onClick={() => navigate(`/choose-accounttype`)}
               />
             </p>
           </div>

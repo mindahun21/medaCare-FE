@@ -1,0 +1,130 @@
+@baseUrl = https://medacare-be.onrender.com/api/v1
+@patient_token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ1NDk1MDQ2LCJpYXQiOjE3NDU0OTQxNDYsImp0aSI6ImRjNGY5M2U3NTc5MDQwZGViNWE1OGE4ZmFjM2YzYTcyIiwidXNlcl9pZCI6Mn0.C1ja2HFiDuqZk8m9o5DCiHh9owXQmGIHFYhjOAJzdvI
+@admin_token = Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbjFAZ21haWwuY29tIiwiaWF0IjoxNzQ2NzMwMTk1LCJleHAiOjE3NTQ2MTk1OTV9.CHIRIUtApC7QK-cI1ret7oW5ydWCh2IbhgyCNBSvS8E
+@institution_token = Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpbnN0aXR1dGlvbjFAZ21haWwuY29tIiwiaWF0IjoxNzQ2ODE4NjI3LCJleHAiOjE3NTQ3MDgwMjd9.4J7Y6VpT_cV5OQwqj8WndwlUKJCY1tsm3bf8ox88oks
+@physician_token = Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkb2N0b3IxQGdtYWlsLmNvbSIsImlhdCI6MTc0NjczMTU1OCwiZXhwIjoxNzU0NjIwOTU4fQ.0ncEcgVzJ-6bzdRy8ZUzDgBhh4e25s2iWGc3nJJfXZk
+@patients_token = Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtbmRhaHVuMEBnbWFpbC5jb20iLCJpYXQiOjE3NDY4Mjc3NzcsImV4cCI6MTc1NDcxNzE3N30.YzsuyMFyPMQBjKzvxU2Db_ht7eVlBITT-P_eIximhTY
+
+
+
+###
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "doctor1@gmail.com",
+  "password": "12345678"
+}
+
+
+###
+POST {{baseUrl}}/physicians/work-hour
+Content-Type: application/json
+Authorization: {{physician_token}}
+
+{
+  "date": "2025-12-08",
+  "startTime": "02:30:00",
+  "endTime": "10:30:00"
+}
+
+###
+GET {{baseUrl}}/users/current
+Content-Type: application/json
+Authorization: {{physician_token}}
+
+###
+GET {{baseUrl}}/physicians/work-hour
+Content-Type: application/json
+Authorization: {{physician_token}}
+
+###
+DELETE {{baseUrl}}/physicians/work-hour/2
+Content-Type: application/json
+Authorization: {{physician_token}}
+
+
+
+###
+GET {{baseUrl}}/patients
+Content-Type: application/json
+Authorization: {{admin_token}}
+
+###
+GET {{baseUrl}}/physicians
+Content-Type: application/json
+Authorization: {{admin_token}}
+
+###
+GET {{baseUrl}}/physicians/all
+Content-Type: application/json
+Authorization: {{admin_token}}
+
+###
+GET {{baseUrl}}/institutions/physicians
+Content-Type: application/json
+Authorization: {{institution_token}}
+
+###
+GET {{baseUrl}}/physicians
+Content-Type: application/json
+Authorization: {{institution_token}}
+
+
+###
+GET {{baseUrl}}/physicians/1/available/dates
+Content-Type: application/json
+Authorization: {{physician_token}}
+
+
+
+###   no resource found
+GET {{baseUrl}}/workingHoursWindows/1
+Content-Type: application/json
+Authorization: {{physician_token}}
+
+
+
+###   no resource found
+GET {{baseUrl}}/physicians/appointments
+Content-Type: application/json
+Authorization: {{physician_token}}
+
+
+###   no resource found
+GET {{baseUrl}}/recommendations/physician
+Content-Type: application/json
+Authorization: {{patients_token}}
+
+
+###   no resource found
+GET {{baseUrl}}/physicians/6/available/dates
+Content-Type: application/json
+Authorization: {{patients_token}}
+
+
+###   no resource found
+GET {{baseUrl}}/physicians/6/available-slots/2025-05-12/30
+Content-Type: application/json
+Authorization: {{patients_token}}
+
+
+
+
+###   no resource found
+POST {{baseUrl}}/physicians/book/slot/6
+Content-Type: application/json
+Authorization: {{patients_token}}
+
+
+###   no resource found
+POST {{baseUrl}}/physicians/booking/finalization/6
+Content-Type: application/json
+Authorization: {{patients_token}}
+
+###  
+GET {{baseUrl}}/assistance/consultation?string="i have a problem with allergies how to prevent them"
+Content-Type: application/json
+Authorization: {{physician_token}}
+
+

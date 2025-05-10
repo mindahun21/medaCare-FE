@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import CompleteProfileFormOne from '../features/profile/components/physician/CompleteProfileFormOne';
 import CompleteProfileFormThree from '../features/profile/components/physician/CompleteProfileFormThree';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -20,7 +20,9 @@ import { RootState } from '../data/store';
 import PageLoader from '../ui/shared/PageLoader';
 import { selectIsAuthenticated } from '../features/authentication/AuthSelectors';
 import SubmitButton from '../ui/shared/SubmitButton';
-import Logout from '../features/authentication/components/Logout';
+import { useAppDispatch } from '../data/hooks';
+import { fetchUser } from '../data/authSlice';
+import Header from '../ui/guest/Header';
 
 export default function CompletePhysicianProfile() {
   const { token, loading } = useSelector((state: RootState) => state.auth);
@@ -28,6 +30,7 @@ export default function CompletePhysicianProfile() {
   const { showMessage } = useMessage();
   const [currentStep, setCurrentStep] = useState(1);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const totalStep = 3;
 
   const methods = useForm<CompletePhysicianProfileType>({
@@ -37,12 +40,6 @@ export default function CompletePhysicianProfile() {
     },
     mode: 'onTouched',
   });
-
-  useEffect(() => {
-    if (!token && !isAuthenticated) {
-      navigate('/login');
-    }
-  }, [token, isAuthenticated, navigate]);
 
   const goToNextStep = async () => {
     let isStepValid = true;
@@ -70,7 +67,13 @@ export default function CompletePhysicianProfile() {
 
   const mutation = useMutation({
     mutationFn: submitPhysicianProfile,
-    onSuccess: () => {
+    onSuccess: async () => {
+      await dispatch(fetchUser());
+      showMessage({
+        type: 'success',
+        text: 'application submited successfuly',
+      });
+
       navigate('/application-submitted');
     },
     onError: () => {
@@ -82,13 +85,31 @@ export default function CompletePhysicianProfile() {
     const isValid = await methods.trigger();
     if (!isValid) return;
     const values = methods.getValues();
+    const formData = new FormData();
+    formData.append('phoneNumber', values.phoneNumber);
+    formData.append('gender', values.gender);
+    formData.append('dateOfBirth', values.dateOfBirth);
 
-    const payload: Partial<CompletePhysicianProfileType> = {
-      phoneNumber: values.phoneNumber,
-      dateOfBirth: values.dateOfBirth,
-      gender: values.gender,
-    };
-    mutation.mutate(payload);
+    if (values.profilePhoto) {
+      formData.append('profilePhoto', values.profilePhoto);
+    }
+    if (values.nationalId) {
+      formData.append('nationalId', values.nationalId);
+    }
+    if (values.resume) {
+      formData.append('resume', values.resume);
+    }
+    if (values.medicalLicense) {
+      formData.append('medicalLicense', values.medicalLicense);
+    }
+    if (values.specializationDoc) {
+      formData.append('specializationDoc', values.specializationDoc);
+    }
+    if (values.degreeCertificate) {
+      formData.append('degreeCertificate', values.degreeCertificate);
+    }
+
+    mutation.mutate(formData);
   };
 
   const stepTitles = ['Personal Info', 'Personal Docs', 'Professional Docs'];
@@ -111,8 +132,9 @@ export default function CompletePhysicianProfile() {
   }
 
   return (
-    <div className="min-h-screen w-full gradient-teal-light flex justify-center items-center overflow-y-auto scrollbar-hide relative">
-      <div className="mx-4 bg-white min-h-[700px flex justify-center w-full sm:w-[500px] md:w-[700px] rounded-2xl shadow-lg my-[50px]">
+    <div className="min-h-screen w-full gradient-teal-light flex justify-center items-center overflow-y-auto scrollbar-hide py-[50px] ">
+      <Header />
+      <div className="mx-4 bg-white min-h-[700px] flex justify-center w-full sm:w-[500px] md:w-[700px] rounded-2xl shadow-lg my-[50px]">
         <div className=" flex flex-col gap-2 justify-center items-center sm:py-10 h-full w-full max-w-[500px] ">
           <AuthBanner />
           <h1 className="text-4xl font-semibold text-center gradient-primary pb-3">
@@ -210,9 +232,6 @@ export default function CompletePhysicianProfile() {
             )}
           </div>
         </div>
-      </div>
-      <div className="absolute top-10 right-10">
-        <Logout />
       </div>
     </div>
   );

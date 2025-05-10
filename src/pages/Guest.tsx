@@ -7,19 +7,10 @@ import Hero from '../ui/guest/Hero';
 import HowItWorks from '../ui/guest/HowItWorks';
 import Services from '../ui/guest/Services';
 import { RootState } from '../data/store';
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import PageLoader from '../ui/shared/PageLoader';
 
 export default function Guest() {
-  const { loading, user } = useSelector((state: RootState) => state.auth);
-  const navigate = useNavigate();
-  useEffect(() => {
-    if (!loading && user) {
-      navigate('/dashboard');
-    }
-  }, [loading, user, navigate]);
-
+  const { loading } = useSelector((state: RootState) => state.auth);
   if (loading) {
     return <PageLoader />;
   }

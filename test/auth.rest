@@ -1,0 +1,157 @@
+@baseUrl = https://medacare-be.onrender.com/api/v1
+@patient_token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ1NDk1MDQ2LCJpYXQiOjE3NDU0OTQxNDYsImp0aSI6ImRjNGY5M2U3NTc5MDQwZGViNWE1OGE4ZmFjM2YzYTcyIiwidXNlcl9pZCI6Mn0.C1ja2HFiDuqZk8m9o5DCiHh9owXQmGIHFYhjOAJzdvI
+@admin_token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ2NDQzMjE0LCJpYXQiOjE3NDY0NDIzMTQsImp0aSI6ImVmN2VjNWFiMDEyYTRiMjRhZWZkODM4MGM0NDg4MGM4IiwidXNlcl9pZCI6MX0.gMlGUNFm8cIvparPBGatrWellOrB5IMW44W1fAUOic8
+@institution_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc0NjYzOTAyOSwiaWF0IjoxNzQ2MjA3MDI5LCJqdGkiOiI5YzZjZjA1ZjMzYTU0NmY2ODlhMGNjMzBiYTMyODUzMSIsInVzZXJfaWQiOjl9.xMA1ArsiF9TUGAzMD1miJyNhWUoiGgclQKLwnmLWH8o
+@physician_token = Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJldGhpb3Rlc3QxMEBnbWFpbC5jb20iLCJpYXQiOjE3NDY4MDA4NDksImV4cCI6MTc1NDY5MDI0OX0.ob_CstNgIZvKhaGoVKXUvI_F4B0K4VXVl-9Ql-7mnSk
+@patients_token = Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJldGhpb3Rlc3QxMEBnbWFpbC5jb20iLCJpYXQiOjE3NDY4Mjc0ODcsImV4cCI6MTc1NDcxNjg4N30.wZD_OXnWsbL3zYdjDJWmTt99oPb2Mm7zpZR1bf3QMK0
+
+
+
+@phoneNumber=+251912345678
+@gender=male
+@dateOfBirth=1990-01-01
+
+@profilePhoto=/home/mindahun/Pictures/bike/bike1.png
+@file=/home/mindahun/Documents/Game1-code-2025.pdf
+
+###
+POST {{baseUrl}}/auth/signup
+Content-Type: application/json
+
+{
+  "email": "ethiotest10@gmail.com",
+  "password": "Xps@xps10",
+  "firstName": "lllllll",
+  "lastName": "aaaaaaa",
+  "origin": "SELF_REGISTERED",
+  "role": "PHYSICIAN"
+}
+
+###
+POST {{baseUrl}}/auth/verify-email?email=ethiotest10@gmail.com&token=884776
+Content-Type: application/json
+
+
+###
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "ethiotest10@gmail.com",
+  "password": "Xps@xps21"
+}
+
+###
+POST {{baseUrl}}/auth/forgot-password?email=ethiotest10@gmail.com
+Content-Type: application/json
+
+###
+PATCH {{baseUrl}}/auth/password-reset
+Content-Type: application/json
+
+{
+  "email": "ethiotest10@gmail.com",
+  "password": "Xps@xps21"
+}
+
+###
+PUT {{baseUrl}}/auth/password
+Content-Type: application/json
+
+{
+  "email": "ethiotest10@gmail.com",
+  "oldPassword": "Xps@xps10",
+  "newPassword": "Xps@xps21"
+}
+
+
+###
+POST {{baseUrl}}/auth/verify-verification-code?email=ethiotest10@gmail.com&code=552853
+Content-Type: application/json
+
+
+### Create Physician with Files
+POST {{baseUrl}}/physicians
+Authorization: {{physician_token}}
+Content-Type: multipart/form-data; boundary=boundary
+
+
+--boundary
+Content-Disposition: form-data; name="phoneNumber"
+Content-Type: text/plain
+
+{{phoneNumber}}
+--boundary
+Content-Disposition: form-data; name="gender"
+Content-Type: text/plain
+
+{{gender}}
+--boundary
+Content-Disposition: form-data; name="dateOfBirth"
+Content-Type: text/plain
+
+{{dateOfBirth}}
+--boundary
+Content-Disposition: form-data; name="profilePhoto"; filename="photo.jpg"
+Content-Type: image/jpeg
+
+< {{profilePhoto}}
+--boundary
+Content-Disposition: form-data; name="nationalId"; filename="id.pdf"
+Content-Type: application/pdf
+
+< {{file}}
+--boundary
+Content-Disposition: form-data; name="resume"; filename="resume.pdf"
+Content-Type: application/pdf
+
+< {{file}}
+--boundary
+Content-Disposition: form-data; name="medicalLicense"; filename="license.pdf"
+Content-Type: application/pdf
+
+< {{file}}
+--boundary
+Content-Disposition: form-data; name="specializationDoc"; filename="specialization.pdf"
+Content-Type: application/pdf
+
+< {{file}}
+--boundary
+Content-Disposition: form-data; name="degreeCertificate"; filename="degree.pdf"
+Content-Type: application/pdf
+
+< {{file}}
+--boundary--
+
+
+###
+POST {{baseUrl}}/auth/signup
+Content-Type: application/json
+
+{
+  "email": "mndahun0@gmail.com",
+  "password": "Xps@xps10",
+  "firstName": "lllllll",
+  "lastName": "aaaaaaa",
+  "origin": "SELF_REGISTERED",
+  "role": "PATIENT"
+}
+
+###
+POST {{baseUrl}}/auth/verify-email?email=mndahun0@gmail.com&token=396329
+Content-Type: application/json
+
+
+###
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "mndahun0@gmail.com",
+  "password": "Xps@xps10"
+}
+
+
+
+
+

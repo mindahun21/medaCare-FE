@@ -17,7 +17,7 @@ export const MessageProvider = ({ children }: { children: ReactNode }) => {
   const showMessage = (msg: Message) => {
     setMessage(msg);
     if (msg.duration !== 0) {
-      setTimeout(() => setMessage(null), msg.duration || 5000);
+      setTimeout(() => setMessage(null), msg.duration || 8000);
     }
   };
 
