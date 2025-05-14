@@ -3,10 +3,33 @@ import { useAdminPhysicians } from '../hooks/dashboardHooks';
 import PageLoader from '../../../ui/shared/PageLoader';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import PhysicianTable from '../ui/PhysicianTable';
+import Role from '../../../ui/shared/Role';
+import SubmitButton from '../../../ui/shared/SubmitButton';
+import AddPhysicianModal from '../ui/AddPhysicianModal';
+import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 
 export default function Physicians() {
   const { data: physicians, isLoading, isError } = useAdminPhysicians();
 
+  const sortedPhysicians = useMemo(() => {
+    if (!physicians) return [];
+
+    const priority = {
+      PENDING: 0,
+      REJECTED: 1,
+      APPROVED: 2,
+    };
+
+    return [...physicians].sort((a, b) => {
+      const aPriority = priority[a.accountRequestStatus] ?? 99;
+      const bPriority = priority[b.accountRequestStatus] ?? 99;
+
+      if (aPriority !== bPriority) {
+        return aPriority - bPriority;
+      }
+      return a.firstName.localeCompare(b.firstName);
+    });
+  }, [physicians]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const numberOfPages = physicians
@@ -14,11 +37,11 @@ export default function Physicians() {
     : 0;
 
   const currentPageData = useMemo(() => {
-    if (!physicians) return [];
+    if (!sortedPhysicians) return [];
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    return physicians.slice(startIndex, endIndex);
-  }, [currentPage, physicians]);
+    return sortedPhysicians.slice(startIndex, endIndex);
+  }, [currentPage, sortedPhysicians]);
 
   const getVisiblePages = (currentPage: number, totalPages: number) => {
     const visiblePages: (number | string)[] = [];
@@ -39,6 +62,7 @@ export default function Physicians() {
 
     return visiblePages;
   };
+  const [isAddPhysicianOpen, setIsAddPhysicianOpen] = useState(false);
 
   if (isLoading) {
     return <PageLoader />;
@@ -56,11 +80,24 @@ export default function Physicians() {
               Physicians registered in medacare platform
             </p>
           </div>
-          <div className="flex text-[#344054] text-[12px]  ">
+          <div className="flex text-[#344054] text-[12px] gap-5  ">
             <button className="flex items-center gap-1 cursor-pointer p-[8px] hover:bg-primary-teal-surface rounded-[6px]">
               <FilterListIcon sx={{ height: 17, width: 17 }} />
               <span>Filter</span>
             </button>
+            <Role allowedRoles={['ORG_ADMIN']} fallback={null}>
+              {() => (
+                <div className="flex items-end ">
+                  <SubmitButton
+                    onClick={() => setIsAddPhysicianOpen(true)}
+                    type="button"
+                    text="Add Physician"
+                    isPending={false}
+                    icon={<AddOutlinedIcon />}
+                  />
+                </div>
+              )}
+            </Role>
           </div>
         </div>
         <PhysicianTable data={currentPageData ?? []} />
@@ -115,6 +152,14 @@ export default function Physicians() {
           )}
         </div>
       </div>
+      <Role allowedRoles={['ORG_ADMIN']} fallback={null}>
+        {() => (
+          <AddPhysicianModal
+            isOpen={isAddPhysicianOpen}
+            onClose={() => setIsAddPhysicianOpen(false)}
+          />
+        )}
+      </Role>
     </div>
   );
 }

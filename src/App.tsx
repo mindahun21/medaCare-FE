@@ -34,6 +34,7 @@ import PatientAppointmentDetail from './features/dashboard/pages/PatientAppointm
 import Role from './ui/shared/Role';
 import ConsultationChat from './ui/shared/ConsultationChat';
 import { selectUser } from './features/authentication/AuthSelectors';
+import PasswordReset from './pages/PasswordReset';
 
 const queryClient = new QueryClient();
 
@@ -87,6 +88,7 @@ const router = createBrowserRouter([
       },
     ],
   },
+  { path: 'password/reset', element: <PasswordReset /> },
   {
     element: <ProtectedRoutes allowedRoles={['PHYSICIAN']} />,
     children: [
@@ -136,7 +138,7 @@ function App() {
         <RouterProvider router={router} />
         <GlobalMessage />
         <Role allowedRoles={['PHYSICIAN']} fallback={null}>
-          {user && user.firstLogin == false && <ConsultationChat />}
+          {() => user && user.firstLogin === false && <ConsultationChat />}
         </Role>
       </MessageProvider>
     </QueryClientProvider>

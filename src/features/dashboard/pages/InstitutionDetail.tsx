@@ -20,9 +20,12 @@ import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import { ColumnDef } from '@tanstack/react-table';
 import Table from '../ui/Table';
+import { useSelector } from 'react-redux';
+import { selectUserRole } from '../../authentication/AuthSelectors';
 
 export default function InstitutionDetail() {
   const { id } = useParams<{ id: string }>();
+  const role = useSelector(selectUserRole);
   const { data: institutions, isLoading, isError } = useInstitutions();
   const institution = institutions?.find((inst) => inst.id === Number(id));
   const [institutionDocuments, setInstitutionDocuments] = useState<
@@ -181,7 +184,7 @@ export default function InstitutionDetail() {
             <span className="text-[#1D586E99]">Institution Details</span>
           </div>
         </div>
-        {institution.requestStatus == 'PENDING' ? (
+        {institution.requestStatus == 'PENDING' && role == 'ADMIN' ? (
           <div className="flex gap-5 items-center">
             <button
               onClick={() =>

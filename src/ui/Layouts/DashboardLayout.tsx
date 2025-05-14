@@ -70,7 +70,7 @@ export default function DashboardLayout() {
                 : 'w-[calc(100%-85px)]'
             }  `}
           >
-            <div className="rounded-[3px] p-[1px] bg-gradient-to-r from-[#03A9F4] to-[#38AAD433] h-full ">
+            <div className="rounded-[3px] p-[1px] bg-gradient-to-r from-[#03A9F4] to-[#38AAD433] h-full ms-2">
               <div className="h-full rounded-[3px] bg-white px-2 flex ">
                 <IconButton size="medium">
                   <SearchIcon />

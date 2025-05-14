@@ -7,9 +7,6 @@ import Header from '../ui/guest/Header';
 
 export default function Login() {
   const navigate = useNavigate();
-  // const [searchParams] = useSearchParams();
-
-  // const prevRoute = searchParams.get('prev') || 'register';
 
   return (
     <div className="flex flex-col min-h-screen pb-20 w-full bg overflow-hidden bg-gradient-to-br from-[#DEF1FF] to-[#FFF] justify-center items-center">

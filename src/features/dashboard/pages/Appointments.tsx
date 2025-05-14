@@ -13,10 +13,16 @@ export default function Appointments() {
     : 0;
   const sortedAppointments = useMemo(() => {
     if (!appointments) return [];
-    return [...appointments].sort(
-      (a, b) =>
-        new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime()
-    );
+
+    return [...appointments].sort((a, b) => {
+      const aDateTime = new Date(
+        `${a.appointmentDate}T${a.appointmentStartTime}`
+      );
+      const bDateTime = new Date(
+        `${b.appointmentDate}T${b.appointmentStartTime}`
+      );
+      return aDateTime.getTime() - bDateTime.getTime();
+    });
   }, [appointments]);
 
   const currentPageData = useMemo(() => {

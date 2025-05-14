@@ -17,6 +17,7 @@ type FileUploadInputProps<T extends FieldValues> = {
   accept: { [key: string]: string[] };
   description?: string;
   maxSize: number;
+  required?: boolean;
 };
 
 function FileUploadInput<T extends FieldValues>({
@@ -25,6 +26,7 @@ function FileUploadInput<T extends FieldValues>({
   description,
   accept,
   maxSize,
+  required = true,
 }: FileUploadInputProps<T>) {
   const {
     setValue,
@@ -49,9 +51,16 @@ function FileUploadInput<T extends FieldValues>({
 
   return (
     <div className="flex flex-col p-5 border rounded-xl border-gray-200 shadow-md">
-      <p className="text-[14px] leading-[21px] text-[#181D27] font-bold ">
-        {label}
-      </p>
+      <div className="flex justify-start">
+        <p className="text-[14px] leading-[21px] text-[#181D27] font-bold relative ">
+          {label}
+          {required && (
+            <span className="text-red-600 absolute -top-1 -right-4 text-xl ">
+              *
+            </span>
+          )}
+        </p>
+      </div>
       {description && (
         <p className="text-[10px] leading-[15px] text-[#6C606C] ">
           {description}

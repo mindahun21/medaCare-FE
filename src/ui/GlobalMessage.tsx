@@ -36,7 +36,9 @@ export default function GlobalMessage() {
         </div>
       )}
       <button
-        className="absolute top-1 right-2 border border-white flex items-center text-white rounded-full cursor-pointer"
+        className={` ${
+          message ? 'flex' : 'hidden'
+        } absolute top-1 right-2 border border-white  items-center text-white rounded-full cursor-pointer`}
         onClick={() => clearMessage()}
       >
         <CloseIcon sx={{ height: 16, width: 16 }} />

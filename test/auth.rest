@@ -2,8 +2,8 @@
 @patient_token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ1NDk1MDQ2LCJpYXQiOjE3NDU0OTQxNDYsImp0aSI6ImRjNGY5M2U3NTc5MDQwZGViNWE1OGE4ZmFjM2YzYTcyIiwidXNlcl9pZCI6Mn0.C1ja2HFiDuqZk8m9o5DCiHh9owXQmGIHFYhjOAJzdvI
 @admin_token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ2NDQzMjE0LCJpYXQiOjE3NDY0NDIzMTQsImp0aSI6ImVmN2VjNWFiMDEyYTRiMjRhZWZkODM4MGM0NDg4MGM4IiwidXNlcl9pZCI6MX0.gMlGUNFm8cIvparPBGatrWellOrB5IMW44W1fAUOic8
 @institution_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc0NjYzOTAyOSwiaWF0IjoxNzQ2MjA3MDI5LCJqdGkiOiI5YzZjZjA1ZjMzYTU0NmY2ODlhMGNjMzBiYTMyODUzMSIsInVzZXJfaWQiOjl9.xMA1ArsiF9TUGAzMD1miJyNhWUoiGgclQKLwnmLWH8o
-@physician_token = Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJldGhpb3Rlc3QxMEBnbWFpbC5jb20iLCJpYXQiOjE3NDY4MDA4NDksImV4cCI6MTc1NDY5MDI0OX0.ob_CstNgIZvKhaGoVKXUvI_F4B0K4VXVl-9Ql-7mnSk
-@patients_token = Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJldGhpb3Rlc3QxMEBnbWFpbC5jb20iLCJpYXQiOjE3NDY4Mjc0ODcsImV4cCI6MTc1NDcxNjg4N30.wZD_OXnWsbL3zYdjDJWmTt99oPb2Mm7zpZR1bf3QMK0
+@physician_token = Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJldGhpb3Rlc3QxMEBnbWFpbC5jb20iLCJpYXQiOjE3NDcwODgyMTIsImV4cCI6MTc1NDk3NzYxMn0.HQ3yAQJXWofey3VOGfztn6s8Bt3jtb1_lYFLwdZ2Hwo
+@patients_token = Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZW56aWxrMjBAZ21haWwuY29tIiwiaWF0IjoxNzQ3MTE2NTY4LCJleHAiOjE3NTUwMDU5Njh9.t-RZBbYGllrFzuMGozYLeHoILTiYPorzmxHxpsz_dGI
 
 
 
@@ -28,7 +28,7 @@ Content-Type: application/json
 }
 
 ###
-POST {{baseUrl}}/auth/verify-email?email=ethiotest10@gmail.com&token=884776
+POST {{baseUrl}}/auth/verify-email?email=ethiotest10@gmail.com&token=795324
 Content-Type: application/json
 
 
@@ -38,7 +38,7 @@ Content-Type: application/json
 
 {
   "email": "ethiotest10@gmail.com",
-  "password": "Xps@xps21"
+  "password": "Xps@xps10"
 }
 
 ###
@@ -51,7 +51,7 @@ Content-Type: application/json
 
 {
   "email": "ethiotest10@gmail.com",
-  "password": "Xps@xps21"
+  "password": "Xps@xps10"
 }
 
 ###
@@ -147,11 +147,34 @@ POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-  "email": "mndahun0@gmail.com",
-  "password": "Xps@xps10"
+  "email": "tenzilk20@gmail.com",
+  "password": "Bintk1995Ham@"
 }
 
 
 
+###
+POST {{baseUrl}}/patients
+Content-Type: application/json
+Authorization: {{patients_token}}
+
+{
+  "dateOfBirth": "2025-05-13",
+  "gender": "Female",
+  "contactNumber": "+251987168523",
+  "emergencyContactName": "abe",
+  "emergencyContactNumber": "+251987452369",
+  "preferredLanguage": "Amharic",
+  "maritalStatus": "Single",
+  "region": "Addis Ababa",
+  "city": "Addis",
+  "subCity": "Bole",
+  "bloodType": "O+",
+  "heightInMeters": 1.75,
+  "weightInKg": 70.0,
+  "allergies": "peanuts",
+  "medicalHistory": "Diabetics",
+  "pastDiagnosis": "pneumonia in 2020"
+}
 
 

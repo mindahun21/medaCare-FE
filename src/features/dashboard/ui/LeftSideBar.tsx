@@ -25,48 +25,58 @@ export default function LeftSideBar({ isOpen }: { isOpen: boolean }) {
           to="/home/dashboard"
         />
         <Role allowedRoles={['ADMIN', 'ORG_ADMIN']} fallback={null}>
-          <Item
-            isActive={location.pathname.includes('/physicians')}
-            isOpen={isOpen}
-            icon={<EventNoteIcon />}
-            text="Physicians"
-            to="/home/physicians"
-          />
+          {() => (
+            <Item
+              isActive={location.pathname.includes('/physicians')}
+              isOpen={isOpen}
+              icon={<EventNoteIcon />}
+              text="Physicians"
+              to="/home/physicians"
+            />
+          )}
         </Role>
 
         <Role allowedRoles={['ADMIN']} fallback={null}>
-          <Item
-            isActive={location.pathname.includes('/institutions')}
-            isOpen={isOpen}
-            icon={<EventNoteIcon />}
-            text="Institutions"
-            to="/home/institutions"
-          />
+          {() => (
+            <Item
+              isActive={location.pathname.includes('/institutions')}
+              isOpen={isOpen}
+              icon={<EventNoteIcon />}
+              text="Institutions"
+              to="/home/institutions"
+            />
+          )}
         </Role>
-        <Role allowedRoles={['ADMIN', 'ORG_ADMIN']} fallback={null}>
-          <Item
-            isActive={location.pathname.includes('/patients')}
-            isOpen={isOpen}
-            icon={<EventNoteIcon />}
-            text="Patients"
-            to="/home/patients"
-          />
+        <Role allowedRoles={['ADMIN']} fallback={null}>
+          {() => (
+            <Item
+              isActive={location.pathname.includes('/patients')}
+              isOpen={isOpen}
+              icon={<EventNoteIcon />}
+              text="Patients"
+              to="/home/patients"
+            />
+          )}
         </Role>
         <Role allowedRoles={['PHYSICIAN']} fallback={null}>
-          <Item
-            isActive={location.pathname.includes('/schedules')}
-            isOpen={isOpen}
-            icon={<EventNoteIcon />}
-            text="Schedules"
-            to="/home/schedules"
-          />
-          <Item
-            isActive={location.pathname.includes('/appointments')}
-            isOpen={isOpen}
-            icon={<EventNoteIcon />}
-            text="appointments"
-            to="/home/appointments"
-          />
+          {() => (
+            <>
+              <Item
+                isActive={location.pathname.includes('/schedules')}
+                isOpen={isOpen}
+                icon={<EventNoteIcon />}
+                text="Schedules"
+                to="/home/schedules"
+              />
+              <Item
+                isActive={location.pathname.includes('/appointments')}
+                isOpen={isOpen}
+                icon={<EventNoteIcon />}
+                text="appointments"
+                to="/home/appointments"
+              />
+            </>
+          )}
         </Role>
       </div>
     </div>

@@ -25,7 +25,9 @@ export default function ProtectedRoutes({
     if (loading || !authInitialized) return;
 
     if (!token || !isAuthenticated) {
-      navigate('/login', { replace: true });
+      if (location.pathname !== '/login') {
+        navigate('/login', { replace: true });
+      }
       return;
     }
 
@@ -33,17 +35,31 @@ export default function ProtectedRoutes({
       const role = user.role?.name;
       const verified = user.verified;
 
+      if (user?.passwordResetRequired) {
+        if (location.pathname !== '/password/reset') {
+          navigate('/password/reset', { replace: true });
+          showMessage({
+            type: 'info',
+            text: 'You need to reset your password!',
+          });
+        }
+        return;
+      }
+
       if (
         role === 'PHYSICIAN' &&
         user?.entity &&
         isPhysicianEntity(user?.entity)
       ) {
         const status = user.entity?.accountRequestStatus;
+        const isGuestPath = location.pathname === '/';
+
         if (user.firstLogin) {
-          navigate('/profile/complete', { replace: true });
+          if (location.pathname !== '/profile/complete') {
+            navigate('/profile/complete', { replace: true });
+          }
           return;
         }
-        const isGuestPath = location.pathname === '/';
 
         if (status === 'PENDING' && !isGuestPath && !hasShownMessage.current) {
           showMessage({
@@ -67,22 +83,30 @@ export default function ProtectedRoutes({
       }
 
       if (role === 'PHYSICIAN' && verified === false) {
-        navigate('/verify-email', { replace: true });
+        if (location.pathname !== '/verify-email') {
+          navigate('/verify-email', { replace: true });
+        }
         return;
       }
 
       if (role === 'ORG_ADMIN' && verified === false) {
-        navigate('/application-submitted', { replace: true });
+        if (location.pathname !== '/application-submitted') {
+          navigate('/application-submitted', { replace: true });
+        }
         return;
       }
 
       if (role === 'PATIENT') {
-        navigate('/patient/redirect', { replace: true });
+        if (location.pathname !== '/patient/redirect') {
+          navigate('/patient/redirect', { replace: true });
+        }
         return;
       }
 
       if (!allowedRoles.includes(role)) {
-        navigate('/unauthorized', { replace: true });
+        if (location.pathname !== '/unauthorized') {
+          navigate('/unauthorized', { replace: true });
+        }
         return;
       }
     }
