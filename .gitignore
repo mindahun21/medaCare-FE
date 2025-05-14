@@ -17,6 +17,8 @@ pachage-lock.json
 .vite
 test.md
 tasks.md
+*.rest
+test
 
 # Editor directories and files
 .vscode/*

@@ -4,16 +4,17 @@ import React from 'react';
 
 export default function Role({
   allowedRoles,
-  children,
   fallback = null,
+  children,
 }: {
   allowedRoles: string[];
   fallback: React.ReactNode;
-  children: React.ReactNode;
+  children: () => React.ReactNode;
 }) {
   const role = useSelector(selectUserRole);
-  if (allowedRoles.includes(role || '')) {
-    return <>{children}</>;
-  }
-  return <>{fallback}</>;
+  return allowedRoles.includes(role || '') ? (
+    <>{children()}</>
+  ) : (
+    <>{fallback}</>
+  );
 }

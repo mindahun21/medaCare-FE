@@ -28,12 +28,6 @@ export default function AppointmentsTable({ data }: TableHandlerProps) {
         },
       },
       {
-        header: 'Consultation Type',
-        accessorKey: 'consultationType',
-        enableSorting: true,
-        enableColumnFilter: true,
-      },
-      {
         header: 'Start Time',
         accessorKey: 'appointmentStartTime',
         enableSorting: true,

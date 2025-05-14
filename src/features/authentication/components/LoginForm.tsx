@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { loginUser } from '../services/authApi';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
@@ -12,7 +12,7 @@ import { AxiosError } from 'axios';
 import { SharedTextFieldProps } from '../../../utils/variables';
 import SubmitButton from '../../../ui/shared/SubmitButton';
 import { useNavigate } from 'react-router-dom';
-import { selectUser, selectUserRole } from '../AuthSelectors';
+import { selectUser } from '../AuthSelectors';
 import { useSelector } from 'react-redux';
 import { isPhysicianEntity } from '../../../types/user';
 
@@ -33,10 +33,83 @@ export default function LoginForm() {
     password: '',
   });
   const user = useSelector(selectUser);
-  const role = useSelector(selectUserRole);
 
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState<LoginFormErrors>({});
+  const [waitingForUser, setWaitingForUser] = useState(false);
+  const [redirected, setRedirected] = useState(false);
+
+  useEffect(() => {
+    if (waitingForUser && user && !redirected) {
+      const firstLogin = user?.firstLogin;
+      const role = user?.role.name;
+
+      if (role == 'PATIENT') {
+        navigate('/patient/redirect', { replace: true });
+        setRedirected(true);
+
+        return;
+      }
+
+      if (user?.passwordResetRequired) {
+        console.log('navigating hear  .. ..... ');
+        navigate('/password/reset', { replace: true });
+        setRedirected(true);
+
+        showMessage({
+          type: 'info',
+          text: 'You need to reset your password!',
+        });
+        return;
+      }
+
+      if (
+        role == 'PHYSICIAN' &&
+        user?.entity &&
+        isPhysicianEntity(user?.entity)
+      ) {
+        const status = user?.entity?.accountRequestStatus;
+        if (firstLogin) {
+          navigate('/profile/complete');
+          setRedirected(true);
+
+          showMessage({
+            type: 'info',
+            text: 'Your profile is not complete yet!',
+          });
+          return;
+        }
+
+        if (status === 'PENDING') {
+          navigate('/');
+          setRedirected(true);
+
+          showMessage({
+            type: 'info',
+            text: 'Your account request has been submitted and is pending approval.',
+          });
+          return;
+        }
+
+        if (status === 'REJECTED') {
+          navigate('/');
+          setRedirected(true);
+
+          showMessage({
+            type: 'warning',
+            text: 'Your account has been rejected.',
+          });
+          return;
+        }
+      }
+
+      showMessage({ type: 'success', text: 'Login Successful!' });
+      setRedirected(true);
+
+      navigate('/home/dashboard');
+      setWaitingForUser(false);
+    }
+  }, [user, waitingForUser, navigate, showMessage, redirected]);
 
   const mutation = useMutation({
     mutationFn: loginUser,
@@ -45,66 +118,32 @@ export default function LoginForm() {
       const expiresAt = data.data?.data?.expiresAt;
       dispatch(setToken({ token: token, expiresAt: expiresAt }));
       await dispatch(fetchUser());
-      const firstLogin = user?.firstLogin;
-
-      if (
-        role === 'PHYSICIAN' &&
-        user?.entity &&
-        isPhysicianEntity(user?.entity)
-      ) {
-        const status = user?.entity?.accountRequestStatus;
-        if (firstLogin) {
-          navigate('/profile/complete');
-          showMessage({ type: 'info', text: 'Your profile not complete yet!' });
-
-          return;
-        }
-
-        if (status === 'PENDING') {
-          navigate('/');
-          showMessage({
-            type: 'info',
-            text: 'Your account request has been submitted and is pending approval.',
-          });
-          return;
-        }
-        if (status === 'REJECTED') {
-          navigate('/');
-
-          showMessage({
-            type: 'warning',
-            text: 'Your account has been rejected.',
-          });
-        }
-      }
-      showMessage({ type: 'success', text: 'Login Successful!' });
-      navigate('/home/dashboard');
+      setWaitingForUser(true);
     },
     onError: (err) => {
       const axiosError = err as AxiosError;
-      const errorData = axiosError.response?.data as ErrorResponse;
-
-      if (axiosError) {
-        if (axiosError.response?.status === 401) {
-          setErrors((prev) => ({
-            ...prev,
-            noneField: 'Email or password is incorrect',
-          }));
-        } else if (errorData.message) {
-          showMessage({
-            type: 'error',
-            text: errorData.message,
-          });
-          setErrors((prev) => ({
-            ...prev,
-            noneField: errorData.message,
-          }));
-        }
+      if (!axiosError.response) {
+        setErrors((prev) => ({
+          ...prev,
+          noneField: 'Network error. Please check your internet connection.',
+        }));
+        showMessage({
+          type: 'error',
+          text: 'Network error. Please check your internet connection.',
+        });
+        return;
       }
-      showMessage({ type: 'error', text: 'Something went wrong!' });
+      const errorData = axiosError.response?.data as ErrorResponse;
+      setErrors((prev) => ({
+        ...prev,
+        noneField: errorData.message || 'Email or password is incorrect',
+      }));
+      showMessage({
+        type: 'error',
+        text: errorData.message || 'Something went wrong!',
+      });
     },
   });
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };

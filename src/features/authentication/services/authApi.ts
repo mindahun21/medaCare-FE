@@ -42,3 +42,18 @@ export async function sendInstitutionrequest(formData: FormData) {
   });
   return response;
 }
+
+export async function resetPassword({
+  email,
+  password,
+}: {
+  email: string;
+  password: string;
+}) {
+  const response = await apiClient.patch(`auth/password-reset`, {
+    email: email,
+    password: password,
+  });
+
+  return response;
+}

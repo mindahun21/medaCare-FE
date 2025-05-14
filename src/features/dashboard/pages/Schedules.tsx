@@ -9,14 +9,13 @@ import {
 } from '../services/dashboardService';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { TextField } from '@mui/material';
+import { CircularProgress, TextField } from '@mui/material';
 import { SharedTextFieldProps } from '../../../utils/variables';
 import SubmitButton from '../../../ui/shared/SubmitButton';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useMessage } from '../../../contexts/MessageContext';
 import { AxiosError } from 'axios';
 import { useWorkingHours } from '../hooks/dashboardHooks';
-import PageLoader from '../../../ui/shared/PageLoader';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 export default function Schedules() {
@@ -192,7 +191,9 @@ export default function Schedules() {
       <div className="w-3/5 bg-gradient-to-br from-[#2CA6FF] to-[#FFFFFF] p-[1px] rounded-[20px] shadow-[0px_5px_20px_5px_#0000000F]">
         <div className=" h-full  p-[21px] ps-[40px] flex flex-col rounded-[18px] bg-[#ffffff] text-primary-teal ">
           {isLoading ? (
-            <PageLoader />
+            <div className="h-full w-full flex items-center justify-center">
+              <CircularProgress />
+            </div>
           ) : (
             <>
               <h1 className=" text-primary-teal text-[24px] font-semibold mb-[30px] ">

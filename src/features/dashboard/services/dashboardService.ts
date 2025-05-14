@@ -75,18 +75,23 @@ export const timeSlotSchema = z
   );
 export type TimeSlot = z.infer<typeof timeSlotSchema>;
 
-export const fetchAdminPhysicians = async (): Promise<Physician[]> => {
+export const fetchAdminPhysicians = async (
+  role: string
+): Promise<Physician[]> => {
   try {
-    const response = await apiClient.get('physicians/all');
+    const endpoint =
+      role === 'ADMIN' ? 'physicians/all' : 'institutions/physicians';
+    const response = await apiClient.get(endpoint);
     return response.data.data;
   } catch (error) {
     throw error;
   }
 };
 
+// /all
 export const fetchInstitutions = async (): Promise<Institution[]> => {
   try {
-    const response = await apiClient.get('institutions/pending/requests');
+    const response = await apiClient.get('institutions/all');
     return response.data.data;
   } catch (error) {
     throw error;
@@ -172,4 +177,13 @@ export const fetchAppointments = async () => {
 export const fetchAdminPatients = async () => {
   const response = await apiClient.get(`patients`);
   return response.data.data;
+};
+
+export const addPhysicianService = async (data: FormData) => {
+  const response = await apiClient.post('/institutions/physicians', data, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+  return response.data;
 };

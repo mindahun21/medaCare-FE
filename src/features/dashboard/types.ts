@@ -18,8 +18,8 @@ export interface Physician {
   phoneNumber: string;
   orgnanizationAffiliated: boolean | null;
   accountRequestStatus: 'PENDING' | 'APPROVED' | 'REJECTED';
-  requestStatus: 'PENDING' | 'APPROVED' | 'REJECTED';
-  healthcareProvider: string | null;
+  requestStatus?: 'PENDING' | 'APPROVED' | 'REJECTED';
+  healthcareProvider: Institution | null;
   documentInvalid: boolean;
   licenseNotValid: boolean;
   identityUnverified: boolean;
@@ -150,6 +150,7 @@ export interface WorkingHour {
 
 export interface Appointment {
   id: number;
+  status: string;
   createdOn: string;
   consultationType: string;
   meetingDetails: string;
@@ -158,4 +159,5 @@ export interface Appointment {
   appointmentEndTime: string;
   appointmentDateTz: string;
   appointmentDate: string;
+  physician?: Physician;
 }

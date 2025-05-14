@@ -6,8 +6,13 @@ import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+// import PageLoader from '../../../ui/shared/PageLoader';
 export default function PatientAppointmentDetail() {
+  // const { id } = useParams<{ id: string }>();
+  // const { data: appointments, isLoading, isError } = useAppointments();
+  // const appointment = appointments?.find((apoint) => apoint.id == Number(id));
   const patient = useMockUser();
+
   const [tab, setTab] = useState('overview');
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
@@ -17,6 +22,15 @@ export default function PatientAppointmentDetail() {
       day: 'numeric',
     });
   };
+
+  // if (isLoading) {
+  //   return <PageLoader />;
+  // }
+
+  // if (isError) {
+  //   return null;
+  // }
+
   return (
     <div className="p-[34px] flex flex-col min-h-[calc(100vh-65px)] ">
       <div className="flex justify-between items-center">

@@ -17,9 +17,12 @@ import Table from '../ui/Table';
 import DownloadOutlinedIcon from '@mui/icons-material/DownloadOutlined';
 import FileDownloadDoneOutlinedIcon from '@mui/icons-material/FileDownloadDoneOutlined';
 import { ColumnDef } from '@tanstack/react-table';
+import { useSelector } from 'react-redux';
+import { selectUserRole } from '../../authentication/AuthSelectors';
 
 export default function PhysicianDetail() {
   const { id } = useParams<{ id: string }>();
+  const role = useSelector(selectUserRole);
   const { data: physicians, isLoading, isError } = useAdminPhysicians();
   const physician = physicians?.find((p) => p.id === Number(id));
   const [physicianDocuments, setPhysicianDocuments] = useState<
@@ -31,12 +34,15 @@ export default function PhysicianDetail() {
   const { showMessage } = useMessage();
   const queryClient = useQueryClient();
   const [isRejectionOpen, setIsRejectionOpen] = useState(false);
-  // TODO: allow rejecting and approving only for admin
+
   useEffect(() => {
     if (physician) {
       const documents: UploadedFiles[] = Object.entries(physician)
         .filter(
-          ([key, value]) => key.endsWith('Url') && typeof value === 'string'
+          ([key, value]) =>
+            key.endsWith('Url') &&
+            typeof value === 'string' &&
+            key !== 'profilePhotoUrl'
         )
         .map(([key, value]) => ({
           id: key,
@@ -176,7 +182,7 @@ export default function PhysicianDetail() {
             <span className="text-[#1D586E99]">Physician Details</span>
           </div>
         </div>
-        {physician.accountRequestStatus == 'PENDING' ? (
+        {physician.accountRequestStatus == 'PENDING' && role == 'ADMIN' ? (
           <div className="flex gap-5 items-center">
             <button
               onClick={() =>
@@ -227,8 +233,12 @@ export default function PhysicianDetail() {
             <div className="w-[233px] h-[158px] rounded-[8px] overflow-hidden">
               <img
                 src={physician.profilePhotoUrl}
-                alt=""
+                alt="Profile"
                 className="object-cover w-full h-full"
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).src =
+                    '/images/doctor-hero.png';
+                }}
               />
             </div>
             <h1 className="text-primary-teal font-inter font-semibold text-[28px] leading-[150%] mt-[11px]">

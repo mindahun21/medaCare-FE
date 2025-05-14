@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
   fetchAdminPatients,
@@ -13,50 +14,70 @@ import {
   Physician,
   WorkingHour,
 } from '../types';
-import { useMemo } from 'react';
+import apiClient from '../../../services/apiClient';
+import { useSelector } from 'react-redux';
+import { selectUserRole } from '../../authentication/AuthSelectors';
 
-export const useAdminPhysicians = () => {
+export const useAdminPhysicians = (enabled = true) => {
+  const role = useSelector(selectUserRole) || '';
   return useQuery<Physician[], Error>({
-    queryKey: ['adminPhysicians'],
-    queryFn: fetchAdminPhysicians,
+    queryKey: ['adminPhysicians', role],
+    queryFn: () => fetchAdminPhysicians(role),
+    enabled: enabled,
     staleTime: 60 * 60 * 1000,
     retry: 3,
   });
 };
 
-export const useInstitutions = () => {
+export const useInstitutions = (enabled = true) => {
   return useQuery<Institution[], Error>({
     queryKey: ['institutions'],
     queryFn: fetchInstitutions,
+    enabled: enabled,
     staleTime: 60 * 60 * 1000,
     retry: 3,
   });
 };
 
-export const useWorkingHours = () => {
+export const useWorkingHours = (enabled = true) => {
   return useQuery<WorkingHour[], Error>({
     queryKey: ['workingHours'],
     queryFn: fetchAvailability,
+    enabled: enabled,
     staleTime: 60 * 60 * 1000,
     retry: 3,
   });
 };
 
-export const useAppointments = () => {
+export const useAppointments = (enabled = true) => {
   return useQuery<Appointment[], Error>({
     queryKey: ['appointments'],
     queryFn: fetchAppointments,
+    enabled: enabled,
     staleTime: 60 * 60 * 1000,
     retry: 3,
   });
 };
 
-export const useAdminPatients = () => {
+export const useAdminPatients = (enabled = true) => {
   return useQuery<Patient[], Error>({
     queryKey: ['adminPatients'],
     queryFn: fetchAdminPatients,
+    enabled: enabled,
     staleTime: 60 * 60 * 1000,
     retry: 3,
+  });
+};
+
+export const useAdminReports = (enabled = true) => {
+  return useQuery({
+    queryKey: ['adminReports'],
+    queryFn: async () => {
+      const response = await apiClient.get('reports/admin/dashboard');
+      return response.data.data;
+      console.log(response.data);
+    },
+    enabled: enabled,
   });
 };
 
@@ -85,6 +106,7 @@ export const useMockUser = (): Patient => {
       appointments: [
         {
           id: 101,
+          status: 'SCHEDULED',
           createdOn: '2025-05-01',
           consultationType: 'Virtual',
           meetingDetails: 'Follow-up on asthma control',
@@ -96,6 +118,7 @@ export const useMockUser = (): Patient => {
         },
         {
           id: 102,
+          status: 'SCHEDULED',
           createdOn: '2025-05-01',
           consultationType: 'Virtual',
           meetingDetails: 'Follow-up on asthma control',
@@ -107,6 +130,7 @@ export const useMockUser = (): Patient => {
         },
         {
           id: 103,
+          status: 'SCHEDULED',
           createdOn: '2025-05-01',
           consultationType: 'Virtual',
           meetingDetails: 'Follow-up on asthma control',

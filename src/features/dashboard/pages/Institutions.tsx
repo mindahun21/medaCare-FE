@@ -14,10 +14,23 @@ export default function Institutions() {
 
   const sortedInstitutions = useMemo(() => {
     if (!institutions) return [];
-    return [...institutions].sort(
-      (a, b) =>
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-    );
+
+    const priority = {
+      PENDING: 0,
+      REJECTED: 1,
+      APPROVED: 2,
+    };
+
+    return [...institutions].sort((a, b) => {
+      const aPriority = priority[a.requestStatus] ?? 99;
+      const bPriority = priority[b.requestStatus] ?? 99;
+
+      if (aPriority !== bPriority) {
+        return aPriority - bPriority;
+      }
+
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    });
   }, [institutions]);
 
   const currentPageData = useMemo(() => {

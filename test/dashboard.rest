@@ -1,9 +1,15 @@
 @baseUrl = https://medacare-be.onrender.com/api/v1
 @patient_token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ1NDk1MDQ2LCJpYXQiOjE3NDU0OTQxNDYsImp0aSI6ImRjNGY5M2U3NTc5MDQwZGViNWE1OGE4ZmFjM2YzYTcyIiwidXNlcl9pZCI6Mn0.C1ja2HFiDuqZk8m9o5DCiHh9owXQmGIHFYhjOAJzdvI
 @admin_token = Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbjFAZ21haWwuY29tIiwiaWF0IjoxNzQ2NzIyNTU4LCJleHAiOjE3NTQ2MTE5NTh9.Q2cSBgCqSMz3Kgp0hHwu_ppzSijZ_oAFWAh4VwpoCx8
-@institution_token = Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpbnN0aXR1dGlvbjFAZ21haWwuY29tIiwiaWF0IjoxNzQ2NzIyODEzLCJleHAiOjE3NTQ2MTIyMTN9.-cKrEtNHqV_0yU2HNuumKVidluIwiaHexdJ6FFW4HHg
+@institution_token = Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtaW5kYWh1bnRoZWJlc3RAZ21haWwuY29tIiwiaWF0IjoxNzQ3MTM4Njk2LCJleHAiOjE3NTUwMjgwOTZ9.XyOhE11BPKo6gxb9sXPeV-n7aE2Vkl3DE7FKTW-SzKY
 @physician_token = 
 
+@phoneNumber=+251912345678
+@gender=male
+@dateOfBirth=1990-01-01
+
+@profilePhoto=/home/mindahun/Pictures/bike/bike1.png
+@file=/home/mindahun/Documents/Game1-code-2025.pdf
 
 ###
 POST {{baseUrl}}/auth/login
@@ -19,8 +25,8 @@ POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-  "email": "institution1@gmail.com",
-  "password": "12345678"
+  "email": "mindahunthebest@gmail.com",
+  "password": "Xps@xps21"
 }
 
 
@@ -47,3 +53,98 @@ Authorization: {{institution_token}}
 GET {{baseUrl}}/physicians/pending/requests
 Content-Type: application/json
 Authorization: {{admin_token}}
+
+
+
+
+
+
+
+### Create Physician with Files
+POST {{baseUrl}}/institutions/physicians
+Authorization: {{institution_token}}
+Content-Type: multipart/form-data; boundary=boundary
+
+
+--boundary
+Content-Disposition: form-data; name="phoneNumber"
+Content-Type: text/plain
+
+{{phoneNumber}}
+--boundary
+Content-Disposition: form-data; name="email"
+Content-Type: text/plain
+
+asdhfkjhajsdhkjf@gmail.com
+--boundary
+Content-Disposition: form-data; name="specialization"
+Content-Type: text/plain
+
+Upper Body
+--boundary
+Content-Disposition: form-data; name="firstName"
+Content-Type: text/plain
+
+Dr. abebe
+--boundary
+Content-Disposition: form-data; name="lastName"
+Content-Type: text/plain
+
+kebede
+--boundary
+Content-Disposition: form-data; name="gender"
+Content-Type: text/plain
+
+{{gender}}
+--boundary
+Content-Disposition: form-data; name="dateOfBirth"
+Content-Type: text/plain
+
+{{dateOfBirth}}
+--boundary
+Content-Disposition: form-data; name="profilePhoto"; filename="photo.jpg"
+Content-Type: image/jpeg
+
+< {{profilePhoto}}
+--boundary
+Content-Disposition: form-data; name="nationalId"; filename="id.pdf"
+Content-Type: application/pdf
+
+< {{file}}
+--boundary
+Content-Disposition: form-data; name="resume"; filename="resume.pdf"
+Content-Type: application/pdf
+
+< {{file}}
+--boundary
+Content-Disposition: form-data; name="medicalLicense"; filename="license.pdf"
+Content-Type: application/pdf
+
+< {{file}}
+--boundary
+Content-Disposition: form-data; name="specializationDoc"; filename="specialization.pdf"
+Content-Type: application/pdf
+
+< {{file}}
+--boundary
+Content-Disposition: form-data; name="degreeCertificate"; filename="degree.pdf"
+Content-Type: application/pdf
+
+< {{file}}
+--boundary--
+
+
+###
+POST {{baseUrl}}/institutions/physicians
+Authorization: {{institution_token}}
+Content-Type: application/json
+
+{
+  "phoneNumber": "{{phoneNumber}}",
+  "email": "asdhfkjhajsdhkjf@gmail.com",
+  "specialization": "Upper Body",
+  "firstName": "Dr. abebe",
+  "lastName": "kebede",
+  "gender": "{{gender}}",
+  "dateOfBirth": "{{dateOfBirth}}"
+}
