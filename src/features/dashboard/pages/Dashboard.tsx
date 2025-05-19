@@ -113,19 +113,14 @@ export default function Dashboard() {
     if (!adminReports?.patientsByGender) return [];
     return [
       {
-        label: 'Female',
-        value: adminReports.patientsByGender[2].patientCount,
-        color: 'bg-blue-500',
-      },
-      {
         label: 'Male',
-        value: adminReports.patientsByGender[1].patientCount,
+        value: adminReports.patientsByGender[0].patientCount,
         color: 'bg-blue-300',
       },
       {
-        label: 'Child',
-        value: adminReports.patientsByGender[0].patientCount,
-        color: 'bg-blue-100',
+        label: 'Female',
+        value: adminReports.patientsByGender[1].patientCount,
+        color: 'bg-blue-500',
       },
     ];
   }, [adminReports]);
@@ -274,145 +269,155 @@ export default function Dashboard() {
               )}
             </Role>
           </div>
-          <div className="flex gap-4 w-full mt-[30px] ">
-            {/* Pie Chart */}
-            <div className="w-[400px] h-[320px] bg-gradient-to-r from-[#03A9F4] to-[#38AAD499] p-[2px] rounded-lg ">
-              <div className=" bg-white rounded-lg p-4 w-full h-full">
-                <div className="flex flex-col justify-start items-start mb-4">
-                  <h2 className="font-semibold text-[16px] leading-[20px] mb-5 ">
-                    Patients By Gender
-                  </h2>
-                </div>
+          <Role allowedRoles={['ADMIN']} fallback={null}>
+            {() => (
+              <div className="flex gap-4 w-full mt-[30px] ">
+                {/* Pie Chart */}
+                <div className="w-[400px] h-[320px] bg-gradient-to-r from-[#03A9F4] to-[#38AAD499] p-[2px] rounded-lg ">
+                  <div className=" bg-white rounded-lg p-4 w-full h-full">
+                    <div className="flex flex-col justify-start items-start mb-4">
+                      <h2 className="font-semibold text-[16px] leading-[20px] mb-5 ">
+                        Patients By Gender
+                      </h2>
+                    </div>
 
-                <div className="flex items-center">
-                  <div
-                    className="w-[167px] h-[167px] recharts-pie-sector"
-                    style={{ outline: 'none' }}
-                  >
-                    {isAdminReportLoading ? (
-                      <Skeleton
-                        variant="circular"
-                        width={'100%'}
-                        height={'100%'}
-                      />
-                    ) : (
-                      <ResponsiveContainer width="100%" height="100%">
-                        <PieChart>
-                          <RechartsTooltip
-                            formatter={(value, name) => [
-                              `${value} Patients`,
-                              name,
-                            ]}
-                            contentStyle={{
-                              backgroundColor: '#ffffff',
-                              border: '1px solid #ccc',
-                              borderRadius: '8px',
-                              padding: '10px',
-                            }}
+                    <div className="flex items-center">
+                      <div
+                        className="w-[167px] h-[167px] recharts-pie-sector"
+                        style={{ outline: 'none' }}
+                      >
+                        {isAdminReportLoading ? (
+                          <Skeleton
+                            variant="circular"
+                            width={'100%'}
+                            height={'100%'}
                           />
-                          <Pie
-                            data={pieChartData}
-                            dataKey="value"
-                            nameKey="label"
-                            cx="50%"
-                            cy="50%"
-                            outerRadius={70}
-                            innerRadius={45}
-                            labelLine={false}
-                            isAnimationActive={false}
-                            activeShape={false}
-                          >
-                            {pieChartData.map((entry, index) => (
-                              <Cell
-                                key={`cell-${index}`}
-                                fill={
-                                  entry.color === 'bg-blue-500'
-                                    ? '#3b82f6'
-                                    : entry.color === 'bg-blue-300'
-                                    ? '#60a5fa'
-                                    : '#bfdbfe'
-                                }
+                        ) : (
+                          <ResponsiveContainer width="100%" height="100%">
+                            <PieChart>
+                              <RechartsTooltip
+                                formatter={(value, name) => [
+                                  `${value} Patients`,
+                                  name,
+                                ]}
+                                contentStyle={{
+                                  backgroundColor: '#ffffff',
+                                  border: '1px solid #ccc',
+                                  borderRadius: '8px',
+                                  padding: '10px',
+                                }}
                               />
-                            ))}
-                          </Pie>
-                        </PieChart>
-                      </ResponsiveContainer>
-                    )}
-                  </div>
-
-                  <div className="ml-8 space-y-2 text-sm">
-                    {!isAdminReportLoading &&
-                      pieChartData.map((item, index) => (
-                        <div key={index} className="flex items-center gap-2">
-                          <div
-                            className={`w-2.5 h-2.5 rounded-full ${item.color}`}
-                          ></div>
-                          <MuiTooltip title={`${item.value} Patients`} arrow>
-                            <span>{item.label}</span>
-                          </MuiTooltip>
-                          <span className="ml-auto font-semibold">
-                            {item.value}
-                          </span>
-                        </div>
-                      ))}
-                    {isAdminReportLoading && (
-                      <div className="flex flex-col justify-center gap-4">
-                        <Skeleton
-                          variant="rectangular"
-                          width={150}
-                          height={20}
-                        />
-                        <Skeleton
-                          variant="rectangular"
-                          width={150}
-                          height={20}
-                        />
-                        <Skeleton
-                          variant="rectangular"
-                          width={150}
-                          height={20}
-                        />
+                              <Pie
+                                data={pieChartData}
+                                dataKey="value"
+                                nameKey="label"
+                                cx="50%"
+                                cy="50%"
+                                outerRadius={70}
+                                innerRadius={45}
+                                labelLine={false}
+                                isAnimationActive={false}
+                                activeShape={false}
+                              >
+                                {pieChartData.map((entry, index) => (
+                                  <Cell
+                                    key={`cell-${index}`}
+                                    fill={
+                                      entry.color === 'bg-blue-500'
+                                        ? '#3b82f6'
+                                        : entry.color === 'bg-blue-300'
+                                        ? '#60a5fa'
+                                        : '#bfdbfe'
+                                    }
+                                  />
+                                ))}
+                              </Pie>
+                            </PieChart>
+                          </ResponsiveContainer>
+                        )}
                       </div>
-                    )}
+
+                      <div className="ml-8 space-y-2 text-sm">
+                        {!isAdminReportLoading &&
+                          pieChartData.map((item, index) => (
+                            <div
+                              key={index}
+                              className="flex items-center gap-2"
+                            >
+                              <div
+                                className={`w-2.5 h-2.5 rounded-full ${item.color}`}
+                              ></div>
+                              <MuiTooltip
+                                title={`${item.value} Patients`}
+                                arrow
+                              >
+                                <span>{item.label}</span>
+                              </MuiTooltip>
+                              <span className="ml-auto font-semibold">
+                                {item.value}
+                              </span>
+                            </div>
+                          ))}
+                        {isAdminReportLoading && (
+                          <div className="flex flex-col justify-center gap-4">
+                            <Skeleton
+                              variant="rectangular"
+                              width={150}
+                              height={20}
+                            />
+                            <Skeleton
+                              variant="rectangular"
+                              width={150}
+                              height={20}
+                            />
+                            <Skeleton
+                              variant="rectangular"
+                              width={150}
+                              height={20}
+                            />
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Bar Graph */}
+                <div className="flex-1 bg-gradient-to-r from-[#03A9F4] to-[#38AAD499] p-[2px] rounded-lg ">
+                  <div className=" bg-white rounded-lg p-4 w-full h-full">
+                    <div className="flex flex-col justify-start items-start mb-4">
+                      <h2 className="font-semibold text-[16px] leading-[20px] mb-5 ">
+                        Patients
+                      </h2>
+                    </div>
+
+                    <div className="h-[200px] w-full relative bg-white flex items-end justify-between px-2 text-xs text-gray-500">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <LineChart data={barGraphData}>
+                          <XAxis dataKey="day" />
+                          <YAxis />
+                          <RechartsTooltip />
+                          <Legend />
+                          <Line
+                            type="monotone"
+                            dataKey="oldPatients"
+                            stroke="#3b82f6"
+                            name="Old Patients"
+                          />
+                          <Line
+                            type="monotone"
+                            dataKey="newPatients"
+                            stroke="#86efac"
+                            name="First Time Patients"
+                          />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-
-            {/* Bar Graph */}
-            <div className="flex-1 bg-gradient-to-r from-[#03A9F4] to-[#38AAD499] p-[2px] rounded-lg ">
-              <div className=" bg-white rounded-lg p-4 w-full h-full">
-                <div className="flex flex-col justify-start items-start mb-4">
-                  <h2 className="font-semibold text-[16px] leading-[20px] mb-5 ">
-                    Patients
-                  </h2>
-                </div>
-
-                <div className="h-[200px] w-full relative bg-white flex items-end justify-between px-2 text-xs text-gray-500">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={barGraphData}>
-                      <XAxis dataKey="day" />
-                      <YAxis />
-                      <RechartsTooltip />
-                      <Legend />
-                      <Line
-                        type="monotone"
-                        dataKey="oldPatients"
-                        stroke="#3b82f6"
-                        name="Old Patients"
-                      />
-                      <Line
-                        type="monotone"
-                        dataKey="newPatients"
-                        stroke="#86efac"
-                        name="First Time Patients"
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </div>
-              </div>
-            </div>
-          </div>
+            )}
+          </Role>
         </div>
         {/* notification section */}
         <div></div>
