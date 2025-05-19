@@ -3,7 +3,7 @@
 @admin_token = Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbjFAZ21haWwuY29tIiwiaWF0IjoxNzQ3MjE0NDQ0LCJleHAiOjE3NTUxMDM4NDR9.Jmfn1PV0KGtz5koMz5lQoaH5JkQzU_JS1Vu0sxFq97k
 @institution_token = Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtaW5kYWh1bnhwc0BnbWFpbC5jb20iLCJpYXQiOjE3NDcyMjIyNTMsImV4cCI6MTc1NTExMTY1M30.KgkqOggWNuh5YDRzMoXXC8jtrCjOPuPGK_TpMm7dBzM
 @physician_token = Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJldGhpb3Rlc3QxMEBnbWFpbC5jb20iLCJpYXQiOjE3NDcyMTMxMDcsImV4cCI6MTc1NTEwMjUwN30.ikafngznRDOLuK7p7e4Z-9pwVmh8nDMIfIgUsGXkDFA
-@patients_token = Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZW56aWxrMjBAZ21haWwuY29tIiwiaWF0IjoxNzQ3MTE2NTY4LCJleHAiOjE3NTUwMDU5Njh9.t-RZBbYGllrFzuMGozYLeHoILTiYPorzmxHxpsz_dGI
+@patients_token = Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwYXRpZW50MUBnbWFpbC5jb20iLCJpYXQiOjE3NDc2NzY4MDYsImV4cCI6MTc1NTU2NjIwNn0.xrmZ1F9LehYcnqxz-6UAg04cZoabz0Xl0lu4tOigsTo
 
 
 @profilePhoto=/home/mindahun/Pictures/bike/bike1.png
@@ -33,8 +33,8 @@ POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-  "email": "ethiotest10@gmail.com",
-  "password": "Xps@xps10"
+  "email": "patient1@gmail.com",
+  "password": "12345678"
 }
 
 ###
