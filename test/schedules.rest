@@ -3,7 +3,7 @@
 @admin_token = Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbjFAZ21haWwuY29tIiwiaWF0IjoxNzQ3MjE0NDQ0LCJleHAiOjE3NTUxMDM4NDR9.Jmfn1PV0KGtz5koMz5lQoaH5JkQzU_JS1Vu0sxFq97k
 @institution_token = Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtaW5kYWh1bnhwc0BnbWFpbC5jb20iLCJpYXQiOjE3NDcyMjIyNTMsImV4cCI6MTc1NTExMTY1M30.KgkqOggWNuh5YDRzMoXXC8jtrCjOPuPGK_TpMm7dBzM
 @physician_token = Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJldGhpb3Rlc3QxMEBnbWFpbC5jb20iLCJpYXQiOjE3NDcyMTMxMDcsImV4cCI6MTc1NTEwMjUwN30.ikafngznRDOLuK7p7e4Z-9pwVmh8nDMIfIgUsGXkDFA
-@patients_token = Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwYXRpZW50MUBnbWFpbC5jb20iLCJpYXQiOjE3NDc2NzY4MDYsImV4cCI6MTc1NTU2NjIwNn0.xrmZ1F9LehYcnqxz-6UAg04cZoabz0Xl0lu4tOigsTo
+@patients_token = Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwYXRpZW50MkBnbWFpbC5jb20iLCJpYXQiOjE3NDc2NzcxNzEsImV4cCI6MTc1NTU2NjU3MX0.UUIkZlNNIexpGt5Qazqu-jSeW5k9kSLpFUcUnyi4XSI
 
 
 @profilePhoto=/home/mindahun/Pictures/bike/bike1.png
@@ -33,7 +33,7 @@ POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-  "email": "patient1@gmail.com",
+  "email": "patient2@gmail.com",
   "password": "12345678"
 }
 
@@ -126,13 +126,13 @@ Authorization: {{patients_token}}
 
 
 ###   no resource found
-GET {{baseUrl}}/physicians/5/available/dates
+GET {{baseUrl}}/physicians/6/available/dates
 Content-Type: application/json
 Authorization: {{patients_token}}
 
 
 ###   no resource found
-GET {{baseUrl}}/physicians/5/available-slots/2025-05-31/30
+GET {{baseUrl}}/physicians/6/available-slots/2025-05-22/30
 Content-Type: application/json
 Authorization: {{patients_token}}
 
@@ -140,13 +140,13 @@ Authorization: {{patients_token}}
 
 
 ###   no resource found
-POST {{baseUrl}}/physicians/book/slot/40
+POST {{baseUrl}}/physicians/book/slot/26
 Content-Type: application/json
 Authorization: {{patients_token}}
 
 
 ###   no resource found
-POST {{baseUrl}}/physicians/booking/finalization/40
+POST {{baseUrl}}/physicians/booking/finalization/26
 Content-Type: application/json
 Authorization: {{patients_token}}
 
@@ -261,3 +261,5 @@ Content-Type: application/pdf
 
 {{file}}
 --boundary--
+
+

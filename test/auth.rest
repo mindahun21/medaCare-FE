@@ -2,7 +2,7 @@
 @patient_token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ1NDk1MDQ2LCJpYXQiOjE3NDU0OTQxNDYsImp0aSI6ImRjNGY5M2U3NTc5MDQwZGViNWE1OGE4ZmFjM2YzYTcyIiwidXNlcl9pZCI6Mn0.C1ja2HFiDuqZk8m9o5DCiHh9owXQmGIHFYhjOAJzdvI
 @admin_token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ2NDQzMjE0LCJpYXQiOjE3NDY0NDIzMTQsImp0aSI6ImVmN2VjNWFiMDEyYTRiMjRhZWZkODM4MGM0NDg4MGM4IiwidXNlcl9pZCI6MX0.gMlGUNFm8cIvparPBGatrWellOrB5IMW44W1fAUOic8
 @institution_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc0NjYzOTAyOSwiaWF0IjoxNzQ2MjA3MDI5LCJqdGkiOiI5YzZjZjA1ZjMzYTU0NmY2ODlhMGNjMzBiYTMyODUzMSIsInVzZXJfaWQiOjl9.xMA1ArsiF9TUGAzMD1miJyNhWUoiGgclQKLwnmLWH8o
-@physician_token = Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJldGhpb3Rlc3QxMEBnbWFpbC5jb20iLCJpYXQiOjE3NDcwODgyMTIsImV4cCI6MTc1NDk3NzYxMn0.HQ3yAQJXWofey3VOGfztn6s8Bt3jtb1_lYFLwdZ2Hwo
+@physician_token = Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtaW5kYWh1bi5kZWJlYmVAYWFzdHVzdHVkZW50LmVkdS5ldCIsImlhdCI6MTc0Nzc3Mjc4OCwiZXhwIjoxNzU1NjYyMTg4fQ.qrp_3pMLuBYb44jdqaSxpiqajRa5YOdQt8Ttj1VpKLw
 @patients_token = Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZW56aWxrMjBAZ21haWwuY29tIiwiaWF0IjoxNzQ3MTE2NTY4LCJleHAiOjE3NTUwMDU5Njh9.t-RZBbYGllrFzuMGozYLeHoILTiYPorzmxHxpsz_dGI
 
 
@@ -178,3 +178,21 @@ Authorization: {{patients_token}}
 }
 
 
+###
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "mindahun.debebe@aastustudent.edu.et",
+  "password": "Xps@xps10"
+}
+
+
+###
+DELETE https://medacare-be.onrender.com/dev/delete/user?email=mindahun.debebe@aastustudent.edu.et
+Content-Type: application/json
+Authorization: {{physician_token}}
+
+
+###
+67653be770be49528c4ab9ee99282322_deleted_mindahun.debebe@aastustudent.edu.et

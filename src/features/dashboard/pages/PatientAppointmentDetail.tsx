@@ -1,35 +1,34 @@
 import React, { useState } from 'react';
-import { useMockUser } from '../hooks/dashboardHooks';
-import { Link } from 'react-router-dom';
+import { useAppointments } from '../hooks/dashboardHooks';
+import { Link, useParams } from 'react-router-dom';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-// import PageLoader from '../../../ui/shared/PageLoader';
+import PageLoader from '../../../ui/shared/PageLoader';
 export default function PatientAppointmentDetail() {
-  // const { id } = useParams<{ id: string }>();
-  // const { data: appointments, isLoading, isError } = useAppointments();
-  // const appointment = appointments?.find((apoint) => apoint.id == Number(id));
-  const patient = useMockUser();
+  const { id } = useParams<{ id: string }>();
+  const { data: appointments, isLoading, isError } = useAppointments();
+  const appointment = appointments?.find((apoint) => apoint.id == Number(id));
+  const patient = appointment?.patient;
 
   const [tab, setTab] = useState('overview');
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    });
-  };
+  // const formatDate = (dateStr: string) => {
+  //   const date = new Date(dateStr);
+  //   return date.toLocaleDateString('en-US', {
+  //     year: 'numeric',
+  //     month: 'short',
+  //     day: 'numeric',
+  //   });
+  // };
 
-  // if (isLoading) {
-  //   return <PageLoader />;
-  // }
+  if (isLoading) {
+    return <PageLoader />;
+  }
 
-  // if (isError) {
-  //   return null;
-  // }
+  if (isError) {
+    return null;
+  }
+  if (!patient) return null;
 
   return (
     <div className="p-[34px] flex flex-col min-h-[calc(100vh-65px)] ">
@@ -108,7 +107,7 @@ export default function PatientAppointmentDetail() {
         >
           Overview
         </button>
-        <button
+        {/* <button
           className={`w-[200px] text-center ${
             tab == 'appointment'
               ? 'bg-white h-full border border-[#2CA6FF] rounded-[10px] py-1 '
@@ -121,107 +120,61 @@ export default function PatientAppointmentDetail() {
           }}
         >
           Appointment
-        </button>
+        </button> */}
       </div>
-      {tab == 'overview' ? (
-        <div className="mt-[45] grid grid-cols-2 gap-6 ">
-          <div className="mt-[46px] bg-gradient-to-br from-[#2CA6FF] to-[#FFFFFF] p-[1px] rounded-[20px] shadow-[0px_5px_20px_5px_#0000000F]">
-            <div className="p-6 flex flex-col gap-8 rounded-[18px] bg-[#ffffff]">
-              <h1 className="text-primary-teal text-2xl font-semibold leading-[150%]">
-                Past Diagnosis
-              </h1>
-              <p className=" text-[18px] text-[#727272] ">
-                {patient.pastDiagnosis}
-              </p>
-            </div>
-          </div>
-          <div className="mt-[46px] bg-gradient-to-br from-[#2CA6FF] to-[#FFFFFF] p-[1px] rounded-[20px] shadow-[0px_5px_20px_5px_#0000000F]">
-            <div className="p-6 flex flex-col gap-8 rounded-[18px] bg-[#ffffff]">
-              <h1 className="text-primary-teal text-2xl font-semibold leading-[150%]">
-                Allergies
-              </h1>
-              <p className=" text-[18px] text-[#727272] ">
-                {patient.allergies}
-              </p>
-            </div>
-          </div>
-          <div className="bg-gradient-to-br from-[#2CA6FF] to-[#FFFFFF] p-[1px] rounded-[20px] shadow-[0px_5px_20px_5px_#0000000F]">
-            <div className="p-6 flex flex-col gap-8 rounded-[18px] bg-[#ffffff]">
-              <h1 className="text-primary-teal text-2xl font-semibold leading-[150%]">
-                Basic Info
-              </h1>
-              <div className="flex flex-wrap  ">
-                <div className=" flex flex-col w-1/2 items-start justify-start gap-1 pb-4 ">
-                  <p className="font-bold">Blood Type</p>{' '}
-                  <span className="text-[#727272]">{patient.bloodType}</span>
-                </div>
-                <div className=" flex flex-col w-1/2 items-start justify-start gap-1 pb-4 ">
-                  <p className="font-bold">Height</p>{' '}
-                  <span className="text-[#727272]">
-                    {patient.heightInMeters} Meters
-                  </span>
-                </div>
-                <div className=" flex flex-col w-1/2 items-start justify-start gap-1 pb-4 ">
-                  <p className="font-bold">Weight</p>{' '}
-                  <span className="text-[#727272]">
-                    {patient.weightInKg} Kg
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="bg-gradient-to-br from-[#2CA6FF] to-[#FFFFFF] p-[1px] rounded-[20px] shadow-[0px_5px_20px_5px_#0000000F]">
-            <div className="p-6 flex flex-col gap-8 rounded-[18px] bg-[#ffffff] h-full ">
-              <h1 className="text-primary-teal text-2xl font-semibold leading-[150%]">
-                Medications
-              </h1>
-              <p className=" text-[18px] text-[#727272] ">
-                {patient.medications}
-              </p>
-            </div>
-          </div>
-        </div>
-      ) : (
+      <div className="mt-[45] grid grid-cols-2 gap-6 ">
         <div className="mt-[46px] bg-gradient-to-br from-[#2CA6FF] to-[#FFFFFF] p-[1px] rounded-[20px] shadow-[0px_5px_20px_5px_#0000000F]">
-          <div className="p-6 flex flex-col rounded-[18px] bg-[#ffffff]">
+          <div className="p-6 flex flex-col gap-8 rounded-[18px] bg-[#ffffff]">
             <h1 className="text-primary-teal text-2xl font-semibold leading-[150%]">
-              Past Appointments
+              Past Diagnosis
             </h1>
-            <p className="text-[#727272]">3 previous consultations</p>
-            {patient.appointments.map((appointment, index) => (
-              <div
-                key={index}
-                className="mt-[20px] bg-gradient-to-br from-[#2CA6FF] to-[#FFFFFF] p-[1px] rounded-[20px] shadow-[0px_5px_20px_5px_#0000000F]"
-              >
-                <div className="p-6 flex justify-between items-start rounded-[18px] bg-[#ffffff]">
-                  <div className="flex flex-col gap-2">
-                    <div className="flex gap-2">
-                      <span className="text-primary-blues-500">
-                        <CalendarMonthIcon />
-                      </span>
-                      <p className="text-primary-teal font-semibold ">
-                        {formatDate(appointment.appointmentDate)}
-                      </p>
-                    </div>
-                    <div className="flex gap-2">
-                      <span className="text-primary-blues-500">
-                        <AccessTimeIcon />
-                      </span>
-                      <p className="text-primary-teal font-semibold ">
-                        {appointment.appointmentStartTime +
-                          ' - ' +
-                          appointment.appointmentEndTime +
-                          '(30 Min)'}
-                      </p>
-                    </div>
-                  </div>
-                  {/* <div className='clas'></div> */}
-                </div>
-              </div>
-            ))}
+            <p className=" text-[18px] text-[#727272] ">
+              {patient.pastDiagnosis}
+            </p>
           </div>
         </div>
-      )}
+        <div className="mt-[46px] bg-gradient-to-br from-[#2CA6FF] to-[#FFFFFF] p-[1px] rounded-[20px] shadow-[0px_5px_20px_5px_#0000000F]">
+          <div className="p-6 flex flex-col gap-8 rounded-[18px] bg-[#ffffff]">
+            <h1 className="text-primary-teal text-2xl font-semibold leading-[150%]">
+              Allergies
+            </h1>
+            <p className=" text-[18px] text-[#727272] ">{patient.allergies}</p>
+          </div>
+        </div>
+        <div className="bg-gradient-to-br from-[#2CA6FF] to-[#FFFFFF] p-[1px] rounded-[20px] shadow-[0px_5px_20px_5px_#0000000F]">
+          <div className="p-6 flex flex-col gap-8 rounded-[18px] bg-[#ffffff]">
+            <h1 className="text-primary-teal text-2xl font-semibold leading-[150%]">
+              Basic Info
+            </h1>
+            <div className="flex flex-wrap  ">
+              <div className=" flex flex-col w-1/2 items-start justify-start gap-1 pb-4 ">
+                <p className="font-bold">Blood Type</p>{' '}
+                <span className="text-[#727272]">{patient.bloodType}</span>
+              </div>
+              <div className=" flex flex-col w-1/2 items-start justify-start gap-1 pb-4 ">
+                <p className="font-bold">Height</p>{' '}
+                <span className="text-[#727272]">
+                  {patient.heightInMeters} Meters
+                </span>
+              </div>
+              <div className=" flex flex-col w-1/2 items-start justify-start gap-1 pb-4 ">
+                <p className="font-bold">Weight</p>{' '}
+                <span className="text-[#727272]">{patient.weightInKg} Kg</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="bg-gradient-to-br from-[#2CA6FF] to-[#FFFFFF] p-[1px] rounded-[20px] shadow-[0px_5px_20px_5px_#0000000F]">
+          <div className="p-6 flex flex-col gap-8 rounded-[18px] bg-[#ffffff] h-full ">
+            <h1 className="text-primary-teal text-2xl font-semibold leading-[150%]">
+              Medications
+            </h1>
+            <p className=" text-[18px] text-[#727272] ">
+              {patient.medications}
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

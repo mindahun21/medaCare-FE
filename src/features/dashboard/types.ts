@@ -160,4 +160,5 @@ export interface Appointment {
   appointmentDateTz: string;
   appointmentDate: string;
   physician?: Physician;
+  patient: Patient;
 }
