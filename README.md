@@ -30,44 +30,136 @@ npm run dev
 ## 📁 Project Structure
 
 ```text
-.
-├── public/                     # Static assets
-│   ├── images/                # App images (e.g., logo, medacare.png)
-│   └── vite.svg               # Vite logo (default)
-├── src/
-│   ├── App.tsx                # Root component
-│   ├── main.tsx               # App entry point
-│   ├── styles.css             # Global styles
-│   ├── data/                  # Static or seeded data
-│   ├── hooks/                 # Custom React hooks
-│   ├── utils/                 # Utility functions/helpers
-│   ├── services/              # Global API clients & service logic
-│   │   └── apiClient.ts
-│   ├── features/              # Feature-based modules
-│   │   ├── authentication/
-│   │   │   ├── components/    # Auth UI components
-│   │   │   │   ├── AuthBanner.tsx
-│   │   │   │   ├── LoginForm.tsx
-│   │   │   │   └── RegisterForm.tsx
-│   │   │   ├── services/      # Auth-related services (API calls, etc.)
-│   │   │   │   └── authApi.ts
-│   │   │   └── types.ts       # Type definitions for authentication
-│   │   └── dashboard/         # (To be developed)
-│   ├── pages/                 # Route-level components
-│   │   ├── Home.tsx
-│   │   ├── Login.tsx
-│   │   ├── Register.tsx
-│   │   └── NotFound.tsx
-│   ├── ui/                    # Reusable UI components
-│   │   └── shared/            # Shared UI elements (buttons, inputs, etc.)
-├── eslint.config.js           # ESLint configuration
-├── vite.config.ts             # Vite configuration (TypeScript)
-├── index.html                 # HTML template
-├── tsconfig.json              # TypeScript compiler configuration
+..
+├── eslint.config.js
+├── index.html
+├── managed_context
+│   └── metadata.json
 ├── package.json
 ├── package-lock.json
-└── README.md                  # Project overview and setup instructions
-
+├── public
+│   ├── icons
+│   └── images
+├── README.md
+├── src
+│   ├── App.tsx
+│   ├── contexts
+│   │   └── MessageContext.tsx
+│   ├── data
+│   │   ├── authSlice.ts
+│   │   ├── hooks.ts
+│   │   └── store.ts
+│   ├── features
+│   │   ├── authentication
+│   │   │   ├── AuthSelectors.ts
+│   │   │   ├── components
+│   │   │   │   ├── ApplicationSubmited.tsx
+│   │   │   │   ├── AuthBanner.tsx
+│   │   │   │   ├── InstitutionRequestFormOne.tsx
+│   │   │   │   ├── InstitutionRequestFormTwo.tsx
+│   │   │   │   ├── LoginForm.tsx
+│   │   │   │   ├── Logout.tsx
+│   │   │   │   ├── RegisterForm.tsx
+│   │   │   │   └── VerifyEmailForm.tsx
+│   │   │   ├── InstitutionRequestSchema.ts
+│   │   │   └── services
+│   │   │       └── authApi.ts
+│   │   ├── dashboard
+│   │   │   ├── context
+│   │   │   │   └── DashBoardContext.tsx
+│   │   │   ├── hooks
+│   │   │   │   ├── dashboardHooks.ts
+│   │   │   │   └── user.ts
+│   │   │   ├── pages
+│   │   │   │   ├── Appointments.tsx
+│   │   │   │   ├── Dashboard.tsx
+│   │   │   │   ├── InstitutionDetail.tsx
+│   │   │   │   ├── Institutions.tsx
+│   │   │   │   ├── PatientAppointmentDetail.tsx
+│   │   │   │   ├── PatientsDetail.tsx
+│   │   │   │   ├── Patients.tsx
+│   │   │   │   ├── PhysicianDetail.tsx
+│   │   │   │   ├── Physicians.tsx
+│   │   │   │   └── Schedules.tsx
+│   │   │   ├── schema.ts
+│   │   │   ├── services
+│   │   │   │   ├── dashboardService.ts
+│   │   │   │   └── user.ts
+│   │   │   ├── types.ts
+│   │   │   └── ui
+│   │   │       ├── AddPhysicianFormOne.tsx
+│   │   │       ├── AddPhysicianFormTwo.tsx
+│   │   │       ├── AddPhysicianModal.tsx
+│   │   │       ├── AppointmentsTable.tsx
+│   │   │       ├── InstitutionTable.tsx
+│   │   │       ├── LeftSideBar.tsx
+│   │   │       ├── PatientsTable.tsx
+│   │   │       ├── PhysicianTable.tsx
+│   │   │       ├── RejectionReason.tsx
+│   │   │       └── Table.tsx
+│   │   └── profile
+│   │       ├── completeProfileSchema.ts
+│   │       ├── components
+│   │       │   └── physician
+│   │       │       ├── CompleteProfileFormOne.tsx
+│   │       │       ├── CompleteProfileFormThree.tsx
+│   │       │       └── CompleteProfileFormTwo.tsx
+│   │       └── services
+│   │           └── completeProfile.ts
+│   ├── hooks
+│   ├── main.tsx
+│   ├── pages
+│   │   ├── AccountVerified.tsx
+│   │   ├── ChooseAccountType.tsx
+│   │   ├── CompletePhysicianProfile.tsx
+│   │   ├── Guest.tsx
+│   │   ├── InstitutionRequest.tsx
+│   │   ├── Login.tsx
+│   │   ├── NotFound.tsx
+│   │   ├── PasswordReset.tsx
+│   │   ├── PatientRedirectPage.tsx
+│   │   ├── Register.tsx
+│   │   └── VerifyEmail.tsx
+│   ├── services
+│   │   ├── apiClient.ts
+│   │   └── uploadFiles.ts
+│   ├── styles.css
+│   ├── types
+│   │   ├── auth.ts
+│   │   ├── message.ts
+│   │   └── user.ts
+│   ├── ui
+│   │   ├── GlobalMessage.tsx
+│   │   ├── guest
+│   │   │   ├── About.tsx
+│   │   │   ├── ContactUs.tsx
+│   │   │   ├── Footer.tsx
+│   │   │   ├── Header.tsx
+│   │   │   ├── Hero.tsx
+│   │   │   ├── HowItWorks.tsx
+│   │   │   └── Services.tsx
+│   │   ├── Layouts
+│   │   │   ├── DashboardLayout.tsx
+│   │   │   ├── ProtectedRoutes.tsx
+│   │   │   ├── PublicRoutes.tsx
+│   │   │   └── Unauthorized.tsx
+│   │   └── shared
+│   │       ├── ConsultationChat.tsx
+│   │       ├── inputFields
+│   │       │   └── FileUploadInput.tsx
+│   │       ├── PageLoader.tsx
+│   │       ├── PrimaryButton.tsx
+│   │       ├── Role.tsx
+│   │       ├── SubmitButton.tsx
+│   │       └── TextButton.tsx
+│   └── utils
+│       └── variables.ts
+├── tasks.md
+├── test.md
+├── test_suite_analysis
+│   └── metadata.json
+├── tsconfig.json
+└── vite.config.ts
 ```
 
 ---
