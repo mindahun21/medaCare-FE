@@ -40,8 +40,8 @@ const services = [
 
 export default function Services() {
   return (
-    <section id="services" className="pt-[50px] bg-white">
-      <div className="mx-auto flex flex-col items-center text-neutrals-900 py-8">
+    <section id="services" className="pt-[50px]  max-w-full overflow-x-hidden">
+      <div className="mx-auto flex flex-col items-center text-neutrals-900 py-8 px-4">
         {/* Title */}
         <h1 className="text-[42px] leading-[55px] font-bold text-center">
           Top
@@ -50,14 +50,14 @@ export default function Services() {
         </h1>
 
         {/* Subtitle */}
-        <p className="text-center pt-[34px] text-neutrals-300 w-[860px] text-[17px] leading-[25px]">
+        <p className="text-center pt-[34px] text-neutrals-300 max-w-[860px] text-[17px] leading-[25px]">
           In today&#x27;s fast-paced world, your health deserves the utmost
           attention and convenience. MedaCare brings a suite of integrated
           services to support your needs digitally:
         </p>
 
         {/* Services Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-9 gap-8 w-full relative mt-[54px] max-w-[1029px]">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-9 gap-8 w-full relative mt-[54px] max-w-[1029px]">
           {services.map((service, index) => (
             <ServiceCard
               key={index}

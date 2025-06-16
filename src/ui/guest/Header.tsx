@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import PrimaryButton from '../shared/PrimaryButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -62,7 +61,9 @@ export default function Header() {
               <li key={href}>
                 <a
                   href={href}
-                  className="hover:text-primary-teal"
+                  className={`hover:text-primary-teal ${
+                    href == '#contact-us' ? 'hidden xl:flex' : ''
+                  } `}
                   onClick={(e) => {
                     e.preventDefault();
                     handleScrollToSection(href);
@@ -80,13 +81,13 @@ export default function Header() {
             onClick={() => navigate('/login')}
             className="w-auto bg-transparent hover:bg-secondary-burgandy text-[15px] text-secondary-burgandy hover:text-white font-bold py-[9px] px-[27px] leading-[27px] tracking-[0.48px] rounded-[4px] transition duration-300 ease-in-out border-2 border-secondary-burgandy"
           >
-            SIGNIN
+            SIGN-IN
           </button>
           <button
             onClick={() => navigate('/choose-accounttype')}
             className="w-auto bg-secondary-burgandy hover:bg-transparent text-[15px] text-white hover:text-secondary-burgandy font-bold py-[5px] px-[23px] leading-[27px] tracking-[0.48px] rounded-[4px] transition duration-300 ease-in-out border-2 border-secondary-burgandy"
           >
-            SIGNUP
+            SIGN-UP
           </button>
         </div>
 
@@ -103,7 +104,7 @@ export default function Header() {
 
       {/* Mobile Nav */}
       {location.pathname === '/' && mobileMenuOpen && (
-        <div className="lg:hidden flex flex-col gap-4 px-4 mt-4 text-lg text-neutral-900 bg-white shadow-lg rounded-lg py-6 absolute top-[108px] left-0 w-full z-40">
+        <div className="lg:hidden flex flex-col px-4 text-lg text-neutral-900 bg-white shadow-lg rounded-lg py-6 absolute top-[108px] left-0 w-full z-40">
           {[
             ['#hero', 'Home'],
             ['#about', 'About Us'],
@@ -114,6 +115,7 @@ export default function Header() {
             <a
               key={href}
               href={href}
+              className="hover:text-primary-teal hover:bg-primary-teal-surface px-5 py-2 "
               onClick={(e) => {
                 e.preventDefault();
                 handleScrollToSection(href);
@@ -122,13 +124,6 @@ export default function Header() {
               {label}
             </a>
           ))}
-          <PrimaryButton
-            text="SIGNUP / SIGNIN"
-            onClick={() => {
-              setMobileMenuOpen(false);
-              navigate('/choose-accounttype');
-            }}
-          />
         </div>
       )}
     </header>

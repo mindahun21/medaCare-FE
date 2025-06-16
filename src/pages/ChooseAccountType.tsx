@@ -10,11 +10,11 @@ export default function ChooseAccountType() {
   return (
     <div className="flex flex-col min-h-screen pb-20 w-full bg overflow-hidden bg-gradient-to-br from-[#DEF1FF] to-[#FFF] justify-center items-center">
       <Header />
-      <div className=" flex justify-center flex-col items-center mt-[108px] ">
+      <div className=" flex justify-center flex-col items-center mt-[108px] max-w-full">
         <h1 className="text-center font-bold text-[36px] leading-[100%] pt-[56px] text-[#333333] ">
           What kind of user are you?
         </h1>
-        <p className="text-center pt-[10px] font-normal text-[#979797] text-[18px] w-[747px] ">
+        <p className="text-center pt-[10px] font-normal text-[#979797] text-[18px] max-w-[747px] ">
           Choose your account type to get started. Whether you're a patient
           seeking care, a provider offering services, or an institution managing
           healthcare professionals.
@@ -74,7 +74,7 @@ export default function ChooseAccountType() {
         </div>
 
         {/* Button */}
-        <div className="flex justify-end px-4 w-[675px] pt-[87px]">
+        <div className="flex justify-end px-20 md:px-4 w-[675px] pt-[87px]">
           <PrimaryButton
             text="NEXT"
             className="px-20 py-3"

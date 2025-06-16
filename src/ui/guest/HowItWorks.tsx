@@ -85,7 +85,7 @@ function RoleSection({
 }) {
   return (
     <div className={background}>
-      <div className="mx-auto flex flex-col items-center py-[32px]">
+      <div className="mx-auto flex flex-col items-center py-[32px] px-4 md:px-0">
         {/* Heading */}
         <h1 className="text-center font-bold text-[42px] leading-[45px]">
           How <span className="gradient-primary px-2">our platform</span> works

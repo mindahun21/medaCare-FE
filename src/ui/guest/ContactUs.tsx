@@ -34,7 +34,7 @@ export default function ContactUs() {
   return (
     <section
       id="contact-us"
-      className="flex flex-col items-center bg-white pt-[116px] pb-[124px]"
+      className="flex flex-col items-center bg-white pt-[116px] pb-[124px] px-4"
     >
       <div className="flex flex-col items-center mb-[25px]">
         <h1 className="text-[42px] font-bold leading-[54px] ">

@@ -83,7 +83,7 @@ export default function Hero() {
         </div>
 
         {/* Right side image */}
-        <div className="h-[692px]">
+        <div className="h-[692px] hidden md:flex">
           <div className="w-[598px] h-[590px]">
             <img
               src="./images/doctor-hero.png"
